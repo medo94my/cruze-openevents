@@ -17,6 +17,7 @@ export const SUPPORTED_CURRENCIES = [
   'NZD',
   'NOK',
   'PHP',
+  'QAR',
   'PLN',
   'GBP',
   'SGD',
@@ -26,7 +27,7 @@ export const SUPPORTED_CURRENCIES = [
   'USD',
 ] as const
 
-export const DEFAULT_CURRENCY = 'SEK' as const
+export const DEFAULT_CURRENCY = 'QAR' as const
 
 export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number]
 
