@@ -230,12 +230,12 @@ function EventCard({ event, lang }: { event: CruzeEvent; lang: Language }) {
   )
 }
 
-export function CruzeHome({ events, compact = false }: { events: CruzeEvent[]; compact?: boolean }) {
+export function CruzeHome({ events, compact = false, initialDate = "any", initialSearch = "" }: { events: CruzeEvent[]; compact?: boolean; initialDate?: DateFilter; initialSearch?: string }) {
   const [lang, setLang] = useState<Language>("en")
   const [category, setCategory] = useState<Category>("all")
-  const [date, setDate] = useState<DateFilter>("any")
+  const [date, setDate] = useState<DateFilter>(initialDate)
   const [freeOnly, setFreeOnly] = useState(false)
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState(initialSearch)
   const discoveryRef = useRef<HTMLDivElement>(null)
   const t = copy[lang]
   const filtered = useMemo(() => events.filter((event) => {
