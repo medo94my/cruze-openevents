@@ -230,7 +230,7 @@ function EventCard({ event, lang }: { event: CruzeEvent; lang: Language }) {
   )
 }
 
-export function CruzeHome({ events }: { events: CruzeEvent[] }) {
+export function CruzeHome({ events, compact = false }: { events: CruzeEvent[]; compact?: boolean }) {
   const [lang, setLang] = useState<Language>("en")
   const [category, setCategory] = useState<Category>("all")
   const [date, setDate] = useState<DateFilter>("any")
@@ -260,6 +260,8 @@ export function CruzeHome({ events }: { events: CruzeEvent[] }) {
         </div>
       </div>
 
+      {!compact && (
+        <>
       <section className="relative mx-3 min-h-[570px] overflow-hidden rounded-[28px] bg-[#2b0e23] text-white sm:mx-6 sm:min-h-[640px] sm:rounded-[34px] lg:mx-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={heroImage} alt="Doha skyline at sunset" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" />
@@ -316,6 +318,9 @@ export function CruzeHome({ events }: { events: CruzeEvent[] }) {
         ) : <div className="rounded-3xl border border-dashed border-[#dccccc] p-12 text-center text-[#765b63]">{t.noResults}</div>}
       </section>
 
+        </>
+      )}
+      {compact && <div className="mx-auto max-w-[1300px] px-5 pt-14 sm:px-8 lg:px-12"><p className="mb-3 text-xs font-bold tracking-[0.17em] text-[#a0576b]">{t.place}</p><h1 className="text-[44px] font-extrabold tracking-tight text-[#341d29] sm:text-[62px]">{t.discovery}</h1><p className="mt-3 text-base text-[#7b6470]">{t.featuredText}</p></div>}
       <section ref={discoveryRef} id="discover" className="scroll-mt-24 mx-auto max-w-[1300px] px-5 pb-20 pt-20 sm:px-8 lg:px-12">
         <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.17em] text-[#9b4f62]">{t.trending}</p>
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
