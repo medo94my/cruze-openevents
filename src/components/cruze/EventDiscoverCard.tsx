@@ -106,7 +106,7 @@ export function EventDiscoverCard({ event, compact = false }: { event: DiscoverE
         <div className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-[#512333] backdrop-blur-md">{categoryLabel(cat)}</div>
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="line-clamp-2 text-[19px] font-bold leading-snug tracking-[-.02em] text-[#2d2024]">{event.title.replace(/^Demo\s*[·:–-]\s*/i, '')}</h3>
+        <h3 className="line-clamp-2 text-[19px] font-bold leading-snug tracking-[-.02em] text-[#2d2024]">{event.title.replace(/^(?:\[DEMO\]|DEMO)\s*[·:–-]?\s*/i, '')}</h3>
         <div className="mt-4 flex items-center gap-2 text-[13px] text-[#786c6d]"><CalendarDays className="h-4 w-4 shrink-0 text-[#a17a78]"/><span>{date.long} · {date.time}</span></div>
         <div className="mt-2 flex items-center gap-2 text-[13px] text-[#786c6d]"><MapPin className="h-4 w-4 shrink-0 text-[#a17a78]"/><span className="truncate">{event.venue || event.city || 'Doha, Qatar'}</span></div>
         <div className="mt-auto flex items-center justify-between border-t border-[#f0e7e2] pt-4 text-sm mt-5">
