@@ -90,7 +90,7 @@ export function Header({ platformName = 'OpenEvents', platformLogo, brandColor }
   }, [])
 
   return (
-    <header className="bg-white border-b border-gray-200 print:hidden">
+    <header className={isPublicPage ? "sticky top-0 z-40 border-b border-[#ecdfd9] bg-[#fffbf6]/95 backdrop-blur-lg print:hidden" : "bg-white border-b border-gray-200 print:hidden"}>
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-3">
           <div className="flex items-center">
@@ -99,11 +99,18 @@ export function Header({ platformName = 'OpenEvents', platformLogo, brandColor }
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={platformLogo} alt={platformName} className="h-8 w-auto sm:h-9" />
               ) : (
-                <span className="text-xl font-bold sm:text-2xl" style={{ color: brandColor || 'var(--brand-color)' }}>{platformName}</span>
+                <span className="text-xl font-extrabold tracking-tight sm:text-2xl" style={{ color: brandColor || 'var(--brand-color)' }}>{platformName}</span>
               )}
             </Link>
           </div>
 
+          {isPublicPage && (
+            <div className="hidden items-center gap-6 md:flex">
+              <Link href="/events" className="text-sm font-semibold text-[#473039] transition hover:text-[#8a1538]">Explore events</Link>
+              <Link href="/events?when=weekend" className="text-sm font-semibold text-[#685760] transition hover:text-[#8a1538]">This weekend</Link>
+              <Link href="/events?q=culture" className="hidden text-sm font-semibold text-[#685760] transition hover:text-[#8a1538] lg:block">Culture & more</Link>
+            </div>
+          )}
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-6">
             {canManageEvents && (
@@ -191,6 +198,7 @@ export function Header({ platformName = 'OpenEvents', platformLogo, brandColor }
             ) : null}
           </div>
 
+          {isPublicPage && <Link href="/events" className="ml-auto hidden rounded-full bg-[#8a1538] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#68122e] md:inline-flex">Find an experience</Link>}
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
