@@ -65,11 +65,16 @@ export async function GET(request: NextRequest, context: RouteContext) {
     // Restrict redirects to this exact storage provider to avoid an open redirect.
     try {
       const parsed = new URL(imageUrl)
-      if (parsed.protocol === 'https:' && parsed.hostname.endsWith('.public.blob.vercel-storage.com')) {
+      if (parsed.protocol === 'https:' && (parsed.hostname.endsWith('.public.blob.vercel-storage.com') || parsed.hostname === 'images.pexels.com')) {
         return NextResponse.redirect(parsed.toString(), { headers: { 'Cache-Control': 'no-store' } })
       }
     } catch {
       // S3/MinIO object keys are not necessarily full URLs; use the original path.
+    }
+
+    // Allow only trusted Unsplash imagery on explicitly fictional catalogue entries.
+    if (event.status === 'PUBLISHED' && id.startsWith('demo-') && (imageUrl.startsWith('https://images.unsplash.com/photo-') || imageUrl.startsWith('https://images.pexels.com/photos/'))) {
+      return NextResponse.redirect(imageUrl, { headers: { 'Cache-Control': 'public, max-age=1800' } })
     }
 
     const key = extractObjectKeyFromStorageRef(imageUrl, ['events', 'speakers', 'users'])

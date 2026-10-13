@@ -14,18 +14,18 @@ const outfit = Outfit({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getPlatformSettings({
-    platform_name: 'OpenEvents',
+    platform_name: 'Cruze Events',
   })
   const name = settings.platform_name
 
   return {
     title: {
-      default: `${name} - Event Management & Ticketing`,
+      default: `${name} — Discover the best of Doha`,
       template: `%s | ${name}`,
     },
     description:
-      `Create, manage, and sell tickets to your events. Powered by ${name}.`,
-    keywords: ["events", "ticketing", "event management", "conferences", "meetups"],
+      `Discover concerts, cultural experiences, and things to do in Doha, Qatar with ${name}.`,
+    keywords: ["Doha events", "Qatar concerts", "things to do in Doha", "Qatar events", "weekend in Doha"],
     icons: {
       icon: [
         { url: "/favicon.ico", sizes: "any" },
@@ -35,11 +35,11 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       type: "website",
-      locale: "en_US",
+      locale: "en_QA",
       siteName: name,
-      title: `${name} - Event Management & Ticketing`,
+      title: `${name} — Discover the best of Doha`,
       description:
-        `Create, manage, and sell tickets to your events. Powered by ${name}.`,
+        `Discover concerts, cultural experiences, and things to do in Doha, Qatar with ${name}.`,
       images: [
         {
           url: "/hero-image.jpg",
@@ -53,7 +53,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: `${name} - Event Management & Ticketing`,
       description:
-        `Create, manage, and sell tickets to your events. Powered by ${name}.`,
+        `Discover concerts, cultural experiences, and things to do in Doha, Qatar with ${name}.`,
       images: ["/hero-image.jpg"],
     },
   }
@@ -66,11 +66,11 @@ export default async function RootLayout({
 }>) {
   const settings = await getPlatformSettings({
     platform_theme: 'light',
-    platform_brand_color: '#5C8BD9',
-    platform_name: 'OpenEvents',
+    platform_brand_color: '#8A1538',
+    platform_name: 'Cruze Events',
     platform_logo: '',
     platform_favicon: '',
-    footer_tagline: 'Organizing events starts here',
+    footer_tagline: 'Your city, your scene. Discover Qatar one experience at a time.',
     footer_links: '',
   })
 
@@ -84,7 +84,7 @@ export default async function RootLayout({
         {favicon && (
           <link rel="icon" href={favicon} />
         )}
-        {brandColor !== '#5C8BD9' && (
+        {brandColor !== '#8A1538' && (
           <style dangerouslySetInnerHTML={{ __html: `
             :root {
               --brand-color: ${brandColor};
