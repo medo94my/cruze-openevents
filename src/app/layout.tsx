@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: {
-      default: `${name} - Event Management & Ticketing`,
+      default: `${name} — Discover the best of Doha`,
       template: `%s | ${name}`,
     },
     description:
@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "en_QA",
       siteName: name,
-      title: `${name} - Event Management & Ticketing`,
+      title: `${name} — Discover the best of Doha`,
       description:
         `Discover concerts, cultural experiences, and things to do in Doha, Qatar with ${name}.`,
       images: [
