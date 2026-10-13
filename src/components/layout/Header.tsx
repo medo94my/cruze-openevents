@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
-import { ChevronDown } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, MapPin, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
@@ -89,8 +89,53 @@ export function Header({ platformName = 'OpenEvents', platformLogo, brandColor }
     }
   }, [])
 
+  if (isPublicPage) {
+    return (
+      <header className="sticky top-0 z-50 border-b border-[#e9d8d2] bg-[#fbf8f3]/95 text-[#321d28] backdrop-blur-xl print:hidden">
+        <nav className="mx-auto flex h-[74px] max-w-[1350px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-12">
+          <Link href="/" className="flex items-center gap-3" aria-label="Cruze Doha home">
+            <span className="flex h-11 w-11 items-center justify-center rounded-[15px] bg-[#641633] text-[23px] font-black tracking-[-0.08em] text-white">C<span className="text-[#e4b98c]">.</span></span>
+            <span className="flex flex-col leading-none">
+              <span className="text-[23px] font-black tracking-[-0.07em] text-[#48142d]">CRUZE<span className="text-[#b57d83]">.</span></span>
+              <span className="mt-1 text-[9px] font-extrabold tracking-[0.31em] text-[#a16c7a]">DOHA EXPERIENCES</span>
+            </span>
+          </Link>
+          <div className="hidden items-center gap-8 lg:flex">
+            <Link href="/events" className="text-[14px] font-bold text-[#4b3540] transition hover:text-[#9e365b]">Discover events</Link>
+            <Link href="/events?when=weekend" className="text-[14px] font-bold text-[#4b3540] transition hover:text-[#9e365b]">This weekend</Link>
+            <Link href="/#discover" className="text-[14px] font-bold text-[#4b3540] transition hover:text-[#9e365b]">Explore by interest</Link>
+          </div>
+          <div className="hidden items-center gap-3 sm:flex">
+            <span className="me-2 hidden items-center gap-1.5 text-xs font-semibold text-[#977b85] xl:inline-flex"><MapPin size={14}/>Qatar</span>
+            {canManageEvents ? (
+              <Link href="/dashboard" className="rounded-full border border-[#d8bdc5] px-5 py-2.5 text-sm font-bold text-[#641633] transition hover:bg-[#f2e9e3]">Dashboard</Link>
+            ) : status === 'authenticated' ? (
+              <Link href="/dashboard/profile" className="rounded-full border border-[#d8bdc5] px-5 py-2.5 text-sm font-bold text-[#641633]">My account</Link>
+            ) : (
+              <Link href="/login" className="rounded-full border border-[#d8bdc5] px-5 py-2.5 text-sm font-bold text-[#641633] transition hover:bg-[#f2e9e3]">Sign in</Link>
+            )}
+            <Link href="/events" className="inline-flex items-center gap-2 rounded-full bg-[#641633] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#812849]">Explore <ArrowUpRight size={16}/></Link>
+          </div>
+          <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#e8dcd5] text-[#641633] sm:hidden" aria-label={mobileMenuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((open) => !open)}>
+            {mobileMenuOpen ? <X size={20}/> : <Menu size={20}/>}
+          </button>
+        </nav>
+        {mobileMenuOpen && (
+          <div className="border-t border-[#e5d8d0] bg-[#fbf8f3] px-5 py-5 sm:hidden">
+            <div className="flex flex-col gap-3 text-sm font-bold">
+              <Link href="/events" onClick={() => setMobileMenuOpen(false)}>Discover events</Link>
+              <Link href="/events?when=weekend" onClick={() => setMobileMenuOpen(false)}>This weekend</Link>
+              <Link href="/#discover" onClick={() => setMobileMenuOpen(false)}>Explore by interest</Link>
+              <Link href={canManageEvents ? '/dashboard' : status === 'authenticated' ? '/dashboard/profile' : '/login'} onClick={() => setMobileMenuOpen(false)} className="mt-2 rounded-full bg-[#641633] px-4 py-3 text-center text-white">{canManageEvents ? 'Dashboard' : status === 'authenticated' ? 'My account' : 'Sign in'}</Link>
+            </div>
+          </div>
+        )}
+      </header>
+    )
+  }
+
   return (
-    <header className="bg-white border-b border-gray-200 print:hidden">
+    <header className={isPublicPage ? "sticky top-0 z-40 border-b border-[#ecdfd9] bg-[#fffbf6]/95 backdrop-blur-lg print:hidden" : "bg-white border-b border-gray-200 print:hidden"}>
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-3">
           <div className="flex items-center">
@@ -99,11 +144,18 @@ export function Header({ platformName = 'OpenEvents', platformLogo, brandColor }
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={platformLogo} alt={platformName} className="h-8 w-auto sm:h-9" />
               ) : (
-                <span className="text-xl font-bold sm:text-2xl" style={{ color: brandColor || 'var(--brand-color)' }}>{platformName}</span>
+                <span className="text-xl font-extrabold tracking-tight sm:text-2xl" style={{ color: brandColor || 'var(--brand-color)' }}>{platformName}</span>
               )}
             </Link>
           </div>
 
+          {isPublicPage && (
+            <div className="hidden items-center gap-6 md:flex">
+              <Link href="/events" className="text-sm font-semibold text-[#473039] transition hover:text-[#8a1538]">Explore events</Link>
+              <Link href="/events?when=weekend" className="text-sm font-semibold text-[#685760] transition hover:text-[#8a1538]">This weekend</Link>
+              <Link href="/events?q=culture" className="hidden text-sm font-semibold text-[#685760] transition hover:text-[#8a1538] lg:block">Culture & more</Link>
+            </div>
+          )}
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-6">
             {canManageEvents && (
@@ -191,6 +243,7 @@ export function Header({ platformName = 'OpenEvents', platformLogo, brandColor }
             ) : null}
           </div>
 
+          {isPublicPage && <Link href="/events" className="ml-auto hidden rounded-full bg-[#8a1538] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#68122e] md:inline-flex">Find an experience</Link>}
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
