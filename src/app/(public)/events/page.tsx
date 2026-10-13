@@ -3,7 +3,10 @@ import { CruzeHome, type CruzeEvent } from '@/components/landing/CruzeHome'
 
 export const dynamic = 'force-dynamic'
 
-export default async function EventsPage() {
+export default async function EventsPage({ searchParams }: { searchParams: Promise<{ when?: string; q?: string }> }) {
+  const params = await searchParams
+  const initialDate = params.when === 'weekend' ? 'weekend' : params.when === 'week' ? 'week' : 'any'
+  const initialSearch = typeof params.q === 'string' ? params.q.slice(0, 100) : ''
   const events = await prisma.event.findMany({
     where: {
       status: 'PUBLISHED',
@@ -33,5 +36,5 @@ export default async function EventsPage() {
     currency: event.ticketTypes[0]?.currency || 'QAR',
   }))
 
-  return <CruzeHome events={cards} compact />
+  return <CruzeHome events={cards} compact initialDate={initialDate} initialSearch={initialSearch} />
 }
