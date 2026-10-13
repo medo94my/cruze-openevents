@@ -1,6 +1,7 @@
 "use client";
 
 import Cropper, { Area } from "react-easy-crop";
+import { upload as uploadToBlob } from "@vercel/blob/client";
 import {
   ChangeEvent,
   DragEvent,
@@ -2060,43 +2061,20 @@ export function EventForm({
       throw new Error("Save the event once before uploading images");
     }
 
-    const uploadRes = await fetch("/api/upload/presigned", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        folder: "events",
-        entityId: form.id || "new",
-        filename: file.name,
+    const entityId = form.id || "new";
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const blob = await uploadToBlob(
+      `events/${entityId}/${Date.now()}-${safeName}`,
+      file,
+      {
+        access: "public",
+        handleUploadUrl: "/api/upload/blob",
         contentType: file.type,
-        size: file.size,
-      }),
-    });
-
-    if (!uploadRes.ok) {
-      throw new Error("Failed to create upload URL");
-    }
-
-    const uploadData = await uploadRes.json();
-    const uploadUrl = uploadData?.data?.uploadUrl as string | undefined;
-    const publicUrl = uploadData?.data?.publicUrl as string | undefined;
-
-    if (!uploadUrl || !publicUrl) {
-      throw new Error("Invalid upload response");
-    }
-
-    const putRes = await fetch(uploadUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": file.type,
+        clientPayload: JSON.stringify({ folder: "events", entityId }),
       },
-      body: file,
-    });
+    );
 
-    if (!putRes.ok) {
-      throw new Error("Failed to upload image");
-    }
-
-    updateField(targetField, publicUrl);
+    updateField(targetField, blob.url);
   }
 
   function parseTicketValidationErrors(
@@ -3018,29 +2996,19 @@ export function EventForm({
   }
 
   async function uploadSpeakerImage(file: File): Promise<string> {
-    const uploadRes = await fetch("/api/upload/presigned", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        folder: "speakers",
-        entityId: form.id || "new",
-        filename: file.name,
+    const entityId = form.id || "new";
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const blob = await uploadToBlob(
+      `speakers/${entityId}/${Date.now()}-${safeName}`,
+      file,
+      {
+        access: "public",
+        handleUploadUrl: "/api/upload/blob",
         contentType: file.type,
-        size: file.size,
-      }),
-    });
-    if (!uploadRes.ok) throw new Error("Failed to create upload URL");
-    const uploadData = await uploadRes.json();
-    const uploadUrl = uploadData?.data?.uploadUrl as string | undefined;
-    const publicUrl = uploadData?.data?.publicUrl as string | undefined;
-    if (!uploadUrl || !publicUrl) throw new Error("Invalid upload response");
-    const putRes = await fetch(uploadUrl, {
-      method: "PUT",
-      headers: { "Content-Type": file.type },
-      body: file,
-    });
-    if (!putRes.ok) throw new Error("Failed to upload image");
-    return publicUrl;
+        clientPayload: JSON.stringify({ folder: "speakers", entityId }),
+      },
+    );
+    return blob.url;
   }
 
   async function applySpeakerCrop() {

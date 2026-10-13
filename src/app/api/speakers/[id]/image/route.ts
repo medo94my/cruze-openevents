@@ -44,6 +44,17 @@ export async function GET(_request: NextRequest, context: RouteContext) {
       }
     }
 
+    // Public Vercel Blob images are already addressable by an HTTPS URL.
+    // Restrict redirects to this exact storage provider to avoid an open redirect.
+    try {
+      const parsed = new URL(speaker.photo)
+      if (parsed.protocol === 'https:' && parsed.hostname.endsWith('.public.blob.vercel-storage.com')) {
+        return NextResponse.redirect(parsed.toString(), { headers: { 'Cache-Control': 'no-store' } })
+      }
+    } catch {
+      // S3/MinIO object keys are not necessarily full URLs; use the original path.
+    }
+
     const key = extractObjectKeyFromStorageRef(speaker.photo, ['speakers', 'users'])
     if (!key) {
       return NextResponse.json({ error: 'Invalid image key' }, { status: 400 })
