@@ -39,7 +39,7 @@ const securityHeaders = [
       "img-src 'self' data: blob: https: http:",
       "font-src 'self' data:",
       "frame-src https://js.stripe.com https://checkout.stripe.com https://www.google.com https://maps.googleapis.com",
-      "connect-src 'self' https://api.stripe.com https://*.osaas.io",
+      "connect-src 'self' https://api.stripe.com https://*.osaas.io https://blob.vercel-storage.com https://*.blob.vercel-storage.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -62,6 +62,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: "localhost",
+      },
+      {
+        protocol: "https",
+        hostname: "**.public.blob.vercel-storage.com",
       },
     ],
   },
