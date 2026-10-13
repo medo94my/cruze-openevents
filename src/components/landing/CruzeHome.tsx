@@ -170,10 +170,14 @@ function dateMatches(event: CruzeEvent, filter: DateFilter) {
   const daysUntil = (eventDateValue.getTime() - now.getTime()) / 86400000
   if (filter === "week") return daysUntil >= 0 && daysUntil <= 7
   // Weekend in Qatar is Friday/Saturday, selecting the upcoming Friday and Saturday.
-  const dayToday = now.getUTCDay()
-  const daysToFriday = (5 - dayToday + 7) % 7
-  const startOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
-  const friday = new Date(startOfDay.getTime() + daysToFriday * 86400000)
+  // Qatar's weekend is Friday/Saturday, measured in Asia/Qatar rather than UTC.
+  const local = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Qatar", year: "numeric", month: "numeric", day: "numeric" })
+      .formatToParts(now).filter((part) => part.type !== "literal").map((part) => [part.type, Number(part.value)])
+  )
+  const localDay = new Date(Date.UTC(local.year, local.month - 1, local.day))
+  const daysToFriday = (5 - localDay.getUTCDay() + 7) % 7
+  const friday = new Date(localDay.getTime() + daysToFriday * 86400000 - 3 * 3600000)
   const sunday = new Date(friday.getTime() + 2 * 86400000)
   return eventDateValue >= friday && eventDateValue < sunday
 }
@@ -264,7 +268,7 @@ export function CruzeHome({ events, compact = false, initialDate = "any", initia
         <>
       <section className="relative mx-3 min-h-[570px] overflow-hidden rounded-[28px] bg-[#2b0e23] text-white sm:mx-6 sm:min-h-[640px] sm:rounded-[34px] lg:mx-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={heroImage} alt="Doha skyline at sunset" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" />
+        <img src={heroImage} alt="Illustrative Qatar-inspired event atmosphere" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#250c20]/95 via-[#42142e]/75 to-[#180e18]/25 rtl:bg-gradient-to-l" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#280e20]/80 via-transparent to-[#280e20]/10" />
         <div className="relative mx-auto flex min-h-[570px] max-w-[1260px] flex-col justify-center px-6 pb-24 pt-12 sm:min-h-[640px] sm:px-12 lg:px-16">
