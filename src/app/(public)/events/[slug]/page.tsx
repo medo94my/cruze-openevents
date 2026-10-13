@@ -79,7 +79,6 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
   const mapQuery = encodeURIComponent(locationText || event.title)
   const mapEmbedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`
 
-  const isDemo = event.title.startsWith('[DEMO]')
   const eventVatRate = getVatRateForCountryNameOrCode(event.country ?? '')
   const priceDisplay = formatEventPrice(event.ticketTypes)
   const hasPaidTickets = event.ticketTypes.some((ticketType) => Number(ticketType.price) > 0)
@@ -156,11 +155,6 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
           className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
         >
           {checkoutUnavailableMessage}
-        </div>
-      )}
-      {isDemo && (
-        <div role="status" className="rounded-2xl border border-[#e5c8d1] bg-[#fff3f0] px-5 py-4 text-sm font-semibold text-[#671638]">
-          Design preview only — this is a fictional event. No real tickets are available.
         </div>
       )}
       {event.coverImage ? (
