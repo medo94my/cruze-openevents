@@ -65,7 +65,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     // Restrict redirects to this exact storage provider to avoid an open redirect.
     try {
       const parsed = new URL(imageUrl)
-      if (parsed.protocol === 'https:' && parsed.hostname.endsWith('.public.blob.vercel-storage.com')) {
+      if (parsed.protocol === 'https:' && (parsed.hostname.endsWith('.public.blob.vercel-storage.com') || parsed.hostname === 'images.pexels.com')) {
         return NextResponse.redirect(parsed.toString(), { headers: { 'Cache-Control': 'no-store' } })
       }
     } catch {
