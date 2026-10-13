@@ -61,6 +61,17 @@ export async function GET(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'Image not found' }, { status: 404 })
     }
 
+    // Public Vercel Blob images are already addressable by an HTTPS URL.
+    // Restrict redirects to this exact storage provider to avoid an open redirect.
+    try {
+      const parsed = new URL(imageUrl)
+      if (parsed.protocol === 'https:' && parsed.hostname.endsWith('.public.blob.vercel-storage.com')) {
+        return NextResponse.redirect(parsed.toString(), { headers: { 'Cache-Control': 'no-store' } })
+      }
+    } catch {
+      // S3/MinIO object keys are not necessarily full URLs; use the original path.
+    }
+
     const key = extractObjectKeyFromStorageRef(imageUrl, ['events', 'speakers', 'users'])
     if (!key) {
       return NextResponse.json({ error: 'Invalid image key' }, { status: 400 })
