@@ -73,7 +73,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     // Allow only trusted Unsplash imagery on explicitly fictional catalogue entries.
-    if (event.status === 'PUBLISHED' && id.startsWith('demo-') && imageUrl.startsWith('https://images.unsplash.com/photo-')) {
+    if (event.status === 'PUBLISHED' && id.startsWith('demo-') && (imageUrl.startsWith('https://images.unsplash.com/photo-') || imageUrl.startsWith('https://images.pexels.com/photos/'))) {
       return NextResponse.redirect(imageUrl, { headers: { 'Cache-Control': 'public, max-age=1800' } })
     }
 
