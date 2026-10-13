@@ -72,6 +72,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
       // S3/MinIO object keys are not necessarily full URLs; use the original path.
     }
 
+    // Allow only trusted Unsplash imagery on explicitly fictional catalogue entries.
+    if (event.status === 'PUBLISHED' && id.startsWith('demo-') && imageUrl.startsWith('https://images.unsplash.com/photo-')) {
+      return NextResponse.redirect(imageUrl, { headers: { 'Cache-Control': 'public, max-age=1800' } })
+    }
+
     const key = extractObjectKeyFromStorageRef(imageUrl, ['events', 'speakers', 'users'])
     if (!key) {
       return NextResponse.json({ error: 'Invalid image key' }, { status: 400 })
