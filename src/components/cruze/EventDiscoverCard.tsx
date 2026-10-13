@@ -46,12 +46,12 @@ export function eventCategory(event: Pick<DiscoverEvent, 'slug' | 'title'>): str
     }
   }
   const title = event.title.toLowerCase()
-  if (/concert|music|jazz|live session|gig/.test(title)) return 'music'
+  if (/concert|music|jazz|soundscape|live session|gig/.test(title)) return 'music'
   if (/family|kids|maker/.test(title)) return 'family'
-  if (/desert|kayak|sunset|outdoor|adventure/.test(title)) return 'outdoors'
+  if (/sealine|stargaz|wellness|water|desert|kayak|sunset|outdoor|adventure/.test(title)) return 'outdoors'
   if (/comedy|stand.?up|show/.test(title)) return 'comedy'
   if (/community|food|social|global/.test(title)) return 'community'
-  if (/talk|startup|tech|workshop/.test(title)) return 'business'
+  if (/founder|talk|startup|tech|workshop/.test(title)) return 'business'
   return 'culture'
 }
 
@@ -62,7 +62,7 @@ export function categoryLabel(category: string): string {
 export function imageForEvent(event: Pick<DiscoverEvent, 'slug' | 'coverImage'>): string | null {
   if (!event.coverImage) return null
   // Demo images are sourced from Unsplash; regular event assets retain the original S3/Blob proxy.
-  if (event.coverImage.startsWith('https://images.unsplash.com/')) {
+  if (event.coverImage.startsWith('https://images.unsplash.com/') || event.coverImage.startsWith('https://images.pexels.com/photos/')) {
     return event.coverImage
   }
   return `/api/events/${encodeURIComponent(event.slug)}/image?slot=cover`
