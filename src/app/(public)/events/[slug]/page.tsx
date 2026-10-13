@@ -28,6 +28,7 @@ function firstQueryValue(value: string | string[] | undefined) {
 
 export default async function EventDetailsPage({ params, searchParams }: PageProps) {
   const { slug } = await params
+  const isDemo = slug.startsWith('demo-')
   const query = await searchParams
   const user = await getCurrentUser()
 
@@ -143,6 +144,11 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
   return (
     <div className="mx-auto max-w-5xl space-y-7 px-4 py-6 sm:px-6 lg:px-8">
       <EventNoticeToast message={noticeMessage} />
+      {isDemo && (
+        <div role="status" className="rounded-xl border border-[#edcbad] bg-[#fff2df] px-5 py-4 text-sm text-[#75441d]">
+          <strong>Fictional showcase event.</strong> This listing demonstrates Cruze's design only. It is not a real scheduled event, the location is illustrative, and tickets are not available for purchase.
+        </div>
+      )}
       {checkoutUnavailableMessage && (
         <div
           role="status"
@@ -288,7 +294,9 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
             </p>
 
             {/* Get tickets — 16px below time */}
-            {event.status === 'PUBLISHED' ? (
+            {isDemo ? (
+              <span className="mt-4 flex h-[52px] items-center justify-center rounded-xl bg-[#eee2dd] px-4 text-center text-sm font-semibold text-[#694e55]">Demo preview — booking disabled</span>
+            ) : event.status === 'PUBLISHED' ? (
               <Link
                 href={`/events/${event.slug}/checkout`}
                 className="mt-4 flex h-[52px] items-center justify-center rounded-[12px] bg-[#5c8bd9] text-[18px] font-semibold text-white transition hover:bg-[#4a7ac8]"
