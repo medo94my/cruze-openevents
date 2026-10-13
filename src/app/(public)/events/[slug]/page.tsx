@@ -79,6 +79,7 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
   const mapQuery = encodeURIComponent(locationText || event.title)
   const mapEmbedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`
 
+  const isDemo = event.title.startsWith('[DEMO]')
   const eventVatRate = getVatRateForCountryNameOrCode(event.country ?? '')
   const priceDisplay = formatEventPrice(event.ticketTypes)
   const hasPaidTickets = event.ticketTypes.some((ticketType) => Number(ticketType.price) > 0)
@@ -157,6 +158,11 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
           {checkoutUnavailableMessage}
         </div>
       )}
+      {isDemo && (
+        <div role="status" className="rounded-2xl border border-[#e5c8d1] bg-[#fff3f0] px-5 py-4 text-sm font-semibold text-[#671638]">
+          Design preview only — this is a fictional event. No real tickets are available.
+        </div>
+      )}
       {event.coverImage ? (
         <section className="relative overflow-hidden rounded-2xl bg-gray-900">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -177,7 +183,7 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
               className="text-4xl font-bold leading-none text-black sm:text-5xl lg:text-[56px]"
               style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
             >
-              {event.title}
+              {isDemo ? event.title.replace(/^\[DEMO\]\s*/, '') : event.title}
             </h1>
             <div className="flex items-center gap-2">
               <p
@@ -276,7 +282,7 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
             >
               {priceDisplay || 'Free'}
             </p>
-            {hasPaidTickets ? (
+            {hasPaidTickets && !isDemo ? (
               <p
                 className="mt-1 text-[13px] leading-5 text-[#4a5565]"
                 style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
@@ -306,7 +312,7 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
               </Link>
             ) : (
               <span className="mt-4 flex h-[52px] items-center justify-center rounded-[12px] border border-gray-300 bg-white text-[18px] font-semibold text-gray-500">
-                Draft preview
+                {isDemo ? "Preview only · no ticket sales" : "Draft preview"}
               </span>
             )}
           </div>
