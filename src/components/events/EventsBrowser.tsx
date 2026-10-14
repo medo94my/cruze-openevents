@@ -159,21 +159,6 @@ export default function EventsBrowser({
   return (
     <main className="events-page">
       {/* =====================================================
-          HEADER
-      ===================================================== */}
-      <header className="events-page__header">
-        <Link href="/" className="events-page__brand">
-          CRUZE<sup>®</sup>
-        </Link>
-
-        <div className="events-page__edition font-mono">QAT / 2026</div>
-
-        <Link href="/" className="events-page__back font-mono">
-          ← BACK
-        </Link>
-      </header>
-
-      {/* =====================================================
           HERO
       ===================================================== */}
       <section className="events-page__hero">

@@ -96,32 +96,33 @@ export default async function DashboardAdminUsersPage({
   return (
     <div className="space-y-6">
       <WorkspacePageHeader
+        badge="// SYSTEM USERS & ROLES"
         title="User Management"
-        description="Create accounts with one-time passwords and manage account types."
+        description="Create accounts with one-time credentials, assign organizer permissions, and manage staff access."
       />
 
       <CreateUserForm />
 
-      <div className="flex flex-wrap items-center gap-4 rounded-xl border border-gray-200 bg-white p-4">
+      <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-white/10 bg-[#161614] p-4 font-mono text-xs">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-600">Filter:</span>
-          <div className="flex gap-1">
+          <span className="text-[11px] uppercase tracking-wider text-[#f1efe8]/50">Filter:</span>
+          <div className="flex gap-1.5">
             <Link
               href={buildUrl({ role: 'all', page: '1' })}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+              className={`rounded-lg px-3 py-1.5 font-mono text-xs uppercase tracking-wider font-bold transition-colors ${
                 roleFilter === 'all'
-                  ? 'bg-[#5C8BD9] text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#d8763d] text-white'
+                  : 'bg-white/5 text-[#f1efe8]/70 hover:bg-white/10'
               }`}
             >
               All
             </Link>
             <Link
               href={buildUrl({ role: 'ORGANIZER', page: '1' })}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+              className={`rounded-lg px-3 py-1.5 font-mono text-xs uppercase tracking-wider font-bold transition-colors ${
                 roleFilter === 'ORGANIZER'
-                  ? 'bg-[#5C8BD9] text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#d8763d] text-white'
+                  : 'bg-white/5 text-[#f1efe8]/70 hover:bg-white/10'
               }`}
             >
               Organizers
@@ -136,42 +137,42 @@ export default async function DashboardAdminUsersPage({
             name="search"
             placeholder="Search by name or email..."
             defaultValue={searchQuery}
-            className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-[#5C8BD9] focus:outline-none focus:ring-1 focus:ring-[#5C8BD9]"
+            className="flex-1 rounded-lg border border-white/15 bg-[#11110f] px-3 py-1.5 text-xs font-mono text-[#f1efe8] placeholder:text-[#f1efe8]/40 focus:border-[#d8763d] focus:outline-none focus:ring-1 focus:ring-[#d8763d]"
           />
           <button
             type="submit"
-            className="rounded-lg bg-gray-100 px-4 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-gray-200"
+            className="rounded-lg border border-white/20 bg-white/5 px-4 py-1.5 font-mono text-xs uppercase tracking-wider text-[#f1efe8] transition-colors hover:bg-white/10 cursor-pointer"
           >
             Search
           </button>
         </form>
       </div>
 
-      <p className="text-sm text-gray-600">
-        Showing {formattedUsers.length} of {total} users
+      <p className="font-mono text-xs text-[#f1efe8]/50">
+        Showing {formattedUsers.length} of {total} registered users
       </p>
 
       <UsersTable users={formattedUsers} currentAdminId={user.id} />
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-3 font-mono text-xs">
           {page > 1 && (
             <Link
               href={buildUrl({ page: String(page - 1) })}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+              className="rounded-lg border border-white/20 bg-white/5 px-4 py-2 uppercase tracking-wider text-[#f1efe8] transition-colors hover:bg-white/10"
             >
-              Previous
+              ← Previous
             </Link>
           )}
-          <span className="text-sm text-gray-600">
+          <span className="text-[#f1efe8]/60">
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
             <Link
               href={buildUrl({ page: String(page + 1) })}
-              className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+              className="rounded-lg border border-white/20 bg-white/5 px-4 py-2 uppercase tracking-wider text-[#f1efe8] transition-colors hover:bg-white/10"
             >
-              Next
+              Next →
             </Link>
           )}
         </div>

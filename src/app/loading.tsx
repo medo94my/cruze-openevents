@@ -1,71 +1,33 @@
 export default function HomeLoading() {
   return (
-    <div className="flex flex-col">
-      {/* Hero image + search bar */}
-      <section className="px-4 pb-5 pt-8 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="animate-pulse overflow-hidden rounded-tl-[20px] rounded-tr-[20px] bg-gray-200">
-            <div className="h-[220px] sm:h-[300px] md:h-[360px] lg:h-[420px]" />
+    <main className="min-h-screen bg-[#11110f] text-[#f1efe8] px-5 py-6 md:px-8">
+      <div className="mx-auto max-w-[1500px] space-y-12">
+        {/* Top telemetry bar */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="h-4 w-40 animate-pulse bg-white/10 font-mono" />
+          <div className="h-4 w-28 animate-pulse bg-white/10 font-mono" />
+        </div>
+
+        {/* Hero skeleton */}
+        <div className="aspect-[16/8] w-full animate-pulse border border-white/10 bg-[#161614] p-8 flex flex-col justify-end">
+          <div className="space-y-4 max-w-2xl">
+            <div className="h-3 w-32 bg-white/10 font-mono" />
+            <div className="h-16 w-full bg-white/15" />
+            <div className="h-4 w-3/4 bg-white/10" />
           </div>
-          {/* Search bar */}
-          <div className="mt-4 animate-pulse rounded-xl border border-gray-200 bg-white p-4">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-              <div className="h-10 rounded-md bg-gray-200 sm:col-span-2" />
-              <div className="h-10 rounded-md bg-gray-200" />
-              <div className="h-10 rounded-md bg-gray-200" />
+        </div>
+
+        {/* Events cards row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="animate-pulse border border-white/10 bg-[#161614] p-6 space-y-4">
+              <div className="aspect-[16/10] bg-white/5 border border-white/10" />
+              <div className="h-5 w-3/4 bg-white/15" />
+              <div className="h-3 w-1/2 bg-white/10" />
             </div>
-          </div>
+          ))}
         </div>
-      </section>
-
-      {/* Featured events section */}
-      <section className="bg-white pb-20 pt-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex animate-pulse flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="h-9 w-52 rounded-lg bg-gray-200" />
-            <div className="h-10 w-32 rounded-[10px] bg-gray-200" />
-          </div>
-
-          {/* 6 event cards */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="animate-pulse overflow-hidden rounded-xl border border-gray-200 bg-white">
-                <div className="h-44 bg-gray-200" />
-                <div className="space-y-3 p-4">
-                  <div className="h-4 w-16 rounded-full bg-gray-200" />
-                  <div className="h-5 w-full rounded bg-gray-200" />
-                  <div className="h-5 w-3/4 rounded bg-gray-200" />
-                  <div className="flex gap-2">
-                    <div className="h-4 w-24 rounded bg-gray-200" />
-                    <div className="h-4 w-24 rounded bg-gray-200" />
-                  </div>
-                  <div className="h-5 w-20 rounded bg-gray-200" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features section */}
-      <section className="bg-white py-15">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="animate-pulse text-center">
-            <div className="mx-auto h-9 w-64 rounded-lg bg-gray-200" />
-            <div className="mx-auto mt-4 h-5 w-96 rounded bg-gray-200" />
-          </div>
-          <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="animate-pulse p-6 text-center">
-                <div className="mx-auto h-12 w-12 rounded-full bg-gray-200" />
-                <div className="mx-auto mt-6 h-5 w-32 rounded bg-gray-200" />
-                <div className="mx-auto mt-2 h-4 w-48 rounded bg-gray-200" />
-                <div className="mx-auto mt-1 h-4 w-40 rounded bg-gray-200" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </main>
   )
 }

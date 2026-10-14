@@ -104,26 +104,26 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
     <main className="event-detail">
       <EventNoticeToast message={noticeMessage} />
 
-      {/* Top Bar Navigation */}
-      <div className="event-detail__top font-mono">
-        <span>01 / LIVE EXPERIENCE · QATAR</span>
-
-        <Link href="/events" className="event-detail__back font-mono">
-          ← BACK TO EVENTS
+      {/* Breadcrumb Kicker */}
+      <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-[#f1efe8]/50">
+        <div className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#d8763d]" />
+          <span>01 / LIVE EXPERIENCE · QATAR</span>
+        </div>
+        <Link href="/events" className="hover:text-[#d8763d] transition-colors">
+          ← BACK TO ALL EVENTS
         </Link>
-
-        <span>QAT / 2026</span>
       </div>
 
       {/* Fictional Showcase Banner */}
       {isDemo && (
-        <div role="status" className="mb-8 border border-[#edcbad] bg-[#fff2df] px-5 py-4 text-sm text-[#75441d] font-mono">
-          <strong>FICTIONAL SHOWCASE EVENT:</strong> This listing demonstrates Cruze&apos;s design in Qatar. It is not a real scheduled event and tickets are not for purchase.
+        <div role="status" className="mb-8 border border-[#d8763d]/30 bg-[#d8763d]/10 px-5 py-4 text-xs font-mono text-[#f1efe8]">
+          <strong className="text-[#d8763d] mr-2">FICTIONAL SHOWCASE:</strong> This listing demonstrates Cruze&apos;s design in Qatar. It is not a real scheduled event and tickets are not for purchase.
         </div>
       )}
 
       {checkoutUnavailableMessage && (
-        <div role="status" className="mb-8 border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 font-mono">
+        <div role="status" className="mb-8 border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-xs font-mono text-amber-200">
           {checkoutUnavailableMessage}
         </div>
       )}
@@ -255,13 +255,6 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
           </div>
         </section>
       )}
-
-      {/* Footer */}
-      <footer className="mt-24 border-t border-white/15 pt-8 flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-white/40">
-        <span>CRUZE® / EVENTS</span>
-        <span>DOHA, QATAR</span>
-        <span>© 2026</span>
-      </footer>
     </main>
   )
 }

@@ -81,15 +81,15 @@ export function OrganizerSidebarNav() {
     }
   }, [checkLegalStatus, checkCustomizationStatus])
 
-  const navItems: NavItem[] = [
-    { id: 'scan', href: '/dashboard/scan', label: 'Scan Tickets' },
-    { id: 'overview', href: '/dashboard', label: 'Dashboard' },
-    { id: 'events', href: '/dashboard/events', label: 'Manage Events' },
+  const navItems: (NavItem & { code: string })[] = [
+    { id: 'overview', href: '/dashboard', label: 'Overview', code: '01' },
+    { id: 'events', href: '/dashboard/events', label: 'Events', code: '02' },
+    { id: 'scan', href: '/dashboard/scan', label: 'Scan Tickets', code: '03' },
   ]
-  const adminNavItems: NavItem[] = [
-    { id: 'adminUsers', href: '/dashboard/admin/users', label: 'User Management' },
-    { id: 'adminLegal', href: '/dashboard/admin/legal', label: 'Legal & Contact', badge: legalNeedsAttention ? 'attention' : undefined },
-    { id: 'adminCustomization', href: '/dashboard/admin/customization', label: 'Platform Customization', badge: customizationNeedsAttention ? 'attention' : undefined },
+  const adminNavItems: (NavItem & { code: string })[] = [
+    { id: 'adminUsers', href: '/dashboard/admin/users', label: 'User Directory', code: '04.1' },
+    { id: 'adminLegal', href: '/dashboard/admin/legal', label: 'Legal & Contact', code: '04.2', badge: legalNeedsAttention ? 'attention' : undefined },
+    { id: 'adminCustomization', href: '/dashboard/admin/customization', label: 'Platform Theme', code: '04.3', badge: customizationNeedsAttention ? 'attention' : undefined },
   ]
 
   const profileSectionActive = pathname === '/dashboard/profile' || pathname.startsWith('/dashboard/settings')
@@ -104,7 +104,7 @@ export function OrganizerSidebarNav() {
   const profileOpen = profileMenuOverride?.path === pathname ? profileMenuOverride.open : autoProfileOpen
 
   return (
-    <nav className="mt-3 space-y-1 text-sm">
+    <nav className="mt-2 space-y-1.5 text-xs font-mono">
       {navItems.map((item) => {
         const active = isActive(pathname, item)
 
@@ -113,35 +113,47 @@ export function OrganizerSidebarNav() {
             key={item.id}
             href={item.href}
             className={cn(
-              'block rounded-md px-3 py-2 font-medium transition',
-              active ? 'bg-[#5C8BD9] text-white' : 'text-gray-700 hover:bg-gray-50'
+              'flex items-center gap-2 rounded-lg px-3 py-2.5 uppercase tracking-wider transition-colors',
+              active
+                ? 'bg-white/10 text-[#f1efe8] font-bold border-l-2 border-[#d8763d]'
+                : 'text-[#f1efe8]/65 hover:text-[#f1efe8] hover:bg-white/5'
             )}
             aria-current={active ? 'page' : undefined}
           >
-            {item.label}
+            <span className={cn('text-[10px]', active ? 'text-[#d8763d]' : 'text-white/30')}>
+              {item.code}
+            </span>
+            <span>{item.label}</span>
           </Link>
         )
       })}
 
       {isSuperAdmin ? (
-        <div className="pt-1">
+        <div className="pt-2">
           <div className="flex items-center gap-1">
             <Link
               href="/dashboard/admin"
               className={cn(
-                'flex-1 rounded-md px-3 py-2 font-medium transition flex items-center justify-between',
-                pathname === '/dashboard/admin' ? 'bg-[#5C8BD9] text-white' : 'text-gray-700 hover:bg-gray-50'
+                'flex-1 flex items-center justify-between rounded-lg px-3 py-2.5 uppercase tracking-wider transition-colors',
+                pathname === '/dashboard/admin'
+                  ? 'bg-white/10 text-[#f1efe8] font-bold border-l-2 border-[#d8763d]'
+                  : 'text-[#f1efe8]/65 hover:text-[#f1efe8] hover:bg-white/5'
               )}
               aria-current={pathname === '/dashboard/admin' ? 'page' : undefined}
             >
-              Admin
+              <div className="flex items-center gap-2">
+                <span className={cn('text-[10px]', pathname === '/dashboard/admin' ? 'text-[#d8763d]' : 'text-white/30')}>
+                  04
+                </span>
+                <span>Admin</span>
+              </div>
               {!adminOpen && (legalNeedsAttention || customizationNeedsAttention) && (
-                <span className="h-2 w-2 rounded-full bg-amber-500" aria-label="Items need attention" />
+                <span className="h-2 w-2 rounded-full bg-[#d8763d]" aria-label="Items need attention" />
               )}
             </Link>
             <button
               type="button"
-              className="rounded-md p-2 text-gray-600 transition hover:bg-gray-50"
+              className="rounded-lg p-2 text-[#f1efe8]/60 transition-colors hover:bg-white/5 hover:text-[#f1efe8]"
               aria-label={adminOpen ? 'Collapse admin links' : 'Expand admin links'}
               aria-expanded={adminOpen}
               onClick={() => {
@@ -150,12 +162,12 @@ export function OrganizerSidebarNav() {
                 setAdminMenuOverride({ path: pathname, open: nextOpen })
               }}
             >
-              <ChevronDown className={cn('h-4 w-4 transition', adminOpen ? 'rotate-180' : '')} />
+              <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', adminOpen ? 'rotate-180' : '')} />
             </button>
           </div>
 
           {adminOpen ? (
-            <div className="ml-3 mt-1 space-y-1 border-l border-gray-200 pl-3">
+            <div className="ml-3 mt-1 space-y-1 border-l border-white/10 pl-3">
               {adminNavItems.map((item) => {
                 const active = isActive(pathname, item)
 
@@ -164,22 +176,24 @@ export function OrganizerSidebarNav() {
                     key={item.id}
                     href={item.href}
                     className={cn(
-                      'group relative flex items-center justify-between rounded-md px-3 py-2 font-medium transition',
-                      active ? 'bg-[#5C8BD9] text-white' : 'text-gray-700 hover:bg-gray-50'
+                      'group relative flex items-center justify-between rounded-lg px-2.5 py-2 uppercase tracking-wider transition-colors',
+                      active
+                        ? 'bg-white/10 text-[#f1efe8] font-bold border-l-2 border-[#d8763d]'
+                        : 'text-[#f1efe8]/60 hover:text-[#f1efe8] hover:bg-white/5'
                     )}
                     aria-current={active ? 'page' : undefined}
                   >
-                    {item.label}
+                    <div className="flex items-center gap-2">
+                      <span className={cn('text-[9px]', active ? 'text-[#d8763d]' : 'text-white/30')}>
+                        {item.code}
+                      </span>
+                      <span>{item.label}</span>
+                    </div>
                     {item.badge === 'attention' && (
-                      <>
-                        <span
-                          className="h-2 w-2 rounded-full bg-amber-500"
-                          aria-label="Needs attention"
-                        />
-                        <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-                          Using default content. Customize for your organization.
-                        </span>
-                      </>
+                      <span
+                        className="h-2 w-2 rounded-full bg-[#d8763d]"
+                        aria-label="Needs attention"
+                      />
                     )}
                   </Link>
                 )
@@ -189,27 +203,34 @@ export function OrganizerSidebarNav() {
         </div>
       ) : null}
 
-      <div className="pt-1">
+      <div className="pt-2">
         <div className="flex items-center gap-1">
           <Link
             href="/dashboard/profile"
             className={cn(
-              'flex-1 rounded-md px-3 py-2 font-medium transition flex items-center justify-between',
-              pathname === '/dashboard/profile' ? 'bg-[#5C8BD9] text-white' : 'text-gray-700 hover:bg-gray-50'
+              'flex-1 flex items-center justify-between rounded-lg px-3 py-2.5 uppercase tracking-wider transition-colors',
+              pathname === '/dashboard/profile'
+                ? 'bg-white/10 text-[#f1efe8] font-bold border-l-2 border-[#d8763d]'
+                : 'text-[#f1efe8]/65 hover:text-[#f1efe8] hover:bg-white/5'
             )}
             aria-current={pathname === '/dashboard/profile' ? 'page' : undefined}
           >
-            Profile
+            <div className="flex items-center gap-2">
+              <span className={cn('text-[10px]', pathname === '/dashboard/profile' ? 'text-[#d8763d]' : 'text-white/30')}>
+                05
+              </span>
+              <span>Profile</span>
+            </div>
             {!profileOpen && mustChangePassword && (
               <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#d8763d] opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#d8763d]" />
               </span>
             )}
           </Link>
           <button
             type="button"
-            className="rounded-md p-2 text-gray-600 transition hover:bg-gray-50"
+            className="rounded-lg p-2 text-[#f1efe8]/60 transition-colors hover:bg-white/5 hover:text-[#f1efe8]"
             aria-label={profileOpen ? 'Collapse profile links' : 'Expand profile links'}
             aria-expanded={profileOpen}
             onClick={() => {
@@ -218,41 +239,47 @@ export function OrganizerSidebarNav() {
               setProfileMenuOverride({ path: pathname, open: nextOpen })
             }}
           >
-            <ChevronDown className={cn('h-4 w-4 transition', profileOpen ? 'rotate-180' : '')} />
+            <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', profileOpen ? 'rotate-180' : '')} />
           </button>
         </div>
 
         {profileOpen ? (
-          <div className="ml-3 mt-1 space-y-1 border-l border-gray-200 pl-3">
+          <div className="ml-3 mt-1 space-y-1 border-l border-white/10 pl-3">
             <Link
               href="/dashboard/settings"
               className={cn(
-                'block rounded-md px-3 py-2 font-medium transition',
-                pathname === '/dashboard/settings' ? 'bg-[#5C8BD9] text-white' : 'text-gray-700 hover:bg-gray-50'
+                'block rounded-lg px-2.5 py-2 uppercase tracking-wider transition-colors',
+                pathname === '/dashboard/settings'
+                  ? 'bg-white/10 text-[#f1efe8] font-bold border-l-2 border-[#d8763d]'
+                  : 'text-[#f1efe8]/60 hover:text-[#f1efe8] hover:bg-white/5'
               )}
               aria-current={pathname === '/dashboard/settings' ? 'page' : undefined}
             >
-              Profile Settings
+              <div className="flex items-center gap-2">
+                <span className={cn('text-[9px]', pathname === '/dashboard/settings' ? 'text-[#d8763d]' : 'text-white/30')}>
+                  05.1
+                </span>
+                <span>Profile Settings</span>
+              </div>
             </Link>
             <Link
               href="/dashboard/settings/account"
               className={cn(
-                'group relative flex items-center justify-between rounded-md px-3 py-2 font-medium transition',
-                pathname.startsWith('/dashboard/settings/account') ? 'bg-[#5C8BD9] text-white' : 'text-gray-700 hover:bg-gray-50'
+                'group relative flex items-center justify-between rounded-lg px-2.5 py-2 uppercase tracking-wider transition-colors',
+                pathname.startsWith('/dashboard/settings/account')
+                  ? 'bg-white/10 text-[#f1efe8] font-bold border-l-2 border-[#d8763d]'
+                  : 'text-[#f1efe8]/60 hover:text-[#f1efe8] hover:bg-white/5'
               )}
               aria-current={pathname.startsWith('/dashboard/settings/account') ? 'page' : undefined}
             >
-              Account Settings
+              <div className="flex items-center gap-2">
+                <span className={cn('text-[9px]', pathname.startsWith('/dashboard/settings/account') ? 'text-[#d8763d]' : 'text-white/30')}>
+                  05.2
+                </span>
+                <span>Account Settings</span>
+              </div>
               {mustChangePassword && (
-                <>
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
-                  </span>
-                  <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-                    Please change your default password
-                  </span>
-                </>
+                <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
               )}
             </Link>
           </div>

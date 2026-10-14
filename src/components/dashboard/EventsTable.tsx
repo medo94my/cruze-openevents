@@ -133,48 +133,52 @@ export function EventsTable({ events }: EventsTableProps) {
 
   if (events.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-          <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <p className="text-gray-900 font-medium">No events found</p>
-        <p className="mt-1 text-sm text-gray-500">Get started by creating your first event.</p>
-        <Link href="/create-event" className="mt-4 inline-flex rounded-md bg-[#5C8BD9] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a7bc9]">
-          Create Event
+      <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-12 text-center">
+        <p className="font-mono text-xs font-bold uppercase tracking-wider text-[#f1efe8]/50">
+          No events found
+        </p>
+        <p className="mt-1 text-xs text-[#f1efe8]/40">
+          Get started by curating and publishing your first Qatar event.
+        </p>
+        <Link
+          href="/create-event"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[#d8763d] px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-white hover:bg-[#c4652e]"
+        >
+          Create Event ↗
         </Link>
       </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#161614] shadow-sm">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-white/10 text-left text-sm">
+          <thead className="bg-[#1a1a18]">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Event</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Date</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Status</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Orders</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Tickets Sold</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-600">Actions</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Event</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Date (Qatar)</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Status</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Orders</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Tickets Sold</th>
+              <th className="px-5 py-3.5 text-right font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-white/5">
             {events.map((event) => (
-              <tr key={event.id}>
-                <td className="px-4 py-3">
-                  <p className="font-medium text-gray-900">{event.title}</p>
-                  <p className="text-xs text-gray-500">{event.visibility}</p>
+              <tr key={event.id} className="transition-colors hover:bg-white/[0.02]">
+                <td className="px-5 py-4">
+                  <p className="font-bold text-[#f1efe8]">{event.title}</p>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-[#f1efe8]/40">{event.visibility}</p>
                 </td>
-                <td className="px-4 py-3 text-gray-700">{formatDateTime(event.startDate)}</td>
-                <td className="px-4 py-3"><EventStatusBadge status={event.status === 'PUBLISHED' && new Date(event.endDate) < new Date() ? 'PASSED' : event.status} /></td>
-                <td className="px-4 py-3 text-gray-700">{event._count.orders}</td>
-                <td className="px-4 py-3 text-gray-700">{event.ticketsSold}</td>
-                <td className="px-4 py-3">
-                  <div className="flex justify-end gap-2">
+                <td className="px-5 py-4 font-mono text-xs text-[#f1efe8]/70">{formatDateTime(event.startDate)}</td>
+                <td className="px-5 py-4">
+                  <EventStatusBadge status={event.status === 'PUBLISHED' && new Date(event.endDate) < new Date() ? 'PASSED' : event.status} />
+                </td>
+                <td className="px-5 py-4 font-mono text-xs text-[#f1efe8]/70">{event._count.orders}</td>
+                <td className="px-5 py-4 font-mono text-xs font-bold text-[#f1efe8]">{event.ticketsSold}</td>
+                <td className="px-5 py-4">
+                  <div className="flex justify-end items-center gap-2">
                     <Link href={`/dashboard/events/${event.id}/edit`}>
                       <Button variant="outline" size="sm">Edit</Button>
                     </Link>

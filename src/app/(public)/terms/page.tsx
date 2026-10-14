@@ -1,268 +1,114 @@
+import Link from 'next/link'
 import { getLegalContent } from '@/lib/legal-content'
 
 export const dynamic = 'force-dynamic'
 
 function DefaultTermsContent() {
   return (
-    <>
-      {/* TERMS OF SERVICE SECTION */}
-      <div className="mb-16">
-        <h1 className="text-4xl font-bold mb-2 text-gray-900">
-          Terms of Service
-        </h1>
-        <p className="text-gray-600 mb-8">Last updated: March 2026</p>
-
-        <p className="text-gray-700 mb-8">
-          These Terms of Service (&quot;Terms&quot;) govern your use of this
-          OpenEvents instance and the purchase of tickets for events managed
-          through this platform. By purchasing a ticket or using the platform,
-          you agree to these Terms.
-        </p>
-
-        {/* Section 1 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            1. About OpenEvents
-          </h2>
-          <p className="text-gray-700">
-            OpenEvents is an open-source ticketing platform. This instance is
-            operated by the organization indicated in the event details. The
-            operator is responsible for managing events and ticket sales
-            through this platform.
+    <div className="space-y-12">
+      {/* TERMS OF SERVICE */}
+      <section className="space-y-8">
+        <div className="space-y-3">
+          <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#d8763d]">
+            01 / LEGAL FRAMEWORK · QATAR
+          </span>
+          <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tight text-[#f1efe8]">
+            TERMS OF SERVICE<span className="text-[#d8763d]">.</span>
+          </h1>
+          <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/60">
+            Last updated: 2026 · Doha, Qatar
           </p>
-        </section>
+        </div>
 
-        {/* Section 2 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            2. Ticket Purchase
-          </h2>
-          <p className="text-gray-700 mb-4">When purchasing a ticket:</p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
-            <li>You agree to provide accurate information</li>
-            <li>
-              You confirm you are legally capable of entering into a contract
-            </li>
-            <li>A binding agreement is formed upon payment confirmation</li>
-            <li>
-              All prices are stated in SEK/EUR and include VAT where
-              applicable
-            </li>
-          </ul>
-        </section>
-
-        {/* Section 3 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            3. Event Changes
-          </h2>
-          <p className="text-gray-700 mb-4">
-            The event organizer reserves the right to:
+        <div className="border border-white/10 bg-[#161614] p-8 sm:p-10 space-y-6">
+          <p className="font-mono text-xs uppercase tracking-wide leading-relaxed text-[#f1efe8]/80">
+            These Terms of Service govern your discovery, reservation, and purchase of admission tickets for curated live events in Qatar on the Cruze platform. By reserving a seat or completing an order, you agree to these Terms.
           </p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
-            <li>Modify the event program</li>
-            <li>Change speakers</li>
-            <li>Change venue</li>
-            <li>Change event date</li>
-          </ul>
-          <p className="text-gray-700">
-            Such changes do not automatically entitle the participant to a
-            refund unless explicitly stated.
-          </p>
-        </section>
 
-        {/* Section 4 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            4. Event Cancellation
-          </h2>
-          <p className="text-gray-700">
-            If the event is canceled entirely by the organizer, ticket holders
-            are entitled to a refund according to the Refund Policy.
-          </p>
-        </section>
-
-        {/* Section 5 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            5. Transfer of Tickets
-          </h2>
-          <p className="text-gray-700">
-            Tickets may be transferable unless otherwise stated. The ticket
-            holder is responsible for ensuring correct attendee information.
-          </p>
-        </section>
-
-        {/* Section 6 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            6. Limitation of Liability
-          </h2>
-          <p className="text-gray-700 mb-4">
-            To the extent permitted by applicable law:
-          </p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
-            <li>The operator is not liable for indirect damages</li>
-            <li>Liability is limited to the ticket price paid</li>
-            <li>
-              Nothing limits liability where prohibited by applicable law
-            </li>
-          </ul>
-        </section>
-
-        {/* Section 7 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            7. Force Majeure
-          </h2>
-          <p className="text-gray-700 mb-4">
-            The operator is not liable for failure to perform due to
-            circumstances beyond reasonable control, including but not limited
-            to:
-          </p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2">
-            <li>Natural disasters</li>
-            <li>Government restrictions</li>
-            <li>Labor disputes</li>
-            <li>Technical failures</li>
-          </ul>
-        </section>
-
-        {/* Section 8 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            8. Intellectual Property
-          </h2>
-          <p className="text-gray-700 mb-4">
-            All content related to the event, including branding, materials,
-            and media, is owned by the event organizer unless otherwise
-            stated.
-          </p>
-          <p className="text-gray-700">
-            Recording, redistribution, or commercial use of event content is
-            prohibited without permission.
-          </p>
-        </section>
-
-        {/* Section 9 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            9. Governing Law
-          </h2>
-          <p className="text-gray-700 mb-4">
-            These Terms are governed by the laws applicable to the
-            operator&apos;s jurisdiction.
-          </p>
-          <p className="text-gray-700">
-            Any disputes shall be resolved in accordance with applicable law.
-          </p>
-        </section>
-
-        {/* Section 10 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            10. Contact
-          </h2>
-          <p className="text-gray-700">
-            For questions regarding these Terms, please contact the operator
-            of this OpenEvents instance through the contact information
-            provided on the event page.
-          </p>
-        </section>
-      </div>
-
-      {/* REFUND POLICY SECTION */}
-      <div className="border-t-2 border-gray-200 pt-16">
-        <h1 className="text-4xl font-bold mb-2 text-gray-900">
-          Cancellation & Refund Policy
-        </h1>
-        <p className="text-gray-600 mb-8">Last updated: March 2026</p>
-
-        <p className="text-gray-700 mb-12">
-          This policy applies to ticket purchases made via OpenEvents.
-        </p>
-
-        {/* Refund Section 1 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            1. Participant Cancellation
-          </h2>
-          <div className="space-y-4">
-            <div className="border-l-4 border-green-500 pl-4 py-2">
-              <p className="font-semibold text-gray-900">
-                More than 30 days before the event
-              </p>
-              <p className="text-gray-700">
-                Full refund minus administrative fee (if applicable)
+          <div className="space-y-8 pt-4 border-t border-white/10">
+            <div className="space-y-2">
+              <h2 className="text-lg font-bold uppercase tracking-tight text-[#f1efe8]">
+                1. Platform Scope
+              </h2>
+              <p className="font-mono text-xs uppercase tracking-wide leading-relaxed text-[#f1efe8]/75">
+                Cruze is an event discovery and ticketing platform dedicated to experiences in Qatar. Cruze staff curate and manage event listings. Ticket holders enter into admission agreements backed by the respective Qatar venue policies.
               </p>
             </div>
-            <div className="border-l-4 border-yellow-500 pl-4 py-2">
-              <p className="font-semibold text-gray-900">
-                14–30 days before the event
+
+            <div className="space-y-2">
+              <h2 className="text-lg font-bold uppercase tracking-tight text-[#f1efe8]">
+                2. Seat Reservations & Inventory Locks
+              </h2>
+              <p className="font-mono text-xs uppercase tracking-wide leading-relaxed text-[#f1efe8]/75">
+                All seat and admission passes represent guaranteed unique places. Selected seats are temporarily held during active checkout (up to 10 minutes). If reservation timers expire prior to authorization, inventory is released back to the floor. All stated prices are in Qatari Riyal (QAR).
               </p>
-              <p className="text-gray-700">50% refund</p>
             </div>
-            <div className="border-l-4 border-red-500 pl-4 py-2">
-              <p className="font-semibold text-gray-900">
-                Less than 14 days before the event
+
+            <div className="space-y-2">
+              <h2 className="text-lg font-bold uppercase tracking-tight text-[#f1efe8]">
+                3. Admission Pass Verification
+              </h2>
+              <p className="font-mono text-xs uppercase tracking-wide leading-relaxed text-[#f1efe8]/75">
+                Each purchased pass includes a cryptographically unique QR entry code. Entry passes are scanned at the venue gate in Doha. Duplicate, replayed, or altered tickets will be denied admission.
               </p>
-              <p className="text-gray-700">No refund</p>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-lg font-bold uppercase tracking-tight text-[#f1efe8]">
+                4. Governing Law
+              </h2>
+              <p className="font-mono text-xs uppercase tracking-wide leading-relaxed text-[#f1efe8]/75">
+                These terms are governed by the laws and regulations of the State of Qatar. Any disputes shall be subject to the jurisdiction of the competent courts in Doha.
+              </p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Refund Section 2 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            2. Ticket Transfer
+      {/* REFUND POLICY */}
+      <section className="space-y-8 pt-6">
+        <div className="space-y-3">
+          <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#d8763d]">
+            02 / CANCELLATION & REFUNDS
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-[#f1efe8]">
+            REFUND POLICY<span className="text-[#d8763d]">.</span>
           </h2>
-          <p className="text-gray-700">
-            Tickets may be transferred to another participant free of charge
-            up until 48 hours before the event.
-          </p>
-        </section>
+        </div>
 
-        {/* Refund Section 3 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            3. Event Cancellation by Organizer
-          </h2>
-          <p className="text-gray-700 mb-4">
-            If the event is fully canceled:
-          </p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2">
-            <li>Full refund of ticket price</li>
-            <li>No compensation for travel, accommodation, or other costs</li>
-          </ul>
-        </section>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="border border-white/10 bg-[#161614] p-6 space-y-3">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[#34d399]">
+              &gt; 30 DAYS PRIOR
+            </span>
+            <h3 className="text-lg font-bold uppercase text-[#f1efe8]">100% Refund</h3>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/70">
+              Full refund of face ticket value back to the original payment method.
+            </p>
+          </div>
 
-        {/* Refund Section 4 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            4. Event Postponement
-          </h2>
-          <p className="text-gray-700 mb-4">If the event is postponed:</p>
-          <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
-            <li>Tickets remain valid for the new date</li>
-            <li>
-              Refund may be requested within 14 days of postponement
-              announcement
-            </li>
-          </ul>
-        </section>
+          <div className="border border-white/10 bg-[#161614] p-6 space-y-3">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[#fbbf24]">
+              14–30 DAYS PRIOR
+            </span>
+            <h3 className="text-lg font-bold uppercase text-[#f1efe8]">50% Refund</h3>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/70">
+              Fifty percent refund processed to the original payment method.
+            </p>
+          </div>
 
-        {/* Refund Section 5 */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            5. Refund Processing
-          </h2>
-          <p className="text-gray-700">
-            Refunds are processed using the original payment method within
-            14–30 days.
-          </p>
-        </section>
-      </div>
-    </>
+          <div className="border border-white/10 bg-[#161614] p-6 space-y-3">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[#f87171]">
+              &lt; 14 DAYS PRIOR
+            </span>
+            <h3 className="text-lg font-bold uppercase text-[#f1efe8]">Non-Refundable</h3>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/70">
+              Passes within 14 days of the scheduled curtain are final. Transfers permitted.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
   )
 }
 
@@ -270,13 +116,23 @@ export default async function TermsPage() {
   const customContent = await getLegalContent('legal_tos')
 
   return (
-    <main className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+    <main className="min-h-screen bg-[#11110f] text-[#f1efe8] px-4 py-12 sm:px-6 lg:px-12">
+      <div className="mx-auto max-w-[1200px]">
+        {/* Navigation Breadcrumb */}
+        <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-[#f1efe8]/50">
+          <span>CRUZE® / QAT / 2026 · LEGAL</span>
+          <Link href="/events" className="hover:text-[#d8763d] transition-colors">
+            ← BACK TO EVENTS
+          </Link>
+        </div>
+
         {customContent?.plainText?.trim() ? (
-          <div>
-            <h1 className="text-4xl font-bold mb-8 text-gray-900">Terms of Service</h1>
+          <div className="border border-white/10 bg-[#161614] p-8 sm:p-12 space-y-6">
+            <h1 className="text-4xl font-black uppercase tracking-tight text-[#f1efe8]">
+              Terms of Service<span className="text-[#d8763d]">.</span>
+            </h1>
             <div
-              className="prose prose-gray max-w-none prose-headings:text-gray-900 prose-a:text-[#5C8BD9] prose-a:hover:text-[#4a7ac8]"
+              className="prose prose-invert max-w-none prose-headings:text-[#f1efe8] prose-p:text-[#f1efe8]/80 prose-a:text-[#d8763d]"
               dangerouslySetInnerHTML={{ __html: customContent.html }}
             />
           </div>

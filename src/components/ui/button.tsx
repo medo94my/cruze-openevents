@@ -5,22 +5,22 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-lg text-xs font-mono uppercase tracking-wider font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 cursor-pointer',
   {
     variants: {
       variant: {
-        default: 'bg-[#5C8BD9] text-white hover:bg-[#4a7ac8] focus-visible:ring-[#5C8BD9]',
-        destructive: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
-        outline: 'border border-gray-300 bg-white hover:bg-gray-50 focus-visible:ring-gray-500',
-        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-500',
-        cancel: 'bg-[#E5E7EB] text-orange-600 hover:bg-[#D1D5DB] focus-visible:ring-gray-400',
-        ghost: 'hover:bg-gray-100 hover:text-gray-900 focus-visible:ring-gray-500',
-        link: 'text-[#5C8BD9] underline-offset-4 hover:underline focus-visible:ring-[#5C8BD9]',
+        default: 'bg-[#d8763d] text-white hover:bg-[#c4652e] focus-visible:ring-[#d8763d]',
+        destructive: 'border border-red-500/30 bg-red-500/15 text-red-400 hover:bg-red-500/25 focus-visible:ring-red-500',
+        outline: 'border border-white/20 bg-transparent text-[#f1efe8] hover:bg-white/10 hover:border-white/40 focus-visible:ring-white/40',
+        secondary: 'border border-white/10 bg-white/5 text-[#f1efe8] hover:bg-white/10 focus-visible:ring-white/20',
+        cancel: 'border border-amber-500/30 bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 focus-visible:ring-amber-400',
+        ghost: 'text-[#f1efe8]/80 hover:bg-white/10 hover:text-[#f1efe8] focus-visible:ring-white/20',
+        link: 'text-[#d8763d] underline-offset-4 hover:underline focus-visible:ring-[#d8763d]',
       },
       size: {
         default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
+        sm: 'h-8 rounded-md px-3 text-[11px]',
+        lg: 'h-11 rounded-lg px-8 text-sm',
         icon: 'h-10 w-10',
       },
     },

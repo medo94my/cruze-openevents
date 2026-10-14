@@ -92,25 +92,65 @@ export default async function DashboardHomePage() {
   return (
     <div className="space-y-6">
       <WorkspacePageHeader
-        title={`Welcome, ${welcomeName}`}
-        description="Platform-wide overview of events, orders, and revenue."
+        badge="// QATAR PLATFORM TELEMETRY"
+        title={`Dashboard: ${welcomeName}`}
+        description="Platform-wide overview of Qatar curated events, ticket velocity, and gross revenue."
+        actions={(
+          <Link
+            href="/create-event"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#d8763d] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#c4652e]"
+          >
+            Create Event ↗
+          </Link>
+        )}
       />
 
       {stats.totalEvents === 0 && (
-        <div className="rounded-xl border border-blue-200 bg-blue-50 p-6">
+        <div className="rounded-2xl border border-white/10 bg-[#161614] p-6 shadow-xl">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Get started with your first event</h2>
-              <p className="mt-1 text-sm text-gray-600">Create an event to start selling tickets and managing attendees.</p>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#d8763d]">
+                Getting Started
+              </span>
+              <h2 className="mt-1 text-lg font-bold uppercase text-[#f1efe8]">
+                Curate Your First Qatar Event
+              </h2>
+              <p className="mt-1 text-xs text-[#f1efe8]/60">
+                Publish verified experiences in Doha to start issuing tickets and tracking attendee metrics.
+              </p>
             </div>
-            <Link href="/create-event" className="inline-flex shrink-0 rounded-md bg-[#5C8BD9] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a7bc9]">
-              Create Your First Event
+            <Link
+              href="/create-event"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#d8763d] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider text-white hover:bg-[#c4652e]"
+            >
+              Create Event ↗
             </Link>
           </div>
         </div>
       )}
 
+      {/* Primary figures */}
       <DashboardStats stats={stats} />
+
+      {/* Utilitarian Quick Actions Strip */}
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-white/10 bg-[#161614] px-4 py-3 font-mono text-xs uppercase tracking-wider">
+        <span className="text-white/40">QUICK ACTIONS:</span>
+        <Link href="/create-event" className="text-[#d8763d] hover:text-[#e08955]">
+          + New Event ↗
+        </Link>
+        <span className="text-white/20">/</span>
+        <Link href="/dashboard/events" className="text-white/80 hover:text-white">
+          Manage Events ↗
+        </Link>
+        <span className="text-white/20">/</span>
+        <Link href="/dashboard/scan" className="text-white/80 hover:text-white">
+          Gate Scanner ↗
+        </Link>
+        <span className="text-white/20">/</span>
+        <Link href="/dashboard/admin" className="text-white/80 hover:text-white">
+          Admin Settings ↗
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <UpcomingEvents events={upcomingEvents} />
@@ -123,18 +163,25 @@ export default async function DashboardHomePage() {
       </div>
 
       {/* Analytics section */}
-      <div>
-        <h2 className="mb-4 text-xl font-semibold text-gray-900">Analytics</h2>
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+          <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
+          <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-[#f1efe8]">
+            Platform Sales Analytics & Velocity
+          </h2>
+        </div>
         <div className="space-y-6">
           <SalesTrendChart
             title="Sales Trend – Last 30 Days"
-            noDataText="No sales data yet"
+            noDataText="No sales data recorded yet"
             data={analytics.dailySales}
+            currency="QAR"
             showCreateEventCta={stats.totalEvents === 0}
           />
           <SalesChart
             title="Top Selling Events"
             data={analytics.topEvents}
+            currency="QAR"
             showCreateEventCta={stats.totalEvents === 0}
           />
         </div>

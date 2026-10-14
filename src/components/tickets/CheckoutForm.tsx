@@ -1205,10 +1205,10 @@ export function CheckoutForm({ event, groupDiscounts = [] }: CheckoutFormProps) 
               )}
               {/* Informational text about invoice payment */}
               {discount?.discountType !== 'INVOICE' && (
-                <p className="mt-2 text-xs text-gray-500">
+                <p className="mt-2 text-xs text-white/50">
                   Want to pay by invoice? Contact{' '}
-                  <a href="mailto:info@eyevinn.se" className="text-blue-600 hover:underline">
-                    info@eyevinn.se
+                  <a href="mailto:concierge@cruze.qa" className="text-[#d8763d] hover:underline">
+                    concierge@cruze.qa
                   </a>{' '}
                   to request invoice payment.
                 </p>
@@ -1221,8 +1221,8 @@ export function CheckoutForm({ event, groupDiscounts = [] }: CheckoutFormProps) 
         {totalAmount === 0 && selectedItems.length > 0 && (
           <Card>
             <CardContent className="pt-6">
-              <p className="text-center text-sm text-green-700">
-                <span className="font-medium">No payment required.</span> Your order total is $0.
+              <p className="text-center text-sm text-[#34d399]">
+                <span className="font-medium">No payment required.</span> Your order total is 0 QAR.
               </p>
             </CardContent>
           </Card>

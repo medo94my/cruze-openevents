@@ -15,40 +15,70 @@ type UpcomingEventsProps = {
 
 export function UpcomingEvents({ events }: UpcomingEventsProps) {
   return (
-    <section className="rounded-xl border border-gray-200 bg-white p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">Upcoming Events</h2>
-        <Link href="/dashboard/events" className="text-sm text-[#5C8BD9] hover:text-[#4a7ac8]">
-          View all
+    <section className="rounded-2xl border border-white/10 bg-[#161614] p-6 shadow-sm">
+      <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
+          <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-[#f1efe8]">
+            Upcoming Qatar Events
+          </h2>
+        </div>
+        <Link
+          href="/dashboard/events"
+          className="text-xs font-mono uppercase tracking-wider text-[#d8763d] hover:text-[#e08955]"
+        >
+          View all ↗
         </Link>
       </div>
 
       {events.length === 0 ? (
-        <div className="text-center py-6">
-          <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
-            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <p className="text-sm text-gray-500">No upcoming events yet.</p>
-          <Link href="/create-event" className="mt-3 inline-flex rounded-md bg-[#5C8BD9] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#4a7bc9]">
-            Create Event
+        <div className="rounded-xl border border-dashed border-white/15 bg-white/[0.02] py-8 text-center">
+          <p className="text-xs font-mono uppercase tracking-wider text-[#f1efe8]/50">
+            No upcoming events scheduled
+          </p>
+          <Link
+            href="/create-event"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[#d8763d] px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider text-white hover:bg-[#c4652e]"
+          >
+            Create Event ↗
           </Link>
         </div>
       ) : (
         <div className="space-y-3">
           {events.map((event) => (
-            <div key={event.id} className="rounded-lg border border-gray-100 p-3">
-              <div className="flex items-center justify-between gap-2">
-                <Link href={`/dashboard/events/${event.id}`} className="font-medium text-gray-900 hover:text-[#5C8BD9]">
+            <div
+              key={event.id}
+              className="rounded-xl border border-white/10 bg-[#11110f] p-4 transition-colors hover:border-white/20"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <Link
+                  href={`/dashboard/events/${event.id}`}
+                  className="font-bold text-sm text-[#f1efe8] transition-colors hover:text-[#d8763d]"
+                >
                   {event.title}
                 </Link>
                 <EventStatusBadge status={event.status} />
               </div>
-              <p className="mt-1 text-sm text-gray-600">{formatDateTime(event.startDate)}</p>
-              <Link href={`/events/${event.slug}`} className="mt-1 inline-block text-xs text-gray-500 hover:text-gray-700">
-                Open public page
-              </Link>
+              <p className="mt-2 text-xs font-mono text-[#f1efe8]/60">
+                {formatDateTime(event.startDate)}
+              </p>
+              <div className="mt-3 flex items-center gap-3 border-t border-white/5 pt-2 text-[11px] font-mono uppercase tracking-wider">
+                <Link
+                  href={`/dashboard/events/${event.id}`}
+                  className="text-white/70 hover:text-white"
+                >
+                  Manage ↗
+                </Link>
+                <span className="text-white/20">·</span>
+                <Link
+                  href={`/events/${event.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#d8763d] hover:text-[#e08955]"
+                >
+                  Public Page ↗
+                </Link>
+              </div>
             </div>
           ))}
         </div>

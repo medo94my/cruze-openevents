@@ -15,10 +15,10 @@ export default function DashboardError({
   }, [error]);
 
   return (
-    <div className="flex min-h-[400px] flex-col items-center justify-center px-4 text-center">
-      <div className="mb-6 rounded-full bg-red-100 p-4">
+    <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#161614] p-12 text-center text-[#f1efe8]">
+      <div className="mb-6 rounded-full border border-red-500/30 bg-red-500/10 p-4">
         <svg
-          className="h-12 w-12 text-red-600"
+          className="h-10 w-10 text-red-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -31,15 +31,16 @@ export default function DashboardError({
           />
         </svg>
       </div>
-      <h2 className="mb-2 text-2xl font-bold text-gray-900">Dashboard Error</h2>
-      <p className="mb-6 max-w-md text-gray-600">
-        We couldn&apos;t load your dashboard. Please try again or contact support if the problem
-        persists.
+      <h2 className="mb-2 text-xl font-bold uppercase tracking-tight text-[#f1efe8]">
+        DASHBOARD ERROR<span className="text-[#d8763d]">.</span>
+      </h2>
+      <p className="mb-6 max-w-md text-xs font-mono text-[#f1efe8]/60">
+        We couldn&apos;t load the requested telemetry data. Please retry or reload the platform overview.
       </p>
-      <div className="flex gap-4">
-        <Button onClick={() => reset()}>Try again</Button>
+      <div className="flex gap-3 font-mono text-xs">
+        <Button onClick={() => reset()}>Retry ↗</Button>
         <Button variant="outline" onClick={() => (window.location.href = '/dashboard')}>
-          Go to dashboard
+          Dashboard Home
         </Button>
       </div>
     </div>
