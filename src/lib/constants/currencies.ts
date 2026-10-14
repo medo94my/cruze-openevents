@@ -18,7 +18,6 @@ export const SUPPORTED_CURRENCIES = [
   'NOK',
   'PHP',
   'QAR',
-  'QAR',
   'PLN',
   'GBP',
   'SGD',
