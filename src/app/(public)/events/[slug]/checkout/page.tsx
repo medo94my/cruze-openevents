@@ -14,10 +14,6 @@ interface CheckoutPageProps {
 
 export default async function CheckoutPage({ params }: CheckoutPageProps) {
   const { slug } = await params
-  // Fictional showcase listings must never enter an order/payment flow.
-  if (slug.startsWith('demo-')) {
-    redirect(`/events/${slug}`)
-  }
 
   const event = await prisma.event.findUnique({
     where: { slug },

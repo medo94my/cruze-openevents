@@ -77,7 +77,6 @@ export function EventDiscoverCard({ event, compact = false }: { event: DiscoverE
   const photo = imageForEvent(event)
   const cat = eventCategory(event)
   const date = dateParts(event)
-  const demo = isDemoEvent(event.slug)
 
   return (
     <Link
@@ -101,13 +100,6 @@ export function EventDiscoverCard({ event, compact = false }: { event: DiscoverE
         <span className="absolute left-3 top-3 border border-[#f1efe8]/20 bg-[#11110f]/80 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-widest text-[#f1efe8] backdrop-blur-md">
           {categoryLabel(cat)}
         </span>
-
-        {/* Demo Notice */}
-        {demo && (
-          <span className="absolute right-3 top-3 border border-[#d8763d]/40 bg-black/60 px-2 py-0.5 font-mono text-[8.5px] uppercase tracking-wider text-[#d8763d] backdrop-blur-md">
-            Demo
-          </span>
-        )}
       </div>
 
       {/* Card Content */}
