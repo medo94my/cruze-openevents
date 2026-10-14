@@ -1,78 +1,66 @@
 export default function EventDetailLoading() {
   return (
-    <div className="mx-auto max-w-5xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
-      {/* Cover image */}
-      <section className="animate-pulse overflow-hidden rounded-xl bg-gray-200">
-        <div className="h-[230px] sm:h-[340px]" />
-      </section>
+    <main className="min-h-screen bg-[#11110f] text-[#f1efe8] px-4 py-8 sm:px-6 lg:px-12">
+      <div className="mx-auto max-w-[1400px] space-y-12">
+        {/* Top Bar Navigation Skeleton */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+          <div className="h-3 w-44 animate-pulse bg-white/10 font-mono" />
+          <div className="h-3 w-32 animate-pulse bg-white/10 font-mono" />
+          <div className="h-3 w-20 animate-pulse bg-white/10 font-mono" />
+        </div>
 
-      {/* Title + info + ticket card */}
-      <section className="border-b border-gray-200 pb-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
-          {/* Left: title, organizer, location, date */}
-          <div className="flex flex-1 animate-pulse flex-col gap-4">
-            <div className="h-12 w-3/4 rounded-lg bg-gray-200" />
-            <div className="h-7 w-48 rounded bg-gray-200" />
-            <div className="flex items-start gap-4">
-              <div className="mt-1 h-5 w-5 shrink-0 rounded bg-gray-200" />
-              <div className="flex flex-col gap-1">
-                <div className="h-5 w-48 rounded bg-gray-200" />
-                <div className="h-5 w-64 rounded bg-gray-200" />
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="h-6 w-6 shrink-0 rounded bg-gray-200" />
-              <div className="h-5 w-56 rounded bg-gray-200" />
+        {/* Monolithic Title & Hero Image */}
+        <div className="space-y-6">
+          <div className="h-14 sm:h-20 w-3/4 animate-pulse bg-white/15" />
+
+          {/* Hero Cover Image Skeleton */}
+          <div className="aspect-[21/9] w-full animate-pulse border border-white/10 bg-[#161614]">
+            <div className="h-full w-full bg-white/5" />
+          </div>
+        </div>
+
+        {/* Meta Grid (Date / Location / Curated By) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 border-y border-white/10 py-6">
+          <div className="space-y-2">
+            <div className="h-2.5 w-20 animate-pulse bg-white/10 font-mono" />
+            <div className="h-5 w-40 animate-pulse bg-white/15 font-mono" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-2.5 w-20 animate-pulse bg-white/10 font-mono" />
+            <div className="h-5 w-48 animate-pulse bg-white/15 font-mono" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-2.5 w-24 animate-pulse bg-white/10 font-mono" />
+            <div className="h-5 w-36 animate-pulse bg-white/15 font-mono" />
+          </div>
+        </div>
+
+        {/* Info Grid (About / Details / Price / Action) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
+          <div className="lg:col-span-6 space-y-4">
+            <div className="h-3 w-16 animate-pulse bg-white/10 font-mono" />
+            <div className="space-y-2">
+              <div className="h-4 w-full animate-pulse bg-white/10" />
+              <div className="h-4 w-5/6 animate-pulse bg-white/10" />
+              <div className="h-4 w-4/6 animate-pulse bg-white/10" />
             </div>
           </div>
 
-          {/* Right: price card */}
-          <div className="flex w-full animate-pulse flex-col gap-2 lg:w-[247px] lg:shrink-0">
-            <div className="h-9 w-24 self-end rounded-full bg-gray-200" />
-            <div className="h-9 w-32 rounded bg-gray-200" />
-            <div className="h-5 w-28 rounded bg-gray-200" />
-            <div className="h-5 w-28 rounded bg-gray-200" />
-            <div className="mt-4 h-[60px] rounded-[14px] bg-gray-200" />
-          </div>
-        </div>
-      </section>
-
-      {/* Overview section */}
-      <section className="border-b border-gray-200 pb-8">
-        <div className="h-8 w-32 animate-pulse rounded-lg bg-gray-200" />
-        <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_270px]">
-          {/* Description lines */}
-          <div className="animate-pulse space-y-3">
-            <div className="h-5 w-full rounded bg-gray-200" />
-            <div className="h-5 w-full rounded bg-gray-200" />
-            <div className="h-5 w-5/6 rounded bg-gray-200" />
-            <div className="h-5 w-4/5 rounded bg-gray-200" />
-            <div className="h-5 w-full rounded bg-gray-200" />
-            <div className="h-5 w-3/4 rounded bg-gray-200" />
-          </div>
-          {/* Map placeholder */}
-          <div className="h-[230px] animate-pulse overflow-hidden rounded-xl bg-gray-200" />
-        </div>
-      </section>
-
-      {/* Speakers section */}
-      <section className="pb-8">
-        <div className="h-8 w-24 animate-pulse rounded-lg bg-gray-200" />
-        <div className="mt-6 flex flex-wrap gap-6">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="flex h-[104px] w-[302px] animate-pulse items-center gap-4 rounded-[14px] bg-gray-100 pl-4 pr-4"
-            >
-              <div className="h-16 w-16 shrink-0 rounded-full bg-gray-200" />
-              <div className="flex flex-col gap-2">
-                <div className="h-5 w-28 rounded bg-gray-200" />
-                <div className="h-4 w-20 rounded bg-gray-200" />
-              </div>
+          <div className="lg:col-span-3 space-y-4">
+            <div className="h-3 w-16 animate-pulse bg-white/10 font-mono" />
+            <div className="space-y-2">
+              <div className="h-3 w-36 animate-pulse bg-white/10 font-mono" />
+              <div className="h-3 w-28 animate-pulse bg-white/10 font-mono" />
             </div>
-          ))}
+          </div>
+
+          <div className="lg:col-span-3 space-y-4 border border-white/10 bg-[#161614] p-6">
+            <div className="h-3 w-12 animate-pulse bg-white/10 font-mono" />
+            <div className="h-8 w-28 animate-pulse bg-white/15 font-mono" />
+            <div className="h-12 w-full animate-pulse bg-white/10" />
+          </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </main>
   )
 }

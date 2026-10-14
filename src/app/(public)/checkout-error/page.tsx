@@ -1,70 +1,72 @@
 import Link from 'next/link'
+import { AlertTriangle } from 'lucide-react'
 
 interface CheckoutErrorPageProps {
   searchParams: Promise<{ error?: string; status?: string }>
 }
 
 const errorMessages: Record<string, string> = {
-  order_not_found: 'The order could not be found.',
-  invalid_token: 'The payment token is invalid or has expired.',
-  invalid_status: 'The order is in an invalid state for payment.',
-  no_payment_id: 'No payment information was found.',
-  not_approved: 'The payment was not approved.',
+  order_not_found: 'The order could not be located in Qatar ticketing records.',
+  invalid_token: 'The payment token is invalid or the session has expired.',
+  invalid_status: 'The order is in an invalid state for payment processing.',
+  no_payment_id: 'No payment confirmation was provided by the gateway.',
+  not_approved: 'The transaction was declined by the issuer or card network.',
   capture_failed: 'Failed to capture the payment. Please try again.',
-  capture_exception: 'An error occurred while processing your payment.',
-  cancel_failed: 'Failed to cancel the order.',
+  capture_exception: 'An unexpected gateway error occurred during payment processing.',
+  cancel_failed: 'Failed to cancel the reservation session.',
 }
 
 export default async function CheckoutErrorPage({ searchParams }: CheckoutErrorPageProps) {
   const params = await searchParams
   const errorCode = params.error || 'unknown'
-  const errorMessage = errorMessages[errorCode] || 'An unexpected error occurred during checkout.'
+  const errorMessage = errorMessages[errorCode] || 'An unexpected error occurred during ticket checkout.'
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-16">
-      <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-          <svg
-            className="h-6 w-6 text-red-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-            />
-          </svg>
-        </div>
+    <main className="min-h-[75vh] bg-[#11110f] text-[#f1efe8] flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-lg space-y-6">
+        <div className="border border-white/10 bg-[#161614] p-8 sm:p-10 text-center space-y-6">
+          <div className="flex justify-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 border border-red-500/30 text-red-400">
+              <AlertTriangle className="h-8 w-8" />
+            </div>
+          </div>
 
-        <h1 className="mb-2 text-xl font-semibold text-red-800">Payment Error</h1>
-        <p className="mb-6 text-red-700">{errorMessage}</p>
+          <div className="space-y-2">
+            <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#d8763d]">
+              CRUZE® / ORDER EXCEPTION
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#f1efe8]">
+              PAYMENT ERROR<span className="text-[#d8763d]">.</span>
+            </h1>
+          </div>
 
-        {params.status && (
-          <p className="mb-4 text-sm text-red-600">Order status: {params.status}</p>
-        )}
+          <p className="font-mono text-xs uppercase tracking-wider leading-relaxed text-[#f1efe8]/70">
+            {errorMessage}
+          </p>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
-          >
-            Go to Homepage
-          </Link>
-          <Link
-            href="/events"
-            className="inline-flex items-center justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-          >
-            Browse Events
-          </Link>
+          {params.status && (
+            <p className="font-mono text-[10px] uppercase text-[#f1efe8]/45">
+              Code: {params.status}
+            </p>
+          )}
+
+          <div className="pt-4 flex flex-col gap-3 font-mono">
+            <Link
+              href="/events"
+              className="w-full bg-[#d8763d] py-3 text-xs font-bold uppercase tracking-wider text-[#11110f] hover:bg-[#e2844d] transition-colors"
+            >
+              BROWSE EVENTS ↗
+            </Link>
+
+            <Link
+              href="/"
+              className="w-full border border-white/20 py-3 text-xs uppercase tracking-wider text-[#f1efe8] hover:border-white hover:bg-white/5 transition-colors"
+            >
+              RETURN TO HOME
+            </Link>
+          </div>
         </div>
       </div>
-
-      <p className="mt-6 text-center text-sm text-gray-500">
-        If this problem persists, please contact support.
-      </p>
     </main>
   )
 }

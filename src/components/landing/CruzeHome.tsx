@@ -161,30 +161,8 @@ export function CruzeHome({ events }: CruzeHomeProps) {
       ===================================================== */}
       <section
         id="top"
-        className="relative min-h-screen overflow-hidden px-5 py-5 md:px-8 md:py-7"
+        className="relative min-h-[calc(100vh-80px)] overflow-hidden px-5 py-3 md:px-8 md:py-4"
       >
-        {/* ================= NAVBAR ================= */}
-        <nav className="relative z-50 flex items-start justify-between">
-          {/* LOGO */}
-          <Link href="/" className="group">
-            <div className="text-[24px] font-black leading-none tracking-[-0.07em] md:text-[30px] text-[#f1efe8]">
-              CRUZE
-              <sup className="ml-1 text-[8px] font-medium text-[#d8763d]">®</sup>
-            </div>
-            <div className="mt-1 text-[8px] uppercase tracking-[0.2em] text-white/45">
-              Live event ticketing · Qatar
-            </div>
-          </Link>
-
-          {/* NAV RIGHT */}
-          <div className="flex items-center gap-6">
-            <span className="hidden text-[9px] uppercase tracking-[0.18em] text-white/45 md:block font-mono">
-              QAT / 2026
-            </span>
-            <SiteMenu />
-          </div>
-        </nav>
-
         {/* =====================================================
             HERO CONTAINER
         ===================================================== */}
@@ -192,11 +170,11 @@ export function CruzeHome({ events }: CruzeHomeProps) {
           className="
             relative
             mx-auto
-            mt-10
-            h-[78vh]
+            mt-2
+            h-[80vh]
             max-w-[1500px]
-            md:mt-4
-            md:h-[78vh]
+            md:mt-2
+            md:h-[80vh]
           "
         >
           {/* ================= LEFT META ================= */}

@@ -23,9 +23,9 @@ export function SiteMenu() {
   const accountItem: MenuItem = session
     ? {
         number: '05',
-        title: 'Account',
-        href: '/dashboard/profile',
-        meta: session.user?.name || session.user?.email || 'My Profile',
+        title: canManageEvents ? 'Curator Profile' : 'My Account',
+        href: canManageEvents ? '/dashboard/profile' : '/orders',
+        meta: session.user?.name || session.user?.email || 'My Account',
       }
     : {
         number: '05',
@@ -49,7 +49,7 @@ export function SiteMenu() {
     },
     {
       number: '03',
-      title: 'Discover',
+      title: 'Events',
       href: '/events',
       meta: "What's happening in Qatar",
     },
@@ -69,9 +69,9 @@ export function SiteMenu() {
         }
       : {
           number: '06',
-          title: 'Contact',
-          href: '/events',
-          meta: 'Doha · Qatar',
+          title: 'About Cruze',
+          href: '/about',
+          meta: 'Exact seating engineered for Qatar',
         },
   ]
 

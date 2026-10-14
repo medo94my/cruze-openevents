@@ -1,23 +1,59 @@
+import Link from 'next/link'
+import { Mail, Phone, MapPin, Clock } from 'lucide-react'
 import { getContactContent } from '@/lib/legal-content'
 
 export const dynamic = 'force-dynamic'
 
 function DefaultContactContent() {
   return (
-    <>
-      <h1 className="text-4xl font-bold mb-2 text-gray-900">Contact Us</h1>
-      <p className="text-gray-600 mb-12">
-        Get in touch with us for support, inquiries, or partnerships.
-      </p>
-
-      <section className="p-8 bg-gray-50 rounded-lg border border-gray-200">
-        <p className="text-gray-600 text-center">
-          Contact information has not been configured yet.
-          <br />
-          Please check back later or contact the event organizer directly.
+    <div className="space-y-8">
+      <div className="space-y-3">
+        <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#d8763d]">
+          01 / DIRECT CONCIERGE
+        </span>
+        <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tight text-[#f1efe8]">
+          CONTACT US<span className="text-[#d8763d]">.</span>
+        </h1>
+        <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/65 max-w-lg">
+          Direct inquiries, VIP seating arrangements, and live event support across Qatar.
         </p>
-      </section>
-    </>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+        <section className="border border-white/10 bg-[#161614] p-8 space-y-4">
+          <div className="flex items-center gap-3 text-[#d8763d]">
+            <Mail className="h-4 w-4" />
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[#f1efe8]/50">
+              EMAIL DESK
+            </span>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold uppercase tracking-tight text-[#f1efe8]">Support & Booking</h2>
+            <a
+              href="mailto:concierge@cruze.qa"
+              className="mt-2 inline-block font-mono text-sm text-[#d8763d] hover:underline"
+            >
+              concierge@cruze.qa
+            </a>
+          </div>
+        </section>
+
+        <section className="border border-white/10 bg-[#161614] p-8 space-y-4">
+          <div className="flex items-center gap-3 text-[#d8763d]">
+            <MapPin className="h-4 w-4" />
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[#f1efe8]/50">
+              LOCATION
+            </span>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold uppercase tracking-tight text-[#f1efe8]">Doha HQ</h2>
+            <p className="mt-2 font-mono text-xs uppercase tracking-wider text-[#f1efe8]/65">
+              Katara Cultural Village · Doha, Qatar
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
   )
 }
 
@@ -33,65 +69,93 @@ type CustomContactContentProps = {
 
 function CustomContactContent({ contact }: CustomContactContentProps) {
   return (
-    <>
-      <h1 className="text-4xl font-bold mb-2 text-gray-900">Contact Us</h1>
-      {contact.companyName && (
-        <p className="text-gray-600 mb-12">
-          Get in touch with {contact.companyName} for support, inquiries, or
-          partnerships.
+    <div className="space-y-8">
+      <div className="space-y-3">
+        <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#d8763d]">
+          01 / CONCIERGE & SUPPORT
+        </span>
+        <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tight text-[#f1efe8]">
+          CONTACT {contact.companyName || 'CRUZE'}<span className="text-[#d8763d]">.</span>
+        </h1>
+        <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/65 max-w-lg">
+          Live assistance, venue access, and admission queries.
         </p>
-      )}
+      </div>
 
-      {contact.email && (
-        <section className="mb-12 p-8 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Email</h2>
-          <a
-            href={`mailto:${contact.email}`}
-            className="text-blue-600 hover:text-blue-800 hover:underline text-lg"
-          >
-            {contact.email}
-          </a>
-        </section>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+        {contact.email && (
+          <section className="border border-white/10 bg-[#161614] p-8 space-y-4">
+            <div className="flex items-center gap-3 text-[#d8763d]">
+              <Mail className="h-4 w-4" />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#f1efe8]/50">
+                EMAIL
+              </span>
+            </div>
+            <div>
+              <a
+                href={`mailto:${contact.email}`}
+                className="font-mono text-sm text-[#d8763d] hover:underline"
+              >
+                {contact.email}
+              </a>
+            </div>
+          </section>
+        )}
 
-      {contact.phone && (
-        <section className="mb-12 p-8 bg-green-50 rounded-lg border-l-4 border-green-500">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Phone</h2>
-          <a
-            href={`tel:${contact.phone.replace(/\s/g, '')}`}
-            className="text-green-600 hover:text-green-800 hover:underline text-lg"
-          >
-            {contact.phone}
-          </a>
-        </section>
-      )}
+        {contact.phone && (
+          <section className="border border-white/10 bg-[#161614] p-8 space-y-4">
+            <div className="flex items-center gap-3 text-[#d8763d]">
+              <Phone className="h-4 w-4" />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#f1efe8]/50">
+                DIRECT LINE
+              </span>
+            </div>
+            <div>
+              <a
+                href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                className="font-mono text-sm text-[#d8763d] hover:underline"
+              >
+                {contact.phone}
+              </a>
+            </div>
+          </section>
+        )}
 
-      {contact.address && (
-        <section className="mb-12 p-8 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Address</h2>
-          <p className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
-            {contact.companyName && (
-              <>
-                {contact.companyName}
-                <br />
-              </>
-            )}
-            {contact.address}
-          </p>
-        </section>
-      )}
+        {contact.address && (
+          <section className="border border-white/10 bg-[#161614] p-8 space-y-4">
+            <div className="flex items-center gap-3 text-[#d8763d]">
+              <MapPin className="h-4 w-4" />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#f1efe8]/50">
+                ADDRESS
+              </span>
+            </div>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/75 leading-relaxed whitespace-pre-line">
+              {contact.companyName && (
+                <>
+                  {contact.companyName}
+                  <br />
+                </>
+              )}
+              {contact.address}
+            </p>
+          </section>
+        )}
 
-      {contact.businessHours && (
-        <section className="mt-12 p-8 bg-gray-50 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Business Hours
-          </h2>
-          <p className="text-gray-700 whitespace-pre-line">
-            {contact.businessHours}
-          </p>
-        </section>
-      )}
-    </>
+        {contact.businessHours && (
+          <section className="border border-white/10 bg-[#161614] p-8 space-y-4">
+            <div className="flex items-center gap-3 text-[#d8763d]">
+              <Clock className="h-4 w-4" />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#f1efe8]/50">
+                OPERATIONAL HOURS
+              </span>
+            </div>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/75 whitespace-pre-line">
+              {contact.businessHours}
+            </p>
+          </section>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -107,8 +171,16 @@ export default async function ContactPage() {
       customContent.businessHours)
 
   return (
-    <main className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+    <main className="min-h-screen bg-[#11110f] text-[#f1efe8] px-4 py-12 sm:px-6 lg:px-12">
+      <div className="mx-auto max-w-[1200px]">
+        {/* Navigation Breadcrumb */}
+        <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-[#f1efe8]/50">
+          <span>CRUZE® / QAT / 2026 · CONCIERGE</span>
+          <Link href="/events" className="hover:text-[#d8763d] transition-colors">
+            ← BACK TO EVENTS
+          </Link>
+        </div>
+
         {hasCustomContent ? (
           <CustomContactContent contact={customContent} />
         ) : (

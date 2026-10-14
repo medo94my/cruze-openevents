@@ -1,91 +1,81 @@
+import Link from 'next/link'
+
 export default function AboutOpenEventsPage() {
   return (
-    <main className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-gray-900">
-          About OpenEvents
-        </h1>
+    <main className="min-h-screen bg-[#11110f] text-[#f1efe8] px-4 py-12 sm:px-6 lg:px-12">
+      <div className="mx-auto max-w-[1200px] space-y-10">
+        {/* Breadcrumb */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 font-mono text-[10px] uppercase tracking-[0.18em] text-[#f1efe8]/50">
+          <span>CRUZE® / QAT / 2026 · ARCHITECTURE</span>
+          <Link href="/about" className="hover:text-[#d8763d] transition-colors">
+            ← ABOUT CRUZE
+          </Link>
+        </div>
 
-        {/* Main Description */}
-        <section className="mb-12">
-          <p className="text-lg text-gray-700 leading-relaxed mb-6">
-            OpenEvents is a modern ticketing and event management platform
-            designed to help organizers create, promote, and manage events with
-            ease. Whether you&apos;re organizing a conference, workshop, webinar, or
-            community gathering, OpenEvents provides the tools you need to sell
-            tickets, manage attendees, and deliver a seamless experience.
+        <div className="space-y-3">
+          <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#d8763d]">
+            OPEN PLATFORM SPECIFICATION
+          </span>
+          <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tight text-[#f1efe8]">
+            CORE ARCHITECTURE<span className="text-[#d8763d]">.</span>
+          </h1>
+          <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/65 max-w-xl">
+            Event ticketing infrastructure powered by Next.js, Prisma PostgreSQL, and real-time inventory locking.
           </p>
-          <p className="text-lg text-gray-700 leading-relaxed">
-            Built with event organizers in mind, OpenEvents streamlines the
-            entire event lifecycle—from ticket sales and attendee management to
-            order tracking and reporting. Our platform is secure, reliable, and
-            designed to scale with your event.
-          </p>
-        </section>
+        </div>
 
-        {/* Open Source */}
-        <section className="mb-12 p-8 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Open Source</h2>
-          <p className="text-gray-700 mb-6">
-            OpenEvents is open-source software, available for anyone to deploy
-            and customize. Each OpenEvents instance is independently operated by
-            its respective organization.
-          </p>
-          <p className="text-gray-700">
-            View the source code and contribute on{' '}
-            <a
-              href="https://github.com/Eyevinn/openevents"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#5C8BD9] hover:text-[#4a7ac8] font-medium"
-            >
-              GitHub
-            </a>.
-          </p>
-        </section>
-
-        {/* Key Features */}
-        <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Why Choose OpenEvents?
+        {/* Technical Overview Card */}
+        <section className="border border-white/10 bg-[#161614] p-8 sm:p-10 space-y-6">
+          <h2 className="text-xl font-bold uppercase tracking-tight text-[#f1efe8]">
+            Engineered for High-Concurrency Qatar Showcases
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-6 border-l-4 border-blue-500 bg-blue-50">
-              <h3 className="font-semibold text-gray-900 mb-2">Easy to Use</h3>
-              <p className="text-gray-700">
-                Intuitive interface for creating and managing events without
-                technical expertise.
-              </p>
-            </div>
-            <div className="p-6 border-l-4 border-green-500 bg-green-50">
-              <h3 className="font-semibold text-gray-900 mb-2">
-                Secure Payments
-              </h3>
-              <p className="text-gray-700">
-                Process payments safely with industry-standard security and
-                compliance measures.
-              </p>
-            </div>
-            <div className="p-6 border-l-4 border-purple-500 bg-purple-50">
-              <h3 className="font-semibold text-gray-900 mb-2">
-                Analytics & Insights
-              </h3>
-              <p className="text-gray-700">
-                Track sales, attendee data, and event performance with detailed
-                reports.
-              </p>
-            </div>
-            <div className="p-6 border-l-4 border-orange-500 bg-orange-50">
-              <h3 className="font-semibold text-gray-900 mb-2">
-                Attendee Management
-              </h3>
-              <p className="text-gray-700">
-                Manage registrations, check-ins, and communicate with attendees
-                seamlessly.
-              </p>
-            </div>
-          </div>
+          <p className="font-mono text-xs uppercase tracking-wide leading-relaxed text-[#f1efe8]/75">
+            Cruze is built for high-demand ticket drops where thousands of attendees compete for exact auditorium seating. Inventory locks prevent race conditions, while modular payment gateways ensure verified instant ticketing in Qatari Riyal (QAR).
+          </p>
         </section>
+
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="border border-white/10 bg-[#161614] p-8 space-y-3">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[#d8763d]">
+              01 / LOCKING
+            </span>
+            <h3 className="text-lg font-bold uppercase text-[#f1efe8]">Transactional Integrity</h3>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/70">
+              Database-level transactions guarantee that no seat is sold twice, even during flash ticket sales.
+            </p>
+          </div>
+
+          <div className="border border-white/10 bg-[#161614] p-8 space-y-3">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[#34d399]">
+              02 / SECURITY
+            </span>
+            <h3 className="text-lg font-bold uppercase text-[#f1efe8]">Cryptographic Entry Passes</h3>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/70">
+              Each admission pass creates a signed digital QR code validated instantly by gate staff.
+            </p>
+          </div>
+
+          <div className="border border-white/10 bg-[#161614] p-8 space-y-3">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[#fbbf24]">
+              03 / PAYMENTS
+            </span>
+            <h3 className="text-lg font-bold uppercase text-[#f1efe8]">Modular Payment Rails</h3>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/70">
+              Seamless checkout processing via Stripe and regional gateways with webhook idempotency.
+            </p>
+          </div>
+
+          <div className="border border-white/10 bg-[#161614] p-8 space-y-3">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-[#d8763d]">
+              04 / LOCALIZATION
+            </span>
+            <h3 className="text-lg font-bold uppercase text-[#f1efe8]">Qatar Tailored</h3>
+            <p className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/70">
+              Native QAR currency pricing, Asia/Qatar timezone handling, and Doha venue maps.
+            </p>
+          </div>
+        </div>
       </div>
     </main>
   )

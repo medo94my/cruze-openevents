@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { CheckCircle2, Clock, XCircle } from 'lucide-react'
 import { prisma } from '@/lib/db'
 import { getPaymentStatus, isPaymentProviderConfigured } from '@/lib/payments'
 
@@ -20,7 +21,6 @@ type OrderStatusInfo = {
 }
 
 async function getOrderStatus(orderNumber: string, paymentSessionId?: string): Promise<OrderStatusInfo> {
-  // Try to find the order by order number
   const order = await prisma.order.findUnique({
     where: { orderNumber },
     select: {
@@ -50,16 +50,13 @@ async function getOrderStatus(orderNumber: string, paymentSessionId?: string): P
     }
   }
 
-  // Check if payment was captured
   let paymentCaptured = order.status === 'PAID'
 
-  // If we have a payment session id and order is not yet paid, check with provider
   if (!paymentCaptured && paymentSessionId && isPaymentProviderConfigured()) {
     try {
       const paymentStatus = await getPaymentStatus(paymentSessionId)
       paymentCaptured = paymentStatus.isApproved
     } catch {
-      // Provider check failed, rely on our database status
       console.log('[CheckoutStatus] Could not verify payment status')
     }
   }
@@ -80,208 +77,103 @@ export default async function CheckoutStatusPage({ params, searchParams }: Check
   const { token, session_id, session_expired } = await searchParams
 
   const orderStatus = await getOrderStatus(orderNumber, session_id || token)
-
-  // Determine what message to show
   const isSessionExpired = session_expired === 'true'
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-16">
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        {/* Header */}
-        <div className="mb-6 text-center">
-          {orderStatus.paymentCaptured ? (
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-              <svg
-                className="h-6 w-6 text-green-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.5 12.75l6 6 9-13.5"
-                />
-              </svg>
-            </div>
-          ) : orderStatus.exists ? (
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
-              <svg
-                className="h-6 w-6 text-amber-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
-                />
-              </svg>
-            </div>
-          ) : (
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <svg
-                className="h-6 w-6 text-red-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-          )}
-
-          <h1 className="text-xl font-semibold text-gray-900">
-            {orderStatus.paymentCaptured
-              ? 'Payment Successful'
-              : orderStatus.exists
-                ? 'Order Status'
-                : 'Order Not Found'}
-          </h1>
-        </div>
-
-        {/* Session expired notice */}
-        {isSessionExpired && (
-          <div className="mb-6 rounded-md border border-amber-200 bg-amber-50 p-3">
-            <p className="text-sm text-amber-800">
-              Your session has expired, but don&apos;t worry - your order was saved. You can view your order details using the link below.
-            </p>
+    <main className="min-h-[75vh] bg-[#11110f] text-[#f1efe8] flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-lg space-y-6">
+        <div className="border border-white/10 bg-[#161614] p-8 sm:p-10 text-center space-y-6">
+          {/* Status Icon */}
+          <div className="flex justify-center">
+            {orderStatus.paymentCaptured ? (
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#34d399]/10 border border-[#34d399]/30 text-[#34d399]">
+                <CheckCircle2 className="h-8 w-8" />
+              </div>
+            ) : isSessionExpired ? (
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                <Clock className="h-8 w-8" />
+              </div>
+            ) : (
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#d8763d]/10 border border-[#d8763d]/30 text-[#d8763d]">
+                <Clock className="h-8 w-8" />
+              </div>
+            )}
           </div>
-        )}
 
-        {/* Order status details */}
-        <div className="mb-6 space-y-4">
-          {orderStatus.exists ? (
-            <>
-              <div className="rounded-md bg-gray-50 p-4">
-                <h2 className="mb-2 text-sm font-medium text-gray-700">Order Information</h2>
-                <dl className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <dt className="text-gray-500">Order Number</dt>
-                    <dd className="font-medium text-gray-900">{orderStatus.orderNumber}</dd>
-                  </div>
-                  {orderStatus.eventTitle && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-500">Event</dt>
-                      <dd className="font-medium text-gray-900">{orderStatus.eventTitle}</dd>
-                    </div>
-                  )}
-                  <div className="flex justify-between">
-                    <dt className="text-gray-500">Payment Status</dt>
-                    <dd
-                      className={`font-medium ${
-                        orderStatus.paymentCaptured
-                          ? 'text-green-600'
-                          : orderStatus.status === 'PENDING'
-                            ? 'text-amber-600'
-                            : orderStatus.status === 'CANCELLED' || orderStatus.status === 'EXPIRED'
-                              ? 'text-red-600'
-                              : 'text-gray-900'
-                      }`}
-                    >
-                      {orderStatus.paymentCaptured
-                        ? 'Payment Captured'
-                        : orderStatus.status === 'PENDING'
-                          ? 'Payment Pending'
-                          : orderStatus.status === 'PENDING_INVOICE'
-                            ? 'Invoice Pending'
-                            : orderStatus.status === 'CANCELLED'
-                              ? 'Cancelled'
-                              : orderStatus.status === 'EXPIRED'
-                                ? 'Expired'
-                                : orderStatus.status}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
+          {/* Heading */}
+          <div className="space-y-2">
+            <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#d8763d]">
+              CRUZE® / ORDER #{orderNumber}
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-[#f1efe8]">
+              {orderStatus.paymentCaptured
+                ? 'ADMISSION CONFIRMED'
+                : isSessionExpired
+                  ? 'HOLD WINDOW EXPIRED'
+                  : 'PROCESSING PAYMENT'}
+              <span className="text-[#d8763d]">.</span>
+            </h1>
+          </div>
 
-              {/* Next steps */}
-              <div className="rounded-md bg-blue-50 p-4">
-                <h2 className="mb-2 text-sm font-medium text-blue-800">What to do next</h2>
-                <ul className="list-inside list-disc space-y-1 text-sm text-blue-700">
-                  {orderStatus.paymentCaptured ? (
-                    <>
-                      <li>Your payment has been successfully processed</li>
-                      <li>View your order details and tickets using the link below</li>
-                      {orderStatus.buyerEmail && (
-                        <li>A confirmation email has been sent to {orderStatus.buyerEmail}</li>
-                      )}
-                    </>
-                  ) : orderStatus.status === 'PENDING' ? (
-                    <>
-                      <li>Your order reservation is still active</li>
-                      <li>Complete your payment to receive your tickets</li>
-                      <li>Note: Reservations expire after a short time</li>
-                    </>
-                  ) : orderStatus.status === 'PENDING_INVOICE' ? (
-                    <>
-                      <li>Your invoice order has been created</li>
-                      <li>View your order details using the link below</li>
-                    </>
-                  ) : orderStatus.status === 'CANCELLED' ? (
-                    <>
-                      <li>This order was cancelled</li>
-                      <li>You can start a new checkout if you still want tickets</li>
-                    </>
-                  ) : orderStatus.status === 'EXPIRED' ? (
-                    <>
-                      <li>This order reservation has expired</li>
-                      <li>You can start a new checkout to try again</li>
-                    </>
-                  ) : (
-                    <li>View your order status using the link below</li>
-                  )}
-                </ul>
-              </div>
-            </>
-          ) : (
-            <div className="rounded-md bg-red-50 p-4">
-              <p className="text-sm text-red-700">
-                We could not find an order with number <strong>{orderNumber}</strong>.
-                Please check the order number or contact support if you believe this is an error.
+          {/* Body Text */}
+          <p className="font-mono text-xs uppercase tracking-wider leading-relaxed text-[#f1efe8]/70">
+            {orderStatus.paymentCaptured ? (
+              <>
+                Your admission passes are confirmed. A receipt and digital ticket have been sent to{' '}
+                <strong className="text-[#f1efe8]">{orderStatus.buyerEmail || 'your email'}</strong>.
+              </>
+            ) : isSessionExpired ? (
+              <>
+                Your temporary seat hold window has elapsed. Unconfirmed tickets have been returned to inventory.
+              </>
+            ) : (
+              <>
+                Your transaction is being confirmed by the gateway. Passes will appear under My Tickets upon clearance.
+              </>
+            )}
+          </p>
+
+          {/* Event Details snippet */}
+          {orderStatus.eventTitle && (
+            <div className="border-t border-white/10 pt-4 text-left">
+              <span className="font-mono text-[8px] uppercase tracking-widest text-[#f1efe8]/40 block mb-1">
+                EVENT
+              </span>
+              <p className="font-mono text-xs uppercase font-bold text-[#f1efe8]">
+                {orderStatus.eventTitle}
               </p>
             </div>
           )}
-        </div>
 
-        {/* Action buttons */}
-        <div className="flex flex-col gap-3">
-          {orderStatus.exists && (
+          {/* Action CTAs */}
+          <div className="pt-4 flex flex-col gap-3 font-mono">
+            {orderStatus.paymentCaptured ? (
+              <Link
+                href={`/orders/${orderNumber}`}
+                className="w-full bg-[#d8763d] py-3 text-xs font-bold uppercase tracking-wider text-[#11110f] hover:bg-[#e2844d] transition-colors"
+              >
+                VIEW YOUR PASSES ↗
+              </Link>
+            ) : (
+              orderStatus.eventSlug && (
+                <Link
+                  href={`/events/${orderStatus.eventSlug}`}
+                  className="w-full bg-[#d8763d] py-3 text-xs font-bold uppercase tracking-wider text-[#11110f] hover:bg-[#e2844d] transition-colors"
+                >
+                  RETRY RESERVATION ↗
+                </Link>
+              )
+            )}
+
             <Link
-              href={`/orders/${orderStatus.orderNumber}`}
-              className="inline-flex w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
+              href="/"
+              className="w-full border border-white/20 py-3 text-xs uppercase tracking-wider text-[#f1efe8] hover:border-white hover:bg-white/5 transition-colors"
             >
-              View order details
+              RETURN TO HOME
             </Link>
-          )}
-          {orderStatus.eventSlug && (
-            <Link
-              href={`/events/${orderStatus.eventSlug}`}
-              className="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Back to event
-            </Link>
-          )}
-          <Link
-            href="/"
-            className="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Go to homepage
-          </Link>
+          </div>
         </div>
       </div>
-
-      <p className="mt-6 text-center text-sm text-gray-500">
-        Need help? <Link href="/support" className="text-blue-600 hover:underline">Contact support</Link>
-      </p>
     </main>
   )
 }
