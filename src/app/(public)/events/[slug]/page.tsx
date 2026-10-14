@@ -1,14 +1,12 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Calendar, ExternalLink, Globe, MapPin, Pencil } from 'lucide-react'
+import { Globe, Pencil } from 'lucide-react'
 import { getCurrentUser, hasRole } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { EventNoticeToast } from '@/components/events/EventNoticeToast'
 import { CHECKOUT_UNAVAILABLE_NOTICE } from '@/lib/orders/checkoutAvailability'
 import { isValidTimeZone } from '@/lib/timezone'
-import { getVatRateForCountryNameOrCode } from '@/lib/pricing/vatRates'
 import { formatEventPrice, formatEventDateTime } from '@/lib/utils'
-import { sanitizeHtml } from '@/lib/sanitize'
 
 export const dynamic = 'force-dynamic'
 
@@ -71,41 +69,16 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
     notFound()
   }
 
-  // Filter out empty/dash-only values for location (#209)
-  const locationParts = [event.venue, event.address, event.city, event.state, event.country]
+  const locationParts = [event.venue, event.address, event.city, event.country]
     .filter((part) => part && part.trim() && part.trim() !== '-')
-  const locationText = locationParts.join(', ')
+  const locationText = locationParts.join(', ') || event.city || 'Doha, Qatar'
 
-  const mapQuery = encodeURIComponent(locationText || event.title)
-  const mapEmbedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`
-
-  const eventVatRate = getVatRateForCountryNameOrCode(event.country ?? '')
   const priceDisplay = formatEventPrice(event.ticketTypes)
-  const hasPaidTickets = event.ticketTypes.some((ticketType) => Number(ticketType.price) > 0)
-  const bottomImage = event.media.find((item) => item.title === 'BOTTOM_IMAGE')?.url || null
-  const coverImageSrc = `/api/events/${encodeURIComponent(event.slug)}/image?slot=cover&v=${event.updatedAt.getTime()}`
-  const bottomImageSrc = `/api/events/${encodeURIComponent(event.slug)}/image?slot=bottom&v=${event.updatedAt.getTime()}`
+  const coverImageSrc = event.coverImage || `/events/img-1.png`
 
-  // Date formatting with timezone (#212)
-  const displayTimeZone = isValidTimeZone(event.timezone) ? event.timezone : 'UTC'
+  const displayTimeZone = isValidTimeZone(event.timezone) ? event.timezone : 'Asia/Qatar'
   const startDateTimeLabel = formatEventDateTime(event.startDate, displayTimeZone)
-  const endDateTimeLabel = formatEventDateTime(event.endDate, displayTimeZone)
-  const startDateKey = new Intl.DateTimeFormat('en-CA', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    timeZone: displayTimeZone,
-  }).format(event.startDate)
-  const endDateKey = new Intl.DateTimeFormat('en-CA', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    timeZone: displayTimeZone,
-  }).format(event.endDate)
-  const isSameLocalDay = startDateKey === endDateKey
-  const rightDateTimeLabel = isSameLocalDay
-    ? startDateTimeLabel
-    : `${startDateTimeLabel} - ${endDateTimeLabel}`
+
   const notice = firstQueryValue(query.notice)
   const noticeMessage = notice === 'created'
     ? 'Event created'
@@ -117,355 +90,178 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
       ? 'Checkout is unavailable because this event is not open for ticket sales.'
       : notice === CHECKOUT_UNAVAILABLE_NOTICE.EVENT_STARTED
         ? 'Checkout is unavailable because this event has already started.'
-        : notice === CHECKOUT_UNAVAILABLE_NOTICE.NO_PURCHASABLE_TICKETS
-          ? 'Checkout is unavailable because there are no tickets currently on sale.'
-          : null
+      : notice === CHECKOUT_UNAVAILABLE_NOTICE.NO_PURCHASABLE_TICKETS
+        ? 'Checkout is unavailable because there are no tickets currently on sale.'
+        : null
 
-  // Get organizer website from either website field or socialLinks
   const organizerWebsite = event.organizer.website ||
     (isRecord(event.organizer.socialLinks) ? (event.organizer.socialLinks.website as string | null) : null)
 
-  type PersonCard = { id: string; name: string; title: string | null; photo: string | null; organization: string | null; link: string | null }
-  const speakers: PersonCard[] = event.speakers.map((person) => ({
-    id: person.id,
-    name: person.name,
-    title: person.title,
-    photo: person.photo,
-    organization:
-      isRecord(person.socialLinks) && person.socialLinks.__kind === 'EVENT_PEOPLE'
-        ? (person.socialLinks.organization as string | null) || null
-        : null,
-    link:
-      isRecord(person.socialLinks) && person.socialLinks.__kind === 'EVENT_PEOPLE'
-        ? (person.socialLinks.link as string | null) || null
-        : null,
-  }))
+  const isPast = new Date(event.endDate) < new Date()
+  const displayTitle = isDemo ? event.title.replace(/^\[DEMO\]\s*/, '') : event.title
 
   return (
-    <div className="mx-auto max-w-5xl space-y-7 px-4 py-6 sm:px-6 lg:px-8">
+    <main className="event-detail">
       <EventNoticeToast message={noticeMessage} />
+
+      {/* Top Bar Navigation */}
+      <div className="event-detail__top font-mono">
+        <span>01 / LIVE EXPERIENCE · QATAR</span>
+
+        <Link href="/events" className="event-detail__back font-mono">
+          ← BACK TO EVENTS
+        </Link>
+
+        <span>QAT / 2026</span>
+      </div>
+
+      {/* Fictional Showcase Banner */}
       {isDemo && (
-        <div role="status" className="rounded-xl border border-[#edcbad] bg-[#fff2df] px-5 py-4 text-sm text-[#75441d]">
-          <strong>Fictional showcase event.</strong> This listing demonstrates Cruze&apos;s design only. It is not a real scheduled event, the location is illustrative, and tickets are not available for purchase.
+        <div role="status" className="mb-8 border border-[#edcbad] bg-[#fff2df] px-5 py-4 text-sm text-[#75441d] font-mono">
+          <strong>FICTIONAL SHOWCASE EVENT:</strong> This listing demonstrates Cruze&apos;s design in Qatar. It is not a real scheduled event and tickets are not for purchase.
         </div>
       )}
+
       {checkoutUnavailableMessage && (
-        <div
-          role="status"
-          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
-        >
+        <div role="status" className="mb-8 border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 font-mono">
           {checkoutUnavailableMessage}
         </div>
       )}
-      {event.coverImage ? (
-        <section className="relative overflow-hidden rounded-2xl bg-gray-900">
+
+      {/* Hero Section */}
+      <section className="event-detail__hero">
+        <div className="relative overflow-hidden border border-white/10 bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={coverImageSrc}
-            alt={event.title}
-            className="aspect-video w-full object-cover"
+            alt={displayTitle}
+            className="event-detail__image"
           />
-        </section>
-      ) : null}
+        </div>
 
-      <section className="border-b border-[#bfbfbf] pb-8">
-        <div className="flex flex-col gap-7 lg:flex-row lg:items-start lg:gap-10">
+        {/* Huge Monolithic Title */}
+        <div className="event-detail__content">
+          <h1>
+            {displayTitle}
+            <span>.</span>
+          </h1>
 
-          {/* Left column: event info */}
-          <div className="flex flex-1 flex-col gap-[14px]">
-            <h1
-              className="text-4xl font-bold leading-none text-black sm:text-5xl lg:text-[56px]"
-              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-            >
-              {isDemo ? event.title.replace(/^\[DEMO\]\s*/, '') : event.title}
-            </h1>
-            <div className="flex items-center gap-2">
-              <p
-                className="text-[20px] text-black"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                By <span className="font-semibold">{event.organization || event.organizer.orgName}</span>
-              </p>
-              {organizerWebsite && (
-                <a
-                  href={organizerWebsite}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#5c8bd9] transition hover:text-[#4a7ac8]"
-                  aria-label="Visit organizer website"
-                >
-                  <Globe className="h-5 w-5" />
-                </a>
-              )}
+          {/* Meta Grid */}
+          <div className="event-detail__meta font-mono">
+            <div>
+              <small>DATE & TIME</small>
+              <strong>{startDateTimeLabel}</strong>
             </div>
-            <div className="flex flex-col gap-[12px]">
-              {event.locationType !== 'ONLINE' ? (
-                <div className="flex items-start gap-[16px]">
-                  <MapPin className="mt-1 h-6 w-6 shrink-0 text-[#364153]" />
-                  <div className="flex flex-col">
-                    {event.venue && (
-                      <span
-                        className="text-[18px] font-semibold leading-7 text-[#364153]"
-                        style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                      >
-                        {event.venue}
-                      </span>
-                    )}
-                    {locationText && (
-                      <span
-                        className="text-[17px] font-normal leading-7 text-[#4a5565]"
-                        style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                      >
-                        {locationText}
-                      </span>
-                    )}
-                    {!event.venue && !locationText && (
-                      <span
-                        className="text-[18px] font-semibold leading-7 text-[#364153]"
-                        style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                      >
-                        Location TBD
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-[16px]">
-                  <MapPin className="h-6 w-6 shrink-0 text-[#364153]" />
-                  <span
-                    className="text-[18px] font-semibold text-[#364153]"
-                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
+
+            <div>
+              <small>LOCATION</small>
+              <strong>{event.venue || event.city || 'Doha, Qatar'}</strong>
+            </div>
+
+            <div>
+              <small>CURATED BY</small>
+              <div className="flex items-center gap-2">
+                <strong>{event.organization || event.organizer.orgName}</strong>
+                {organizerWebsite && (
+                  <a
+                    href={organizerWebsite}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#d8763d] hover:text-white"
                   >
-                    Online event
-                  </span>
-                </div>
-              )}
-              <div className="flex items-center gap-[12px]">
-                <Calendar className="h-7 w-7 shrink-0 text-[#364153]" />
-                <span
-                  className="text-[17px] leading-7 text-[#364153]"
-                  style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                >
-                  {startDateTimeLabel}
-                </span>
+                    <Globe className="h-3.5 w-3.5" />
+                  </a>
+                )}
               </div>
             </div>
           </div>
-
-          {/* Right column: edit button (top-right) + price section */}
-          <div className="flex w-full flex-col lg:w-[320px] lg:shrink-0">
-
-            {/* Edit button — only shown to the event owner or super admin */}
-            {isOwnerOrAdmin ? (
-              <Link
-                href={`/dashboard/events/${event.id}/edit`}
-                className="flex w-fit items-center gap-2 self-end rounded-[50px] bg-[#e5e7eb] py-2 pl-4 pr-4 transition hover:bg-[#d1d5db]"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                <Pencil className="h-5 w-5 text-[#4a5565]" />
-                <span className="text-[16px] font-semibold leading-6 text-[#4a5565]">Edit</span>
-              </Link>
-            ) : (
-              <div className="h-10" />
-            )}
-
-            {/* Price — 2px below edit button, height 36px */}
-            <p
-              className="mt-0.5 text-[24px] font-bold leading-[30px] text-[#5c8bd9]"
-              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-            >
-              {priceDisplay || 'Free'}
-            </p>
-            {hasPaidTickets && !isDemo ? (
-              <p
-                className="mt-1 text-[13px] leading-5 text-[#4a5565]"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                Excl. VAT ({Math.round(eventVatRate * 100)}%).
-              </p>
-            ) : null}
-
-            {/* Date and time */}
-            <p
-              className="mt-1 text-[15px] leading-6 text-[#364153]"
-              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-            >
-              {rightDateTimeLabel}
-            </p>
-
-            {/* Get tickets — 16px below time */}
-            {isDemo ? (
-              <span className="mt-4 flex h-[52px] items-center justify-center rounded-xl bg-[#eee2dd] px-4 text-center text-sm font-semibold text-[#694e55]">Demo preview — booking disabled</span>
-            ) : event.status === 'PUBLISHED' ? (
-              <Link
-                href={`/events/${event.slug}/checkout`}
-                className="mt-4 flex h-[52px] items-center justify-center rounded-[12px] bg-[#5c8bd9] text-[18px] font-semibold text-white transition hover:bg-[#4a7ac8]"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                Get tickets
-              </Link>
-            ) : (
-              <span className="mt-4 flex h-[52px] items-center justify-center rounded-[12px] border border-gray-300 bg-white text-[18px] font-semibold text-gray-500">
-                {isDemo ? "Preview only · no ticket sales" : "Draft preview"}
-              </span>
-            )}
-          </div>
-
         </div>
-      </section>
 
-      <section className="border-b border-gray-300 pb-8">
-        <h2
-          className="text-[28px] font-bold leading-[34px] text-black"
-          style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-        >
-          Overview
-        </h2>
-        <div
-          className={`mt-4 grid grid-cols-1 gap-6 ${
-            event.locationType !== 'ONLINE' ? 'lg:grid-cols-[1fr_280px]' : ''
-          }`}
-        >
-          <div>
-            {event.descriptionHtml ? (
-              <div
-                className="prose max-w-none text-[18px] leading-[29.25px] text-[#364153] prose-a:text-[#5c8bd9] prose-a:hover:text-[#4a7ac8]"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.descriptionHtml) }}
-              />
-            ) : event.description?.trim() ? (
-              <p
-                className="whitespace-pre-line text-[18px] leading-[29.25px] text-[#364153]"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                {event.description}
-              </p>
-            ) : (
-              <p
-                className="text-[18px] leading-[29.25px] text-[#364153]"
-                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-              >
-                Event details will be announced soon.
-              </p>
+        {/* Info Grid (About / Details / Price / Action) */}
+        <div className="event-detail__info">
+          <div className="event-detail__about">
+            <small className="font-mono">ABOUT</small>
+            <p>{event.description || 'Live experience curated for Qatar. Choose your place and enjoy the showcase.'}</p>
+
+            {isOwnerOrAdmin && (
+              <div className="mt-6">
+                <Link
+                  href={`/dashboard/events/${event.id}/edit`}
+                  className="inline-flex items-center gap-2 border border-white/20 px-3 py-1.5 font-mono text-xs uppercase hover:bg-white/10"
+                >
+                  <Pencil className="h-3 w-3" />
+                  <span>Edit Event</span>
+                </Link>
+              </div>
             )}
           </div>
 
-          {event.locationType !== 'ONLINE' ? (
-            <div className="overflow-hidden rounded-xl border border-gray-200">
-              <iframe
-                title="Event location map"
-                src={mapEmbedUrl}
-                className="h-[230px] w-full"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+          <div className="event-detail__details font-mono">
+            <small>DETAILS</small>
+            <p>
+              {startDateTimeLabel}
+              <br />
+              {event.venue}
+              <br />
+              {locationText}
+            </p>
+          </div>
+
+          <div className="event-detail__price font-mono">
+            <small>FROM</small>
+            <strong className="text-[#d8763d]">{priceDisplay}</strong>
+          </div>
+
+          {/* Action Button */}
+          {isPast ? (
+            <p className="event-detail__closed font-mono">
+              EVENT HAS ENDED — BOOKING CLOSED
+            </p>
+          ) : isDemo ? (
+            <div className="event-detail__closed font-mono">
+              SHOWCASE LISTING — DEMO ONLY
             </div>
-          ) : null}
+          ) : (
+            <Link
+              href={`/events/${event.slug}/checkout`}
+              className="event-detail__ticket-button font-mono"
+            >
+              <span>GET TICKETS</span>
+              <span className="event-detail__ticket-arrow">↗</span>
+            </Link>
+          )}
         </div>
       </section>
 
-      {event.website && (
-        <section className="border-b border-gray-300 pb-8">
-          <a
-            href={event.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-[#5c8bd9] transition hover:text-[#4a7ac8]"
-            style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-          >
-            <ExternalLink className="h-5 w-5" />
-            <span className="text-[18px] underline">Read more about {event.title} on the event website</span>
-          </a>
-        </section>
-      )}
-
-      {speakers.length > 0 ? (
-        <section className="border-b border-[#bfbfbf] pb-8">
-          <h2
-            className="text-[30px] font-bold leading-[36px] text-black"
-            style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-          >
-            Speakers
-          </h2>
-          <div className="mt-6 flex flex-wrap gap-6">
-            {speakers.map((person) => (
-              <div
-                key={person.id}
-                className="flex h-[104px] w-[302px] shrink-0 items-center gap-4 rounded-[14px] bg-[#f9fafb] pl-4 pr-4"
-              >
-                {/* Avatar */}
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#e5e7eb]">
-                  {person.photo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={`/api/speakers/${person.id}/image`}
-                      alt={person.name}
-                      className="h-full w-full rounded-full object-cover"
-                    />
-                  ) : (
-                    <span
-                      className="text-[24px] font-bold leading-8 text-[#4a5565]"
-                      style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                    >
-                      {person.name.charAt(0).toUpperCase()}
-                    </span>
-                  )}
-                </div>
-                {/* Info */}
-                <div className="flex flex-1 flex-col">
-                  <div className="flex items-center gap-2">
-                    {person.link ? (
-                      <a
-                        href={person.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[18px] font-semibold leading-[28px] text-[#5c8bd9] underline transition hover:text-[#4a7ac8]"
-                        style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                      >
-                        {person.name}
-                      </a>
-                    ) : (
-                      <span
-                        className="text-[18px] font-semibold leading-[28px] text-black"
-                        style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                      >
-                        {person.name}
-                      </span>
-                    )}
-                  </div>
-                  {person.title && (
-                    <span
-                      className="text-[16px] font-normal leading-[24px] text-[#364153]"
-                      style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                    >
-                      {person.title}
-                    </span>
-                  )}
-                  {person.organization && (
-                    <span
-                      className="text-[14px] font-normal leading-[20px] text-[#4a5565]"
-                      style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
-                    >
-                      {person.organization}
-                    </span>
-                  )}
-                </div>
+      {/* Speakers Section if present */}
+      {event.speakers.length > 0 && (
+        <section className="mt-20 border-t border-white/10 pt-14">
+          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40 block mb-6">
+            02 / FEATURED VOICES & PERFORMERS
+          </span>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {event.speakers.map((speaker) => (
+              <div key={speaker.id} className="border border-white/10 p-5 bg-white/[0.02]">
+                <h3 className="text-xl font-bold uppercase tracking-tight text-[#f1efe8]">
+                  {speaker.name}
+                </h3>
+                {speaker.title && (
+                  <p className="font-mono text-xs uppercase tracking-wider text-[#d8763d] mt-1">
+                    {speaker.title}
+                  </p>
+                )}
               </div>
             ))}
           </div>
         </section>
-      ) : null}
+      )}
 
-      {bottomImage ? (
-        <section className="overflow-hidden rounded-none bg-gray-900">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={bottomImageSrc}
-            alt={`${event.title} visual`}
-            className="aspect-video w-full object-cover"
-          />
-        </section>
-      ) : null}
-    </div>
+      {/* Footer */}
+      <footer className="mt-24 border-t border-white/15 pt-8 flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-white/40">
+        <span>CRUZE® / EVENTS</span>
+        <span>DOHA, QATAR</span>
+        <span>© 2026</span>
+      </footer>
+    </main>
   )
 }
