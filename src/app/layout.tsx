@@ -65,7 +65,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const settings = await getPlatformSettings({
-    platform_theme: 'light',
+    platform_theme: 'dark',
     platform_brand_color: '#8A1538',
     platform_name: 'Cruze Events',
     platform_logo: '',
@@ -74,7 +74,7 @@ export default async function RootLayout({
     footer_links: '',
   })
 
-  const theme = settings.platform_theme
+  const theme = settings.platform_theme || 'dark'
   const brandColor = settings.platform_brand_color
   const favicon = settings.platform_favicon ? '/api/platform/image/favicon' : ''
 

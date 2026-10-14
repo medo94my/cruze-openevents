@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
-import { Prisma, PaymentMethod } from '@prisma/client'
+import { PaymentMethod } from '@prisma/client'
 import { z } from 'zod'
 import { getSession } from '@/lib/auth'
 import { prisma } from '@/lib/db'
-import { sendOrderConfirmationEmail, sendAttendeeTicketEmailsForOrder } from '@/lib/email'
 import { canAccessOrder } from '@/lib/orders/authorization'
 import {
   createPaymentIntent,
@@ -12,9 +11,8 @@ import {
   generatePaymentUrls,
   isPaymentProviderConfigured,
 } from '@/lib/payments'
-import { generateTicketCreateInput, lockTicketTypes } from '@/lib/orders'
+import { fulfillOrder } from '@/lib/orders/fulfillment'
 import { expirePendingOrderIfNeeded } from '@/lib/orders/expirePendingOrder'
-import { formatDateTime } from '@/lib/utils'
 import { getAppUrl } from '@/lib/url'
 
 interface RouteContext {
@@ -166,7 +164,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
       amount: Number(order.totalAmount),
       currency: order.currency,
       orderId: order.id,
-      description: `OpenEvents Order ${order.orderNumber}`,
+      description: `Cruze Events Order ${order.orderNumber}`,
+      customer: {
+        email: order.buyerEmail,
+        name: `${order.buyerFirstName} ${order.buyerLastName}`,
+      },
       returnUrl,
       cancelUrl,
     })
@@ -202,172 +204,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
       )
     }
 
-    // Complete the order
-    const ticketTypeIds = Array.from(new Set(order.items.map((item) => item.ticketTypeId)))
-
-    const paidOrder = await prisma.$transaction(
-      async (tx) => {
-        await lockTicketTypes(tx, ticketTypeIds)
-
-        const latestOrder = await tx.order.findUniqueOrThrow({
-          where: { id: order.id },
-          include: {
-            items: {
-              include: {
-                ticketType: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-              },
-            },
-            event: {
-              select: {
-                title: true,
-                startDate: true,
-                locationType: true,
-                venue: true,
-                city: true,
-                country: true,
-                onlineUrl: true,
-              },
-            },
-          },
-        })
-
-        if (latestOrder.status !== 'PENDING' && latestOrder.status !== 'PENDING_INVOICE') {
-          throw new Error(`Order cannot be paid in status ${latestOrder.status}`)
-        }
-
-        for (const item of latestOrder.items) {
-          await tx.ticketType.update({
-            where: { id: item.ticketTypeId },
-            data: {
-              reservedCount: {
-                decrement: item.quantity,
-              },
-              soldCount: {
-                increment: item.quantity,
-              },
-            },
-          })
-        }
-
-        await tx.order.update({
-          where: { id: latestOrder.id },
-          data: {
-            status: 'PAID',
-            paidAt: new Date(),
-            expiresAt: null,
-            paymentId: paymentIntent.id,
-            paymentMethod: PaymentMethod.PAYPAL,
-          },
-        })
-
-        const ticketCreateData = generateTicketCreateInput(
-          latestOrder.id,
-          latestOrder.items.map((item) => ({
-            ticketTypeId: item.ticketTypeId,
-            ticketTypeName: item.ticketType.name,
-            quantity: item.quantity,
-            unitPrice: Number(item.unitPrice),
-            totalPrice: Number(item.totalPrice),
-            currency: latestOrder.currency,
-            attendees: Array.isArray(item.attendeeData)
-              ? (item.attendeeData as unknown as import('@/lib/orders').AttendeeData[])
-              : undefined,
-          }))
-        )
-
-        if (ticketCreateData.length > 0) {
-          await tx.ticket.createMany({
-            data: ticketCreateData,
-          })
-        }
-
-        return tx.order.findUniqueOrThrow({
-          where: { id: latestOrder.id },
-          include: {
-            items: {
-              include: {
-                ticketType: {
-                  select: {
-                    name: true,
-                  },
-                },
-              },
-            },
-            tickets: true,
-            event: {
-              select: {
-                title: true,
-                startDate: true,
-                locationType: true,
-                venue: true,
-                city: true,
-                country: true,
-                onlineUrl: true,
-              },
-            },
-          },
-        })
-      },
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-      }
-    )
-
-    const eventLocation =
-      paidOrder.event.locationType === 'ONLINE'
-        ? paidOrder.event.onlineUrl || 'Online event'
-        : [paidOrder.event.venue, paidOrder.event.city, paidOrder.event.country]
-            .filter(Boolean)
-            .join(', ')
-    const eventDate = formatDateTime(paidOrder.event.startDate)
-    const buyerName = `${paidOrder.buyerFirstName} ${paidOrder.buyerLastName}`
-
-    // Email failures must not fail a successful payment flow.
-    try {
-      await sendOrderConfirmationEmail(paidOrder.buyerEmail, {
-        orderNumber: paidOrder.orderNumber,
-        orderId: paidOrder.id,
-        eventTitle: paidOrder.event.title,
-        eventDate,
-        eventLocation,
-        tickets: paidOrder.items.map((item) => ({
-          name: item.ticketType.name,
-          quantity: item.quantity,
-          price: `${item.totalPrice.toString()} ${paidOrder.currency}`,
-        })),
-        totalAmount: `${paidOrder.totalAmount.toString()} ${paidOrder.currency}`,
-        buyerName,
-        vatRate: parseFloat(paidOrder.vatRate.toString()),
-        vatAmount: paidOrder.vatAmount.toString(),
-        ticketCodes: paidOrder.tickets.map((t) => t.ticketCode),
-      })
-    } catch (emailError) {
-      console.error('[Pay] Confirmation email failed after successful payment:', emailError)
-    }
-
-    // Send each non-buyer attendee their own ticket email
-    try {
-      await sendAttendeeTicketEmailsForOrder({
-        orderNumber: paidOrder.orderNumber,
-        buyerEmail: paidOrder.buyerEmail,
-        buyerName,
-        eventTitle: paidOrder.event.title,
-        eventDate,
-        eventLocation,
-        tickets: paidOrder.tickets,
-        items: paidOrder.items,
-      })
-    } catch (emailError) {
-      console.error('[Pay] Attendee ticket emails failed after successful payment:', emailError)
-    }
-
-    revalidateTag('event-analytics', 'max')
-    revalidateTag('dashboard-analytics', 'max')
+    const paidOrder = await fulfillOrder({
+      orderId: order.id,
+      paymentId: paymentIntent.id,
+      paymentMethod: PaymentMethod.PAYPAL,
+    })
 
     return NextResponse.json({
       order: paidOrder,
