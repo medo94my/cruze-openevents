@@ -8,8 +8,6 @@
 
 import { PaymentGatewayRegistry } from './registry'
 import type {
-  PaymentGatewayAdapter,
-  PaymentStatus,
   PaymentIntent,
   CreatePaymentOptions,
   CapturePaymentResult,

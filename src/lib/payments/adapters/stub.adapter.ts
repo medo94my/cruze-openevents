@@ -41,7 +41,8 @@ export class StubPaymentAdapter implements PaymentGatewayAdapter {
     }
   }
 
-  async getPaymentStatus(_paymentSessionId: string): Promise<GatewayStatusResult> {
+  async getPaymentStatus(paymentSessionId: string): Promise<GatewayStatusResult> {
+    void paymentSessionId
     return {
       status: 'complete:paid',
       isApproved: true,
@@ -49,7 +50,8 @@ export class StubPaymentAdapter implements PaymentGatewayAdapter {
     }
   }
 
-  async refund(_options: RefundOptions): Promise<RefundResult> {
+  async refund(options: RefundOptions): Promise<RefundResult> {
+    void options
     return {
       refundId: `ref_mock_${Date.now()}`,
       status: 'completed',

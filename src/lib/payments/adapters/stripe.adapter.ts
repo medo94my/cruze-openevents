@@ -30,6 +30,7 @@ export class StripePaymentAdapter implements PaymentGatewayAdapter {
       amount: options.amount,
       currency: options.currency,
       description: options.description,
+      customerEmail: options.customer?.email,
       returnUrl: options.returnUrl,
       cancelUrl: options.cancelUrl,
     })

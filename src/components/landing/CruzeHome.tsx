@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import {
-  ArrowRight, ArrowUpRight, CalendarDays, Compass, Heart,
+  ArrowRight, ArrowUpRight, Compass, Heart,
   MapPin, Music2, Palette, Search, Sparkles, Sun, Ticket,
   UtensilsCrossed, UsersRound, Waves, BriefcaseBusiness, X,
 } from "lucide-react"
@@ -310,7 +310,7 @@ export function CruzeHome({ events, compact = false, initialDate = "any", initia
             </div>
             <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-3 border-t border-white/10 bg-black/40 px-6 py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-[#9da3af] backdrop-blur-xl sm:px-12 lg:px-16">
               <span>{t.local}</span>
-              <span className="font-mono text-[10.5px] text-[#d4af37]">25° 17' N · 51° 32' E · ASIA/QATAR</span>
+              <span className="font-mono text-[10.5px] text-[#d4af37]">25° 17′ N · 51° 32′ E · ASIA/QATAR</span>
             </div>
           </section>
 

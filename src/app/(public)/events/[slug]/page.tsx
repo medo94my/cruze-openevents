@@ -146,7 +146,7 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
       <EventNoticeToast message={noticeMessage} />
       {isDemo && (
         <div role="status" className="rounded-xl border border-[#edcbad] bg-[#fff2df] px-5 py-4 text-sm text-[#75441d]">
-          <strong>Fictional showcase event.</strong> This listing demonstrates Cruze's design only. It is not a real scheduled event, the location is illustrative, and tickets are not available for purchase.
+          <strong>Fictional showcase event.</strong> This listing demonstrates Cruze&apos;s design only. It is not a real scheduled event, the location is illustrative, and tickets are not available for purchase.
         </div>
       )}
       {checkoutUnavailableMessage && (

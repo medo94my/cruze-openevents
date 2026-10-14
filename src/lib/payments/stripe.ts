@@ -5,6 +5,7 @@ export interface CreateStripeCheckoutSessionOptions {
   amount: number
   currency: string
   description?: string
+  customerEmail?: string
   returnUrl: string
   cancelUrl: string
 }
@@ -116,6 +117,7 @@ export async function createStripeCheckoutSession(
 
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
+    customer_email: options.customerEmail,
     success_url: `${options.returnUrl}?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: options.cancelUrl,
     line_items: [

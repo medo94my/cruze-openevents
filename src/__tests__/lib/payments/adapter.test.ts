@@ -96,11 +96,13 @@ describe('Payment Gateway Adapter Architecture', () => {
         }
       }
 
-      async getPaymentStatus(_id: string): Promise<GatewayStatusResult> {
+      async getPaymentStatus(id: string): Promise<GatewayStatusResult> {
+        void id
         return { status: 'PAID', isApproved: true }
       }
 
-      async refund(_options: RefundOptions): Promise<RefundResult> {
+      async refund(options: RefundOptions): Promise<RefundResult> {
+        void options
         return { refundId: 'sc_ref_1', status: 'completed', provider: this.id }
       }
     }

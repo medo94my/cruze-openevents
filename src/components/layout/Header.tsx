@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, ChevronDown, MapPin, Menu, X } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 
