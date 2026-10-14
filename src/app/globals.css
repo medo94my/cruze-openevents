@@ -558,30 +558,129 @@ body {
   animation: ambientAurora 12s ease-in-out infinite;
 }
 
-.sheen-effect {
+/* ============================================================================
+   SEATWISE EDITORIAL BRUTALISM & SWISS TYPOGRAPHIC ARCHITECTURE
+   Deep matte charcoal canvas (#11110f), warm cream typography (#f1efe8),
+   burnt terracotta (#d8763d), monolithic headlines, and 1px razor grids.
+   ============================================================================ */
+
+.seatwise-canvas {
+  background-color: #11110f;
+  color: #f1efe8;
+  position: relative;
+  selection-background-color: #d8763d;
+  selection-color: #11110f;
+}
+
+.seatwise-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.55'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+.seatwise-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(at 52% 45%, rgba(216, 118, 61, 0.07), transparent 50%);
+  z-index: 0;
+}
+
+.seatwise-hero-title {
+  font-size: clamp(84px, 16vw, 240px);
+  font-weight: 900;
+  line-height: 0.72;
+  letter-spacing: -0.075em;
+  text-transform: uppercase;
+}
+
+.seatwise-section-title {
+  font-size: clamp(64px, 9vw, 150px);
+  font-weight: 900;
+  line-height: 0.76;
+  letter-spacing: -0.07em;
+  text-transform: uppercase;
+}
+
+.seatwise-card-title {
+  font-size: clamp(36px, 5.2vw, 76px);
+  font-weight: 900;
+  line-height: 0.82;
+  letter-spacing: -0.065em;
+  text-transform: uppercase;
+}
+
+.seatwise-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.15rem 1.4rem;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f1efe8;
+  background: transparent;
+  border: 1px solid rgba(241, 239, 232, 0.4);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  border-radius: 0px !important;
+}
+
+.seatwise-btn:hover {
+  background: #f1efe8;
+  color: #11110f;
+  border-color: #f1efe8;
+}
+
+.seatwise-btn:hover .seatwise-btn-arrow {
+  color: #11110f;
+  transform: translate(3px, -3px);
+}
+
+.seatwise-btn-arrow {
+  color: #d8763d;
+  font-size: 14px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), color 0.22s ease;
+}
+
+.seatwise-universe-world {
+  perspective: 1200px;
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.seatwise-universe-world::-webkit-scrollbar {
+  display: none;
+}
+
+.seatwise-card-3d {
+  aspect-ratio: 0.72;
   position: relative;
   overflow: hidden;
+  border: 1px solid transparent;
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.sheen-effect::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    60deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.22) 50%,
-    transparent 65%
-  );
-  transform: translateX(-100%) rotate(25deg);
-  transition: transform 0.75s ease;
-  pointer-events: none;
+.seatwise-card-3d:hover {
+  border-color: rgba(241, 239, 232, 0.35);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
 }
 
-.sheen-effect:hover::after {
-  transform: translateX(100%) rotate(25deg);
+.seatwise-card-3d:hover .seatwise-card-img {
+  transform: scale(1.06);
+  filter: brightness(1.1) saturate(1.05);
 }
+
+.seatwise-card-3d:hover .seatwise-card-drawer {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 

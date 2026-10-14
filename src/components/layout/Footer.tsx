@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { useSession } from "next-auth/react"
-import { ArrowUpRight, MapPin } from "lucide-react"
 
 type FooterLink = { label: string; href: string; external?: boolean }
 type FooterProps = {
@@ -11,66 +10,92 @@ type FooterProps = {
   links?: FooterLink[]
 }
 
-const links: FooterLink[] = [
-  { label: "About us", href: "/about" },
+const DEFAULT_LINKS: FooterLink[] = [
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
-  { label: "Privacy", href: "/privacy" },
-  { label: "Terms", href: "/terms" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
 ]
 
 export function Footer({ tagline, links: overrideLinks }: FooterProps) {
   const { data: session } = useSession()
   const canManage = session?.user?.roles?.includes("SUPER_ADMIN") || session?.user?.roles?.includes("ORGANIZER")
+  const activeLinks = overrideLinks || DEFAULT_LINKS
 
   return (
-    <footer className="border-t border-white/[0.08] bg-[#0c0d12] text-[#e3e1e9] print:hidden">
-      <div className="mx-auto max-w-[1300px] px-6 pb-12 pt-20 sm:px-10 lg:px-12">
-        <div className="grid grid-cols-1 gap-12 border-b border-white/[0.08] pb-14 md:grid-cols-[1.5fr_1fr_1fr]">
-          <div>
-            <Link href="/" className="group inline-flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8A1538] to-[#5C1026] text-xl font-black text-white shadow-[0_4px_14px_rgba(138,21,56,0.35)] transition-transform duration-300 group-hover:scale-105">
-                C<span className="text-[#e8bc91]">.</span>
+    <footer className="border-t border-[#f1efe8]/15 bg-[#11110f] text-[#f1efe8] print:hidden">
+      <div className="mx-auto max-w-[1440px] px-6 py-16 sm:px-10 lg:px-12">
+        <div className="grid grid-cols-1 gap-12 border-b border-[#f1efe8]/15 pb-16 md:grid-cols-12 md:gap-8">
+          {/* Brand & Mission (Col 1-5) */}
+          <div className="md:col-span-5">
+            <Link href="/" className="inline-block">
+              <span className="text-[24px] font-black uppercase tracking-[-0.06em] text-[#f1efe8]">
+                CRUZE<span className="text-[#d8763d]">®</span>
               </span>
-              <span className="text-[26px] font-black tracking-[-0.06em] text-white">CRUZE<span className="text-[#8A1538]">.</span></span>
             </Link>
-            <p className="mt-5 max-w-sm text-[14px] leading-7 text-[#9da3af]">{tagline || "Discover Qatar. Find your people. Make memories."}</p>
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-xs font-semibold tracking-wider text-[#d4af37]">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1">
-                <MapPin size={13}/> DOHA · QATAR
-              </span>
-              <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] text-[#9da3af]">
-                25.2867° N · 51.5333° E
-              </span>
+            <p className="mt-4 max-w-sm font-mono text-xs uppercase tracking-wider text-[#f1efe8]/60 leading-relaxed">
+              {tagline || "Live event ticketing and exact seat discovery. Engineered for Qatar."}
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3 font-mono text-[9px] uppercase tracking-[0.2em] text-[#d8763d]">
+              <span>DOHA · 25° 17′ N · 51° 32′ E</span>
             </div>
           </div>
-          <div>
-            <h3 className="mb-5 text-[12px] font-bold uppercase tracking-[0.2em] text-[#8A1538]">Discovery Space</h3>
-            <div className="flex flex-col gap-3 text-[13.5px] text-[#9da3af]">
-              <Link href="/events" className="transition hover:text-white">All experiences</Link>
-              <Link href="/events?when=weekend" className="transition hover:text-white">This weekend in Qatar</Link>
-              <Link href="/#discover" className="transition hover:text-white">Curated by interest</Link>
-              <Link href={canManage ? "/dashboard" : "/login"} className="inline-flex items-center gap-1.5 text-[#e8bc91] transition hover:text-white">
-                {canManage ? "Staff dashboard" : "Staff sign in"}
-                <ArrowUpRight size={13}/>
+
+          {/* Directory Column 1 (Col 6-8) */}
+          <div className="md:col-span-3">
+            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#f1efe8]/40 block mb-4">
+              01 / DIRECTORY
+            </span>
+            <div className="flex flex-col space-y-2.5 font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+              <Link href="/events" className="hover:text-[#d8763d] transition-colors">
+                All Experiences ↗
+              </Link>
+              <Link href="/#event-universe" className="hover:text-[#d8763d] transition-colors">
+                Event Universe
+              </Link>
+              <Link href="/#happening" className="hover:text-[#d8763d] transition-colors">
+                Happening Next
+              </Link>
+              <Link
+                href={canManage ? "/dashboard" : "/login"}
+                className="hover:text-[#d8763d] transition-colors"
+              >
+                {canManage ? "Staff Dashboard" : "Staff Access"}
               </Link>
             </div>
           </div>
-          <div>
-            <h3 className="mb-5 text-[12px] font-bold uppercase tracking-[0.2em] text-[#8A1538]">Platform</h3>
-            <div className="flex flex-col gap-3 text-[13.5px] text-[#9da3af]">
-              {(overrideLinks || links).map((link) => link.external ? (
-                <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className="transition hover:text-white">{link.label}</a>
-              ) : (
-                <Link key={link.href} href={link.href} className="transition hover:text-white">{link.label}</Link>
-              ))}
+
+          {/* Directory Column 2 (Col 9-12) */}
+          <div className="md:col-span-4">
+            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#f1efe8]/40 block mb-4">
+              02 / LEGAL & NETWORK
+            </span>
+            <div className="flex flex-col space-y-2.5 font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+              {activeLinks.map((link) =>
+                link.external ? (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#d8763d] transition-colors"
+                  >
+                    {link.label} ↗
+                  </a>
+                ) : (
+                  <Link key={link.href} href={link.href} className="hover:text-[#d8763d] transition-colors">
+                    {link.label}
+                  </Link>
+                )
+              )}
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-8 text-[12px] text-[#6d7485]">
-          <span>© {new Date().getFullYear()} Cruze Events. Engineered for Qatar.</span>
-          <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[11px]">
-            Design preview · Sample events are fictional
-          </span>
+
+        {/* Bottom Telemetry Bar */}
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.16em] text-[#f1efe8]/40">
+          <span>© {new Date().getFullYear()} CRUZE EVENTS. ALL RIGHTS RESERVED.</span>
+          <span>CURATED IN DOHA, QATAR · REAL TIME SEATING</span>
         </div>
       </div>
     </footer>
