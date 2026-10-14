@@ -198,22 +198,29 @@ export function LoginForm() {
   }
 
   return (
-    <div className="rounded-2xl bg-white px-4 py-6 shadow-[0px_10px_30px_0px_rgba(0,0,0,0.12)] sm:rounded-3xl sm:px-8 sm:py-10 lg:px-12 lg:py-12">
+    <div className="border border-white/15 bg-[#11110f] text-[#f1efe8] p-6 sm:p-10 shadow-2xl font-mono">
       {/* Header */}
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-black sm:text-4xl">Welcome back</h1>
-        <p className="mt-2 text-base text-[#4a5565] sm:text-lg">Log in to your OpenEvents account</p>
+      <div className="mb-8">
+        <span className="text-[9px] uppercase tracking-[0.2em] text-white/40 block mb-2">
+          CRUZE® / AUTHENTICATION / QATAR
+        </span>
+        <h1 className="font-sans text-3xl sm:text-4xl font-black uppercase tracking-tight text-[#f1efe8]">
+          SIGN IN<span>.</span>
+        </h1>
+        <p className="mt-2 text-xs uppercase tracking-wider text-white/50">
+          Access your bookings, passes, and curated Qatar events
+        </p>
       </div>
 
       {/* URL-based status messages */}
       {initialMessage && (
         <div
-          className={`mb-4 rounded-md p-3 text-sm ${
+          className={`mb-6 p-4 text-xs font-mono uppercase tracking-wider border ${
             initialMessage.type === 'success'
-              ? 'bg-green-50 text-green-700 border border-green-200'
+              ? 'bg-green-950/40 text-green-300 border-green-800'
               : initialMessage.type === 'error'
-              ? 'bg-red-50 text-red-700 border border-red-200'
-              : 'bg-blue-50 text-blue-700 border border-blue-200'
+              ? 'bg-red-950/40 text-red-300 border-red-800'
+              : 'bg-blue-950/40 text-blue-300 border-blue-800'
           }`}
         >
           {initialMessage.text}
@@ -222,108 +229,112 @@ export function LoginForm() {
 
       {/* Sign-in error */}
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700 border border-red-200">
+        <div className="mb-6 p-4 text-xs font-mono uppercase tracking-wider bg-red-950/40 text-red-300 border border-red-800">
           {error}
           {error.toLowerCase().includes('verify') && (
             <span>
               {' '}
-              <Link href="/verify-email" className="underline font-semibold hover:text-red-900">
-                Resend verification email
+              <Link href="/verify-email" className="underline font-semibold text-[#d8763d] hover:text-white">
+                Resend verification email ↗
               </Link>
             </span>
           )}
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 sm:gap-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {/* Email */}
         <div className="flex flex-col gap-2">
-          <label className="text-base font-semibold text-black">Email address</label>
+          <label className="text-[10px] uppercase tracking-wider text-white/60">
+            Email address
+          </label>
           <div className="relative">
-            <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#828283] pointer-events-none" />
+            <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30 pointer-events-none" />
             <input
               type="email"
-              placeholder="your@email.com"
+              placeholder="YOUR@EMAIL.COM"
               autoComplete="email"
               disabled={isLoading}
-              className="h-12 w-full rounded-[10px] bg-[#f2f2f4] pl-12 pr-4 text-base placeholder:text-[#828283] focus:outline-none focus:ring-2 focus:ring-[#5c8bd9] disabled:opacity-50"
+              className="h-12 w-full border border-white/20 bg-white/[0.03] pl-11 pr-4 text-xs tracking-wider text-[#f1efe8] placeholder:text-white/20 focus:border-[#d8763d] focus:outline-none disabled:opacity-50"
               {...register('email')}
             />
           </div>
           {errors.email && (
-            <p className="text-sm text-red-600">{errors.email.message}</p>
+            <p className="text-xs text-red-400">{errors.email.message}</p>
           )}
         </div>
 
         {/* Password */}
         <div className="flex flex-col gap-2">
-          <label className="text-base font-semibold text-black">Password</label>
+          <label className="text-[10px] uppercase tracking-wider text-white/60">
+            Password
+          </label>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#828283] pointer-events-none" />
+            <Lock className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30 pointer-events-none" />
             <input
               type={showPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
+              placeholder="••••••••••••"
               autoComplete="current-password"
               disabled={isLoading}
-              className="h-12 w-full rounded-[10px] bg-[#f2f2f4] pl-12 pr-12 text-base placeholder:text-[#828283] focus:outline-none focus:ring-2 focus:ring-[#5c8bd9] disabled:opacity-50"
+              className="h-12 w-full border border-white/20 bg-white/[0.03] pl-11 pr-11 text-xs tracking-wider text-[#f1efe8] placeholder:text-white/20 focus:border-[#d8763d] focus:outline-none disabled:opacity-50"
               {...register('password')}
             />
             <button
               type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#828283] hover:text-gray-700 disabled:opacity-50"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white disabled:opacity-50"
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               disabled={isLoading}
             >
               {showPassword ? (
-                <Eye className="h-5 w-5" />
+                <Eye className="h-4 w-4" />
               ) : (
-                <EyeOff className="h-5 w-5" />
+                <EyeOff className="h-4 w-4" />
               )}
             </button>
           </div>
           {errors.password && (
-            <p className="text-sm text-red-600">{errors.password.message}</p>
+            <p className="text-xs text-red-400">{errors.password.message}</p>
           )}
         </div>
 
         {/* Remember me + Forgot password */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <label className="flex cursor-pointer items-center gap-2">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs">
+          <label className="flex cursor-pointer items-center gap-2 text-white/60">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-[18px] w-[18px] cursor-pointer rounded accent-[#5c8bd9]"
+              className="h-4 w-4 cursor-pointer accent-[#d8763d]"
             />
-            <span className="text-sm font-medium text-[#4a5565]">Remember me</span>
+            <span>Remember credentials</span>
           </label>
           <Link
             href="/forgot-password"
-            className="text-sm text-[#5c8bd9] hover:underline"
+            className="text-[#d8763d] hover:underline"
           >
             Forgot password?
           </Link>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-[#d1d5dc]" />
+        <div className="border-t border-white/10" />
 
         {/* Terms links */}
-        <p className="text-center text-sm text-[#4a5565]">
+        <p className="text-center text-[10px] text-white/40">
           By continuing, you agree to our{' '}
           <Link
             href="/terms"
-            className="font-semibold text-[#5c8bd9] hover:underline"
+            className="text-[#d8763d] hover:underline"
           >
-            Terms of Service
+            Terms
           </Link>
           {' '}and{' '}
           <Link
             href="/privacy"
-            className="font-semibold text-[#5c8bd9] hover:underline"
+            className="text-[#d8763d] hover:underline"
           >
-            Privacy Policy
+            Privacy
           </Link>
         </p>
 
@@ -331,11 +342,11 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="flex h-12 w-full items-center justify-center rounded-[10px] bg-[#5c8bd9] text-base font-semibold text-white shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1),0px_2px_4px_0px_rgba(0,0,0,0.1)] transition-colors hover:bg-[#4a7ac8] disabled:cursor-not-allowed disabled:opacity-50 sm:h-[52px] sm:text-lg"
+          className="flex h-12 w-full items-center justify-center bg-[#f1efe8] text-black text-xs font-bold uppercase tracking-wider transition-colors hover:bg-[#d8763d] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (
             <svg
-              className="h-5 w-5 animate-spin"
+              className="h-5 w-5 animate-spin text-black"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -355,7 +366,7 @@ export function LoginForm() {
               />
             </svg>
           ) : (
-            'Log in'
+            'AUTHENTICATE / ENTER ↗'
           )}
         </button>
       </form>

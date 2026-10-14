@@ -1,7 +1,7 @@
+import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { prisma } from '@/lib/db'
 import { CheckoutForm } from '@/components/tickets/CheckoutForm'
-import { Card, CardContent } from '@/components/ui/card'
 import { formatEventDateTime } from '@/lib/utils'
 import { isValidTimeZone } from '@/lib/timezone'
 import { getCheckoutUnavailableNotice, getCheckoutUnavailableReason } from '@/lib/orders/checkoutAvailability'
@@ -71,7 +71,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
     redirect(`/events/${event.slug}?notice=${encodeURIComponent(notice)}`)
   }
 
-  const displayTimeZone = isValidTimeZone(event.timezone) ? event.timezone : 'UTC'
+  const displayTimeZone = isValidTimeZone(event.timezone) ? event.timezone : 'Asia/Qatar'
 
   const location =
     event.locationType === 'ONLINE'
@@ -79,47 +79,66 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
       : [event.venue, event.city, event.country].filter(Boolean).join(', ')
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Checkout</h1>
+    <main className="min-h-screen bg-[#11110f] text-[#f1efe8] px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl">
+        {/* Navigation Breadcrumb */}
+        <div className="flex items-center justify-between border-b border-white/15 pb-4 mb-8 font-mono text-xs uppercase tracking-wider text-white/50">
+          <span>CRUZE® / ORDER CHECKOUT</span>
+          <Link href={`/events/${event.slug}`} className="hover:text-[#d8763d] transition-colors">
+            ← BACK TO EVENT
+          </Link>
+        </div>
 
-      <Card className="mb-6">
-        <CardContent className="p-4 flex flex-row items-stretch justify-between gap-4">
-          <div className="flex flex-col gap-2 min-w-0">
-            <p className="font-bold text-base text-black leading-tight">{event.title}</p>
-            <p className="text-sm text-gray-700 leading-snug">{location}</p>
-            <p className="text-sm text-gray-700">
-              {formatEventDateTime(event.startDate, displayTimeZone)}
+        <h1 className="mb-8 font-sans text-4xl sm:text-5xl font-black uppercase tracking-tight text-white">
+          CHECKOUT<span>.</span>
+        </h1>
+
+        {/* Event Summary Card */}
+        <div className="border border-white/15 bg-white/[0.02] p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#d8763d] block">
+              ADMISSION PASSES
+            </span>
+            <h2 className="text-2xl font-bold uppercase tracking-tight text-white">
+              {event.title}
+            </h2>
+            <p className="font-mono text-xs text-white/60">
+              {location} · {formatEventDateTime(event.startDate, displayTimeZone)}
             </p>
           </div>
-          <div className="w-44 aspect-video rounded-[10px] overflow-hidden flex-shrink-0 bg-gradient-to-r from-blue-500 to-indigo-600">
-            {event.coverImage && (
-              // eslint-disable-next-line @next/next/no-img-element
+
+          {event.coverImage && (
+            <div className="w-36 aspect-[16/10] overflow-hidden border border-white/15 flex-shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={`/api/events/${encodeURIComponent(event.slug)}/image?slot=cover`}
+                src={event.coverImage}
                 alt={event.title}
                 className="h-full w-full object-cover"
               />
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          )}
+        </div>
 
-      <CheckoutForm
-        event={{
-          id: event.id,
-          slug: event.slug,
-          title: event.title,
-          country: event.country,
-          collectAllergies: event.collectAllergies,
-        }}
-        groupDiscounts={event.groupDiscounts.map((gd) => ({
-          id: gd.id,
-          ticketTypeId: gd.ticketTypeId,
-          minQuantity: gd.minQuantity,
-          discountType: gd.discountType,
-          discountValue: Number(gd.discountValue),
-        }))}
-      />
-    </div>
+        {/* Checkout Form */}
+        <div className="border border-white/15 bg-white/[0.02] p-6 sm:p-10">
+          <CheckoutForm
+            event={{
+              id: event.id,
+              slug: event.slug,
+              title: event.title,
+              country: event.country,
+              collectAllergies: event.collectAllergies,
+            }}
+            groupDiscounts={event.groupDiscounts.map((gd) => ({
+              id: gd.id,
+              ticketTypeId: gd.ticketTypeId,
+              minQuantity: gd.minQuantity,
+              discountType: gd.discountType,
+              discountValue: Number(gd.discountValue),
+            }))}
+          />
+        </div>
+      </div>
+    </main>
   )
 }

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/db'
@@ -14,7 +15,7 @@ function getPageTitle(status: string, paymentMethod: string | null): string {
     return 'Invoice Order Received'
   }
   if (status === 'PAID') {
-    return 'Order Confirmed'
+    return 'Admission Confirmed'
   }
   if (status === 'PENDING' && paymentMethod === 'INVOICE') {
     return 'Invoice Order Received'
@@ -32,10 +33,6 @@ export default async function OrderConfirmationPage({ params }: ConfirmationPage
   const user = await getCurrentUser()
   const { orderNumber } = await params
 
-  // Try to find the order - allow access if:
-  // 1. User owns the order (userId matches)
-  // 2. User is the organizer of the event
-  // 3. No user is logged in but order exists (anonymous access)
   const order = await prisma.order.findFirst({
     where: {
       orderNumber,
@@ -91,9 +88,24 @@ export default async function OrderConfirmationPage({ params }: ConfirmationPage
   const pageTitle = getPageTitle(order.status, order.paymentMethod)
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">{pageTitle}</h1>
-      <TicketDisplay order={order} />
-    </div>
+    <main className="min-h-screen bg-[#11110f] text-[#f1efe8] px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-4xl">
+        {/* Navigation Breadcrumb */}
+        <div className="flex items-center justify-between border-b border-white/15 pb-4 mb-8 font-mono text-xs uppercase tracking-wider text-white/50">
+          <span>CRUZE® / ORDER #{order.orderNumber}</span>
+          <Link href="/orders" className="hover:text-[#d8763d] transition-colors">
+            ← BACK TO MY TICKETS
+          </Link>
+        </div>
+
+        <h1 className="mb-8 font-sans text-4xl sm:text-5xl font-black uppercase tracking-tight text-white">
+          {pageTitle}<span className="text-[#d8763d]">.</span>
+        </h1>
+
+        <div className="rounded-none border border-white/15 bg-white/[0.02] p-6 sm:p-8">
+          <TicketDisplay order={order} />
+        </div>
+      </div>
+    </main>
   )
 }
