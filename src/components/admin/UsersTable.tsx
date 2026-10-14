@@ -117,30 +117,30 @@ export function UsersTable({ users, currentAdminId }: UsersTableProps) {
 
   if (users.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-gray-300 bg-white p-10 text-center text-gray-600">
+      <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-10 text-center font-mono text-xs text-[#f1efe8]/50">
         No users match the current filters.
       </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#161614] shadow-sm">
       {error ? (
-        <p className="border-b border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
+        <p className="border-b border-red-500/20 bg-red-950/30 px-4 py-3 font-mono text-xs text-red-400">{error}</p>
       ) : null}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-white/10 text-left text-sm">
+          <thead className="bg-[#1a1a18]">
             <tr>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Name</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Email</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Roles</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Joined</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-600">Account Type</th>
-              <th className="px-4 py-3 text-right font-medium text-gray-600">Actions</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Name</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Email</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Roles</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Joined</th>
+              <th className="px-5 py-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Account Type</th>
+              <th className="px-5 py-3.5 text-right font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#f1efe8]/50">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-white/5">
             {users.map((user) => {
               const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim()
               const isSelf = user.id === currentAdminId
@@ -149,22 +149,22 @@ export function UsersTable({ users, currentAdminId }: UsersTableProps) {
               const hasChanges = selectedType !== currentType
 
               return (
-                <tr key={user.id}>
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-gray-900">{fullName || '—'}</p>
+                <tr key={user.id} className="transition-colors hover:bg-white/[0.02]">
+                  <td className="px-5 py-4">
+                    <p className="font-bold text-[#f1efe8]">{fullName || '—'}</p>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">{user.email}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-4 font-mono text-xs text-[#f1efe8]/70">{user.email}</td>
+                  <td className="px-5 py-4">
                     <div className="flex flex-wrap gap-1">
                       {user.roles.map((role) => (
                         <span
                           key={role}
-                          className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                          className={`inline-block rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${
                             role === 'SUPER_ADMIN'
-                              ? 'bg-purple-100 text-purple-700'
+                              ? 'border-[#d8763d]/40 bg-amber-950/40 text-[#d8763d]'
                               : role === 'ORGANIZER'
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-gray-100 text-gray-700'
+                                ? 'border-emerald-500/30 bg-emerald-950/40 text-emerald-400'
+                                : 'border-white/10 bg-white/5 text-[#f1efe8]/60'
                           }`}
                         >
                           {role}
@@ -172,12 +172,12 @@ export function UsersTable({ users, currentAdminId }: UsersTableProps) {
                       ))}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-5 py-4 font-mono text-xs text-[#f1efe8]/70">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-4">
                     {isSelf ? (
-                      <span className="inline-block h-9 min-w-[150px] rounded-md border border-gray-200 bg-gray-50 px-3 text-sm leading-9 text-gray-600">
+                      <span className="inline-block h-9 min-w-[150px] rounded-lg border border-white/10 bg-[#11110f] px-3 font-mono text-xs leading-9 text-[#f1efe8]/60">
                         {currentType}
                       </span>
                     ) : (
@@ -190,17 +190,17 @@ export function UsersTable({ users, currentAdminId }: UsersTableProps) {
                             [user.id]: event.target.value as AccountType,
                           }))
                         }}
-                        className="h-9 min-w-[150px] rounded-md border border-gray-300 bg-white px-3 text-sm"
+                        className="h-9 min-w-[150px] rounded-lg border border-white/15 bg-[#11110f] px-3 font-mono text-xs text-[#f1efe8] focus:border-[#d8763d] focus:outline-none"
                       >
                         <option value="ORGANIZER">ORGANIZER</option>
                         <option value="SUPER_ADMIN">SUPER_ADMIN</option>
                       </select>
                     )}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-4">
                     <div className="flex justify-end gap-2">
                       {isSelf ? (
-                        <span className="text-xs text-gray-400">You</span>
+                        <span className="font-mono text-xs text-[#f1efe8]/40">You</span>
                       ) : (
                         <>
                           <Button

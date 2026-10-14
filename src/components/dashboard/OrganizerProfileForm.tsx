@@ -149,41 +149,62 @@ export function OrganizerProfileForm({ initial, action }: OrganizerProfileFormPr
     : null
 
   return (
-    <form action={action} className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
-      <h1 className="text-2xl font-bold text-gray-900">Organizer Profile</h1>
-
-      <div>
-        <Label htmlFor="orgName" required>Organization Name</Label>
-        <Input id="orgName" name="orgName" defaultValue={initial.orgName} required />
+    <form action={action} className="space-y-5 rounded-2xl border border-white/10 bg-[#161614] p-6 sm:p-8 shadow-sm">
+      <div className="flex items-center gap-2 border-b border-white/10 pb-4">
+        <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
+        <h1 className="text-xl font-bold uppercase tracking-tight text-[#f1efe8]">
+          Curator Organization Profile
+        </h1>
       </div>
 
       <div>
-        <Label htmlFor="description">Description</Label>
-        <textarea
-          id="description"
-          name="description"
-          defaultValue={initial.description || ''}
-          className="min-h-24 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-        />
+        <Label htmlFor="orgName" required className="font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+          Organization / Brand Name
+        </Label>
+        <div className="mt-1">
+          <Input id="orgName" name="orgName" defaultValue={initial.orgName} required />
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="description" className="font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+          Curator Description / Bio
+        </Label>
+        <div className="mt-1">
+          <textarea
+            id="description"
+            name="description"
+            defaultValue={initial.description || ''}
+            rows={4}
+            placeholder="Share information about your Qatar events curation and mission..."
+            className="w-full rounded-lg border border-white/15 bg-[#11110f] px-3 py-2 text-sm text-[#f1efe8] placeholder:text-[#f1efe8]/40 focus:border-[#d8763d] focus:outline-none focus:ring-1 focus:ring-[#d8763d]"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
         <div>
-          <Label htmlFor="website">Website</Label>
-          <Input id="website" name="website" defaultValue={initial.website || ''} />
+          <Label htmlFor="website" className="font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+            Website URL
+          </Label>
+          <div className="mt-1">
+            <Input id="website" name="website" defaultValue={initial.website || ''} placeholder="https://cruze.qa" />
+          </div>
         </div>
         <div>
-          <Label htmlFor="logoUpload">Logo</Label>
+          <Label htmlFor="logoUpload" className="font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+            Brand Logo
+          </Label>
           <input type="hidden" name="logo" value={logoUrl} readOnly />
           <div className="mt-2 space-y-3">
-            <div className="h-20 w-20 overflow-hidden rounded-md border border-gray-200 bg-gray-50">
+            <div className="h-20 w-20 overflow-hidden rounded-xl border border-white/15 bg-[#11110f]">
               {currentLogoSrc ? (
                 <div
                   className="h-full w-full bg-cover bg-center"
                   style={{ backgroundImage: `url(${currentLogoSrc})` }}
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-xs text-gray-500">
+                <div className="flex h-full w-full items-center justify-center font-mono text-[10px] uppercase text-[#f1efe8]/40">
                   No logo
                 </div>
               )}
@@ -202,15 +223,17 @@ export function OrganizerProfileForm({ initial, action }: OrganizerProfileFormPr
               <Button
                 type="button"
                 variant="outline"
+                size="sm"
                 isLoading={isUploadingLogo}
                 onClick={() => fileInputRef.current?.click()}
               >
-                {logoUrl ? 'Change Logo' : 'Upload Logo'}
+                {logoUrl ? 'Change' : 'Upload'}
               </Button>
               {logoUrl && (
                 <Button
                   type="button"
                   variant="ghost"
+                  size="sm"
                   onClick={() => {
                     if (localLogoPreviewUrlRef.current) {
                       URL.revokeObjectURL(localLogoPreviewUrlRef.current)
@@ -227,18 +250,26 @@ export function OrganizerProfileForm({ initial, action }: OrganizerProfileFormPr
               )}
             </div>
             {logoUploadError && (
-              <p className="text-sm text-red-600">{logoUploadError}</p>
+              <p className="font-mono text-xs text-red-400">{logoUploadError}</p>
             )}
           </div>
         </div>
       </div>
 
       <div>
-        <Label htmlFor="linkedin">LinkedIn</Label>
-        <Input id="linkedin" name="linkedin" defaultValue={initial.socialLinks.linkedin || ''} />
+        <Label htmlFor="linkedin" className="font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+          LinkedIn / Channel
+        </Label>
+        <div className="mt-1">
+          <Input id="linkedin" name="linkedin" defaultValue={initial.socialLinks.linkedin || ''} placeholder="https://linkedin.com/company/cruze" />
+        </div>
       </div>
 
-      <Button type="submit" disabled={isUploadingLogo}>Save Profile</Button>
+      <div className="border-t border-white/10 pt-4">
+        <Button type="submit" disabled={isUploadingLogo}>
+          Save Profile ↗
+        </Button>
+      </div>
     </form>
   )
 }

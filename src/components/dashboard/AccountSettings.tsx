@@ -67,41 +67,73 @@ export function AccountSettings({
   return (
     <div className="space-y-6">
       {noticeMessage ? (
-        <section className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+        <section className="rounded-2xl border border-white/10 bg-[#161614] px-4 py-3 font-mono text-xs text-[#f1efe8]">
+          <span className="text-[#d8763d] mr-2">NOTICE //</span>
           {noticeMessage}
         </section>
       ) : null}
 
-      <form action={updateEmailAction} className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
-        <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
+      <form action={updateEmailAction} className="space-y-4 rounded-2xl border border-white/10 bg-[#161614] p-6 shadow-sm">
+        <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+          <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
+          <h1 className="text-base font-bold uppercase tracking-tight text-[#f1efe8]">
+            Account Email Address
+          </h1>
+        </div>
         <div>
-          <Label htmlFor="email" required>Email</Label>
-          <Input id="email" name="email" type="email" defaultValue={userEmail} required />
-        </div>
-        <Button type="submit">Update Email</Button>
-      </form>
-
-      <form action={changePasswordAction} className="space-y-4 rounded-xl border border-gray-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-gray-900">Change Password</h2>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <div>
-            <Label htmlFor="currentPassword" required>Current Password</Label>
-            <Input id="currentPassword" name="currentPassword" type="password" required />
-          </div>
-          <div>
-            <Label htmlFor="newPassword" required>New Password</Label>
-            <Input id="newPassword" name="newPassword" type="password" required />
+          <Label htmlFor="email" required className="font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+            Primary Email
+          </Label>
+          <div className="mt-1">
+            <Input id="email" name="email" type="email" defaultValue={userEmail} required />
           </div>
         </div>
-        <Button type="submit">Change Password</Button>
+        <div className="pt-2">
+          <Button type="submit">Update Email ↗</Button>
+        </div>
       </form>
 
-      <section className="space-y-4 rounded-xl border border-red-200 bg-red-50 p-6">
-        <h2 className="text-lg font-semibold text-red-900">Delete Account</h2>
+      <form action={changePasswordAction} className="space-y-4 rounded-2xl border border-white/10 bg-[#161614] p-6 shadow-sm">
+        <div className="flex items-center gap-2 border-b border-white/10 pb-3">
+          <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
+          <h2 className="text-base font-bold uppercase tracking-tight text-[#f1efe8]">
+            Change Access Password
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <Label htmlFor="currentPassword" required className="font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+              Current Password
+            </Label>
+            <div className="mt-1">
+              <Input id="currentPassword" name="currentPassword" type="password" required />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="newPassword" required className="font-mono text-[11px] uppercase tracking-wider text-[#f1efe8]/70">
+              New Password
+            </Label>
+            <div className="mt-1">
+              <Input id="newPassword" name="newPassword" type="password" required />
+            </div>
+          </div>
+        </div>
+        <div className="pt-2">
+          <Button type="submit">Change Password ↗</Button>
+        </div>
+      </form>
+
+      <section className="space-y-4 rounded-2xl border border-red-500/30 bg-[#161614] p-6 shadow-sm">
+        <div className="flex items-center gap-2 border-b border-red-500/20 pb-3">
+          <span className="h-2 w-2 rounded-full bg-red-400" />
+          <h2 className="text-base font-bold uppercase tracking-tight text-red-400">
+            Danger Zone: Delete Account
+          </h2>
+        </div>
 
         {hasScheduledDeletion ? (
           <>
-            <p className="text-sm text-red-800">
+            <p className="text-xs font-mono text-[#f1efe8]/70">
               {`Your account deletion is scheduled for ${scheduledForLabel || ''}. You can cancel this during the grace period.`}
             </p>
             <form action={cancelDeletionAction}>
@@ -110,18 +142,24 @@ export function AccountSettings({
           </>
         ) : (
           <>
-            <p className="text-sm text-red-800">Request account deletion by email confirmation. After confirmation, your account enters a grace period before final anonymization.</p>
+            <p className="text-xs font-mono text-[#f1efe8]/70">
+              Request account deletion by email confirmation. After confirmation, your account enters a grace period before permanent anonymization.
+            </p>
             {hasPendingConfirmation ? (
-              <p className="text-sm text-red-800">Check your inbox to confirm deletion. You can request another confirmation email if the previous link expired.</p>
+              <p className="text-xs font-mono text-amber-300">
+                Check your inbox to confirm deletion. You can request another confirmation email if the previous link expired.
+              </p>
             ) : null}
-            <Button
-              type="button"
-              variant="destructive"
-              isLoading={isDeleting}
-              onClick={() => setDeleteConfirmOpen(true)}
-            >
-              {hasPendingConfirmation ? 'Resend Confirmation Email' : 'Delete Account'}
-            </Button>
+            <div>
+              <Button
+                type="button"
+                variant="destructive"
+                isLoading={isDeleting}
+                onClick={() => setDeleteConfirmOpen(true)}
+              >
+                {hasPendingConfirmation ? 'Resend Confirmation Email' : 'Delete Account ↗'}
+              </Button>
+            </div>
           </>
         )}
       </section>

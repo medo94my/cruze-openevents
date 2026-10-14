@@ -14,49 +14,57 @@ export default async function OrganizerProfilePage() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-gray-200 bg-white p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <section className="rounded-2xl border border-white/10 bg-[#161614] p-6 sm:p-8 shadow-sm">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between border-b border-white/10 pb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{orgName}</h1>
-            <p className="mt-1 text-sm text-gray-600">Organizer profile</p>
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#d8763d]">
+              // CURATOR CREDENTIALS
+            </span>
+            <h1 className="mt-1 text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-[#f1efe8]">
+              {orgName}
+              <span className="text-[#d8763d]">.</span>
+            </h1>
+            <p className="mt-1 text-xs font-mono text-[#f1efe8]/60">Verified platform curator profile</p>
           </div>
           <Link
             href="/dashboard/settings"
-            className="inline-flex rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/5 px-4 py-2 font-mono text-xs uppercase tracking-wider text-[#f1efe8] transition-colors hover:bg-white/10"
           >
-            Edit Profile
+            Edit Profile ↗
           </Link>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-4 text-sm text-gray-700 sm:grid-cols-2">
-          <div>
-            <p className="font-medium text-gray-900">Contact Email</p>
-            <p className="mt-1">{user.email}</p>
+        <div className="mt-6 grid grid-cols-1 gap-6 font-mono text-xs sm:grid-cols-2">
+          <div className="rounded-xl border border-white/5 bg-[#11110f] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f1efe8]/50">Official Email</p>
+            <p className="mt-1.5 text-sm text-[#f1efe8]">{user.email}</p>
           </div>
-          <div>
-            <p className="font-medium text-gray-900">Website</p>
-            <p className="mt-1">
+          <div className="rounded-xl border border-white/5 bg-[#11110f] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f1efe8]/50">Website</p>
+            <p className="mt-1.5 text-sm">
               {website ? (
                 <a
                   href={website}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[#5C8BD9] hover:underline"
+                  className="text-[#d8763d] hover:underline"
                 >
                   {website}
                 </a>
               ) : (
-                'Not set'
+                <span className="text-[#f1efe8]/40">Not configured</span>
               )}
             </p>
           </div>
-          <div className="sm:col-span-2">
-            <p className="font-medium text-gray-900">About</p>
-            <p className="mt-1 whitespace-pre-wrap">{description || 'No description yet.'}</p>
+          <div className="sm:col-span-2 rounded-xl border border-white/5 bg-[#11110f] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f1efe8]/50">Curator Statement / Bio</p>
+            <p className="mt-1.5 whitespace-pre-wrap font-sans text-sm text-[#f1efe8]/80 leading-relaxed">
+              {description || 'No public curator description provided yet.'}
+            </p>
           </div>
-          <div>
-            <p className="font-medium text-gray-900">LinkedIn</p>
-            <p className="mt-1">{socialLinks.linkedin || 'Not set'}</p>
+          <div className="rounded-xl border border-white/5 bg-[#11110f] p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f1efe8]/50">LinkedIn / Public Channel</p>
+            <p className="mt-1.5 text-sm text-[#f1efe8]">{socialLinks.linkedin || 'Not linked'}</p>
           </div>
         </div>
       </section>

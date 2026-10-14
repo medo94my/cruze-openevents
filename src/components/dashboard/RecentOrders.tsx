@@ -23,48 +23,82 @@ type RecentOrdersProps = {
 
 export function RecentOrders({ orders }: RecentOrdersProps) {
   return (
-    <section className="rounded-xl border border-gray-200 bg-white p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">Recent Orders</h2>
+    <section className="rounded-2xl border border-white/10 bg-[#161614] p-6 shadow-sm">
+      <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
+          <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-[#f1efe8]">
+            Recent Orders & Ticket Sales
+          </h2>
+        </div>
       </div>
 
       {orders.length === 0 ? (
-        <p className="text-sm text-gray-600">No orders yet.</p>
+        <div className="rounded-xl border border-dashed border-white/15 bg-white/[0.02] py-8 text-center">
+          <p className="text-xs font-mono uppercase tracking-wider text-[#f1efe8]/50">
+            No orders placed yet
+          </p>
+        </div>
       ) : (
         <div className="space-y-3">
           {orders.map((order) => {
             const pendingLabel = getPendingOrderLabel(order)
             const pendingIsReminder = order.reminderSentAt != null
             return (
-              <div key={order.id} className="rounded-lg border border-gray-100 p-3">
+              <div
+                key={order.id}
+                className="rounded-xl border border-white/10 bg-[#11110f] p-4 transition-colors hover:border-white/20"
+              >
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Link href={`/dashboard/events/${order.event.id}/orders/${order.id}`} className="font-medium text-gray-900 hover:text-[#5C8BD9]">
-                    {order.orderNumber}
+                  <Link
+                    href={`/dashboard/events/${order.event.id}/orders/${order.id}`}
+                    className="font-mono text-xs font-bold uppercase tracking-wider text-[#d8763d] transition-colors hover:text-[#e08955]"
+                  >
+                    #{order.orderNumber}
                   </Link>
-                  <p className="text-sm font-medium text-gray-900">{formatCurrency(order.totalAmount, order.currency)}</p>
+                  <p className="font-mono text-sm font-bold text-[#f1efe8]">
+                    {formatCurrency(order.totalAmount, order.currency || 'QAR')}
+                  </p>
                 </div>
-                <p className="text-sm text-gray-600">{order.event.title}</p>
-                <p className="text-xs text-gray-500">
-                  {order.buyerEmail} · {order.status}
+                <p className="mt-1 text-xs font-medium text-[#f1efe8]/80">{order.event.title}</p>
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px] font-mono text-[#f1efe8]/50">
+                  <span className="text-white/60">{order.buyerEmail}</span>
+                  <span>·</span>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                      order.status === 'PAID'
+                        ? 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/30'
+                        : order.status === 'PENDING'
+                          ? 'bg-amber-950/50 text-amber-300 border border-amber-500/30'
+                          : 'bg-white/5 text-white/60 border border-white/10'
+                    }`}
+                  >
+                    {order.status}
+                  </span>
                   {pendingLabel && (
                     <span
-                      className={`ml-1 inline-flex items-center justify-center rounded-full px-2 py-0.5 text-center text-xs font-medium ${
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
                         pendingIsReminder
-                          ? 'bg-blue-100 text-blue-600'
-                          : 'bg-amber-100 text-amber-600'
+                          ? 'bg-blue-950/50 text-blue-300 border border-blue-500/30'
+                          : 'bg-amber-950/50 text-amber-300 border border-amber-500/30'
                       }`}
                     >
                       {pendingLabel}
                     </span>
                   )}
                   {order.paymentMethod === 'INVOICE' && (
-                    <span className="ml-1 inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">Invoice</span>
+                    <span className="inline-flex rounded-full border border-amber-500/30 bg-amber-950/50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-300">
+                      Invoice
+                    </span>
                   )}
                   {order.paymentMethod === 'FREE' && (
-                    <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">Free order</span>
+                    <span className="inline-flex rounded-full border border-blue-500/30 bg-blue-950/50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-300">
+                      Free
+                    </span>
                   )}
-                  {' · '}{formatDateTime(order.createdAt)}
-                </p>
+                  <span>·</span>
+                  <span>{formatDateTime(order.createdAt)}</span>
+                </div>
               </div>
             )
           })}

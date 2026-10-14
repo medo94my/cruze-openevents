@@ -19,8 +19,8 @@ const M = { top: 16, right: 54, bottom: 44, left: 64 }
 const PLOT_W = VB_W - M.left - M.right
 const PLOT_H = VB_H - M.top - M.bottom
 
-const REV_COLOR = '#75bc0a'
-const TICK_COLOR = '#4a77be'
+const REV_COLOR = '#d8763d'
+const TICK_COLOR = '#38bdf8'
 
 function niceMax(maxValue: number): number {
   if (maxValue <= 0) return 4
@@ -75,7 +75,7 @@ function toCountValue(value: number | string | null | undefined): number {
 
 type View = 'daily' | 'weekly'
 
-export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', showCreateEventCta = false }: SalesTrendChartProps) {
+export function SalesTrendChart({ title, noDataText, data, currency = 'QAR', showCreateEventCta = false }: SalesTrendChartProps) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
   const [view, setView] = useState<View>('daily')
 
@@ -95,40 +95,47 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
   }
 
   const btnClass = (active: boolean) =>
-    `text-sm font-medium px-4 py-2 rounded-lg transition-colors ${
-      active ? 'bg-[#5c8bd9] text-white' : 'bg-[#E5E7EB] text-[#4A5565]'
+    `text-xs font-mono uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg transition-colors ${
+      active ? 'bg-[#d8763d] text-white' : 'bg-white/5 text-[#f1efe8]/60 hover:bg-white/10'
     }`
 
   if (!hasData) {
     return (
-      <section className="rounded-xl border border-gray-100 bg-white p-6 shadow-md">
-        <div className="flex items-start justify-between">
-          <div>
-            <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-            <p className="text-sm text-gray-500 mt-1">Revenue and ticket sales over time</p>
+      <section className="rounded-2xl border border-white/10 bg-[#161614] p-6 shadow-sm">
+        <div className="flex items-start justify-between border-b border-white/10 pb-3">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
+            <div>
+              <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-[#f1efe8]">
+                {title}
+              </h3>
+              <p className="text-xs font-mono text-[#f1efe8]/50 mt-0.5">
+                Revenue ({currency}) and ticket sales over time
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button className={btnClass(view === 'daily')} onClick={() => handleViewChange('daily')}>
-              Daily (30 days)
+              Daily (30d)
             </button>
             <button className={btnClass(view === 'weekly')} onClick={() => handleViewChange('weekly')}>
               Weekly
             </button>
           </div>
         </div>
-        <div className="mt-8 flex flex-col items-center justify-center py-8">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-            <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-          </div>
-          <p className="text-gray-900 font-medium">{noDataText}</p>
-          <p className="mt-1 text-sm text-gray-500 text-center max-w-xs">
-            Data will appear here once you receive orders.
+        <div className="mt-6 flex flex-col items-center justify-center py-8 text-center rounded-xl border border-dashed border-white/15 bg-white/[0.02]">
+          <p className="text-xs font-mono uppercase tracking-wider text-[#f1efe8]/50">
+            {noDataText}
+          </p>
+          <p className="mt-1 text-xs text-[#f1efe8]/40 max-w-xs">
+            Data will appear here once ticket purchases occur.
           </p>
           {showCreateEventCta && (
-            <Link href="/create-event" className="mt-4 inline-flex rounded-md bg-[#5C8BD9] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a7bc9]">
-              Create Your First Event
+            <Link
+              href="/create-event"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[#d8763d] px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-white hover:bg-[#c4652e]"
+            >
+              Create Event ↗
             </Link>
           )}
         </div>
@@ -165,16 +172,23 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
   const tooltipFlip = hoveredIdx !== null && hoveredIdx > n * 0.7
 
   return (
-    <section className="rounded-xl border border-gray-100 bg-white p-6 shadow-md">
+    <section className="rounded-2xl border border-white/10 bg-[#161614] p-6 shadow-sm">
       {/* Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
-          <p className="text-sm text-gray-500 mt-1">Revenue and ticket sales over time</p>
+      <div className="flex items-start justify-between mb-6 border-b border-white/10 pb-4">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-[#d8763d]" />
+          <div>
+            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-[#f1efe8]">
+              {title}
+            </h3>
+            <p className="text-xs font-mono text-[#f1efe8]/50 mt-0.5">
+              Revenue ({currency}) and ticket sales trajectory
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <button className={btnClass(view === 'daily')} onClick={() => handleViewChange('daily')}>
-            Daily (30 days)
+            Daily (30d)
           </button>
           <button className={btnClass(view === 'weekly')} onClick={() => handleViewChange('weekly')}>
             Weekly
@@ -197,7 +211,7 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
               x2={M.left + PLOT_W}
               y1={yOfRev(v)}
               y2={yOfRev(v)}
-              stroke="#e5e7eb"
+              stroke="rgba(255, 255, 255, 0.08)"
               strokeWidth={0.8}
               strokeDasharray="4 3"
             />
@@ -207,7 +221,7 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
           <line
             x1={M.left} x2={M.left}
             y1={M.top} y2={M.top + PLOT_H}
-            stroke="#d1d5db" strokeWidth={1}
+            stroke="rgba(255, 255, 255, 0.15)" strokeWidth={1}
           />
 
           {/* Left Y-axis ticks & labels */}
@@ -217,9 +231,9 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
               x={M.left - 6}
               y={yOfRev(v) + 4}
               textAnchor="end"
-              fontSize={11}
-              fill="#6b7280"
-              fontFamily="ui-sans-serif, system-ui, sans-serif"
+              fontSize={10}
+              fill="#8e8e89"
+              fontFamily="ui-monospace, SFMono-Regular, monospace"
             >
               {formatRevTick(v)}
             </text>
@@ -230,19 +244,19 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
             x={13}
             y={M.top + PLOT_H / 2}
             textAnchor="middle"
-            fontSize={11}
-            fill="#808080"
-            fontFamily="ui-sans-serif, system-ui, sans-serif"
+            fontSize={10}
+            fill="#8e8e89"
+            fontFamily="ui-monospace, SFMono-Regular, monospace"
             transform={`rotate(-90 13 ${M.top + PLOT_H / 2})`}
           >
-            Revenue ({currency})
+            REV ({currency})
           </text>
 
           {/* Right Y-axis line */}
           <line
             x1={M.left + PLOT_W} x2={M.left + PLOT_W}
             y1={M.top} y2={M.top + PLOT_H}
-            stroke="#d1d5db" strokeWidth={1}
+            stroke="rgba(255, 255, 255, 0.15)" strokeWidth={1}
           />
 
           {/* Right Y-axis ticks & labels */}
@@ -252,9 +266,9 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
               x={M.left + PLOT_W + 6}
               y={yOfTick(v) + 4}
               textAnchor="start"
-              fontSize={11}
-              fill="#6b7280"
-              fontFamily="ui-sans-serif, system-ui, sans-serif"
+              fontSize={10}
+              fill="#8e8e89"
+              fontFamily="ui-monospace, SFMono-Regular, monospace"
             >
               {v}
             </text>
@@ -265,19 +279,19 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
             x={VB_W - 11}
             y={M.top + PLOT_H / 2}
             textAnchor="middle"
-            fontSize={11}
-            fill="#808080"
-            fontFamily="ui-sans-serif, system-ui, sans-serif"
+            fontSize={10}
+            fill="#8e8e89"
+            fontFamily="ui-monospace, SFMono-Regular, monospace"
             transform={`rotate(90 ${VB_W - 11} ${M.top + PLOT_H / 2})`}
           >
-            Tickets
+            TICKETS
           </text>
 
           {/* X-axis line */}
           <line
             x1={M.left} x2={M.left + PLOT_W}
             y1={M.top + PLOT_H} y2={M.top + PLOT_H}
-            stroke="#d1d5db" strokeWidth={1}
+            stroke="rgba(255, 255, 255, 0.15)" strokeWidth={1}
           />
 
           {/* X-axis date labels */}
@@ -289,11 +303,11 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
               <text
                 key={i}
                 x={xOf(i)}
-                y={M.top + PLOT_H + 14}
+                y={M.top + PLOT_H + 16}
                 textAnchor="middle"
-                fontSize={11}
-                fill="#6b7280"
-                fontFamily="ui-sans-serif, system-ui, sans-serif"
+                fontSize={10}
+                fill="#8e8e89"
+                fontFamily="ui-monospace, SFMono-Regular, monospace"
               >
                 {shortDate(d.date)}
               </text>
@@ -324,12 +338,12 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
           {visibleData.map((d, i) => (
             <rect
               key={i}
-              x={xOf(i) - 4}
-              y={yOfRev(d.revenue) - 4}
-              width={8}
-              height={8}
+              x={xOf(i) - 3.5}
+              y={yOfRev(d.revenue) - 3.5}
+              width={7}
+              height={7}
               fill={REV_COLOR}
-              stroke="white"
+              stroke="#161614"
               strokeWidth={1.5}
               style={{ pointerEvents: 'none' }}
             />
@@ -341,9 +355,9 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
               key={i}
               cx={xOf(i)}
               cy={yOfTick(d.ticketsSold)}
-              r={4}
+              r={3.5}
               fill={TICK_COLOR}
-              stroke="white"
+              stroke="#161614"
               strokeWidth={1.5}
               style={{ pointerEvents: 'none' }}
             />
@@ -354,7 +368,7 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
             <line
               x1={hoveredX} x2={hoveredX}
               y1={M.top} y2={M.top + PLOT_H}
-              stroke="#9ca3af"
+              stroke="rgba(255, 255, 255, 0.4)"
               strokeWidth={1}
               strokeDasharray="4 2"
               style={{ pointerEvents: 'none' }}
@@ -384,7 +398,7 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
         {/* Tooltip */}
         {hoveredIdx !== null && hovered && (
           <div
-            className="absolute top-4 z-10 rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-lg text-sm pointer-events-none"
+            className="absolute top-4 z-10 rounded-xl border border-white/15 bg-[#161614] px-3.5 py-2.5 shadow-2xl text-xs font-mono pointer-events-none"
             style={{
               left: tooltipFlip
                 ? `calc(${((hoveredX / VB_W) * 100).toFixed(1)}% - 8px)`
@@ -392,28 +406,28 @@ export function SalesTrendChart({ title, noDataText, data, currency = 'SEK', sho
               transform: tooltipFlip ? 'translateX(-100%)' : 'none',
             }}
           >
-            <p className="font-semibold text-gray-700 mb-1.5">{shortDate(hovered.date)}</p>
+            <p className="font-bold text-[#f1efe8] mb-1.5 uppercase tracking-wider">{shortDate(hovered.date)}</p>
             <div className="flex items-center gap-2">
-              <span className="inline-block w-3 h-3 shrink-0 rounded-sm" style={{ background: REV_COLOR }} />
-              <span className="text-gray-600">{formatCurrency(hovered.revenue, currency)}</span>
+              <span className="inline-block w-2.5 h-2.5 shrink-0 rounded-xs" style={{ background: REV_COLOR }} />
+              <span className="text-[#f1efe8]/80">{formatCurrency(hovered.revenue, currency)}</span>
             </div>
             <div className="flex items-center gap-2 mt-1">
-              <span className="inline-block w-3 h-3 shrink-0 rounded-full" style={{ background: TICK_COLOR }} />
-              <span className="text-gray-600">{hovered.ticketsSold} tickets</span>
+              <span className="inline-block w-2.5 h-2.5 shrink-0 rounded-full" style={{ background: TICK_COLOR }} />
+              <span className="text-[#f1efe8]/80">{hovered.ticketsSold} tickets</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-6 mt-3">
+      <div className="flex items-center justify-center gap-6 mt-4 pt-3 border-t border-white/10 font-mono text-xs">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-3 h-3 shrink-0 rounded-sm" style={{ background: REV_COLOR }} />
-          <span className="text-sm" style={{ color: REV_COLOR }}>Revenue ({currency})</span>
+          <span className="inline-block w-2.5 h-2.5 shrink-0 rounded-xs" style={{ background: REV_COLOR }} />
+          <span style={{ color: REV_COLOR }}>Revenue ({currency})</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="inline-block w-3 h-3 shrink-0 rounded-full" style={{ background: TICK_COLOR }} />
-          <span className="text-sm" style={{ color: TICK_COLOR }}>Tickets Sold</span>
+          <span className="inline-block w-2.5 h-2.5 shrink-0 rounded-full" style={{ background: TICK_COLOR }} />
+          <span style={{ color: TICK_COLOR }}>Tickets Sold</span>
         </div>
       </div>
     </section>

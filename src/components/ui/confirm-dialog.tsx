@@ -90,7 +90,7 @@ export function ConfirmDialog({
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         aria-hidden="true"
         onClick={isLoading ? undefined : onClose}
       />
@@ -98,12 +98,12 @@ export function ConfirmDialog({
       {/* Panel */}
       <div
         ref={dialogRef}
-        className="relative z-10 mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        className="relative z-10 mx-4 w-full max-w-md rounded-2xl border border-white/10 bg-[#161614] p-6 shadow-2xl text-[#f1efe8]"
       >
-        <h2 id="confirm-dialog-title" className="text-lg font-semibold text-gray-900">
+        <h2 id="confirm-dialog-title" className="text-lg font-bold uppercase tracking-tight text-[#f1efe8]">
           {title}
         </h2>
-        <p id="confirm-dialog-desc" className="mt-2 text-sm text-gray-600">
+        <p id="confirm-dialog-desc" className="mt-2 text-sm text-[#f1efe8]/70">
           {description}
         </p>
         <div className="mt-6 flex justify-end gap-3">

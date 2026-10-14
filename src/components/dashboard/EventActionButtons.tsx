@@ -12,7 +12,7 @@ type Props = {
 }
 
 const itemClass =
-  'flex cursor-pointer select-none items-center px-3 py-2 text-sm text-gray-700 outline-none hover:bg-gray-50 focus:bg-gray-50 rounded'
+  'flex cursor-pointer select-none items-center px-3 py-2 font-mono text-xs uppercase tracking-wider text-[#f1efe8]/80 outline-none hover:bg-white/10 hover:text-white focus:bg-white/10 rounded-lg transition-colors'
 
 export function EventActionButtons({ eventId, eventSlug }: Props) {
   const [copied, setCopied] = useState(false)
@@ -47,16 +47,16 @@ export function EventActionButtons({ eventId, eventSlug }: Props) {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <Button variant="outline">
-            <Download className="mr-1 h-4 w-4" />
+            <Download className="mr-1 h-3.5 w-3.5" />
             Export
-            <ChevronDown className="ml-1 h-4 w-4" />
+            <ChevronDown className="ml-1 h-3.5 w-3.5" />
           </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
             sideOffset={4}
             align="start"
-            className="z-50 min-w-[160px] rounded-lg border border-gray-200 bg-white p-1 shadow-md"
+            className="z-50 min-w-[160px] rounded-xl border border-white/15 bg-[#161614] p-1.5 shadow-2xl text-[#f1efe8]"
           >
             <DropdownMenu.Item asChild>
               <a

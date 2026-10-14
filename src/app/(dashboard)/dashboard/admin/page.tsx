@@ -14,14 +14,15 @@ export default async function DashboardAdminOverviewPage() {
   return (
     <div className="space-y-6">
       <WorkspacePageHeader
+        badge="// PLATFORM ADMINISTRATION"
         title="Admin Overview"
-        description="Platform-wide statistics and user management."
+        description="Platform-wide statistics, curator directory, and system controls."
         actions={(
           <Link
             href="/dashboard/admin/users"
-            className="inline-flex rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#d8763d] px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#c4652e]"
           >
-            Manage Users
+            Manage Users ↗
           </Link>
         )}
       />

@@ -14,12 +14,12 @@ type DashboardStatsProps = {
 
 export function DashboardStats({ stats }: DashboardStatsProps) {
   const cards = [
-    { label: 'Total Events', value: String(stats.totalEvents) },
-    { label: 'Published', value: String(stats.publishedEvents) },
-    { label: 'Draft', value: String(stats.draftEvents) },
-    { label: 'Upcoming', value: String(stats.upcomingEvents) },
-    { label: 'Tickets Sold', value: String(stats.totalTicketsSold) },
-    { label: 'Revenue', value: formatCurrency(stats.totalRevenue), subtitle: 'Excluding invoice and free orders' },
+    { label: 'Total Events', value: String(stats.totalEvents).padStart(2, '0') },
+    { label: 'Published (Live)', value: String(stats.publishedEvents).padStart(2, '0') },
+    { label: 'Draft', value: String(stats.draftEvents).padStart(2, '0') },
+    { label: 'Upcoming', value: String(stats.upcomingEvents).padStart(2, '0') },
+    { label: 'Tickets Sold', value: stats.totalTicketsSold.toLocaleString('en-US') },
+    { label: 'Gross Revenue', value: formatCurrency(stats.totalRevenue, 'QAR'), subtitle: 'Paid card & sandbox orders' },
   ]
 
   return <WorkspaceStatsGrid items={cards} columns={3} />

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { ImageIcon, Upload, X, Loader2, Sun, Moon, LayoutGrid, Layers, GalleryHorizontal } from 'lucide-react'
+import { WorkspacePageHeader } from '@/components/layout/WorkspaceShell'
 
 type FooterLink = { label: string; href: string; external?: boolean }
 
@@ -199,13 +200,12 @@ export default function AdminCustomizationPage() {
   const displayImage = previews['homepage'] || (heroImage ? '/api/platform/image/hero' : '/hero-image.jpg')
 
   return (
-    <div className="space-y-10">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Platform Customization</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Customize the branding and look of your platform.
-        </p>
-      </div>
+    <div className="space-y-8">
+      <WorkspacePageHeader
+        badge="// PLATFORM IDENTITY"
+        title="Platform Customization"
+        description="Configure branding, Qatar localized themes, logos, and public metadata."
+      />
 
       {message && (
         <div
@@ -659,15 +659,15 @@ export default function AdminCustomizationPage() {
       {/* ================================================================
           SAVE
           ================================================================ */}
-      <div className="flex items-center gap-4 border-t border-gray-200 pt-6">
+      <div className="flex items-center gap-4 border-t border-white/10 pt-6">
         <button
           type="button"
           onClick={handleSave}
           disabled={saving || !!uploading || !platformName.trim()}
-          className="inline-flex items-center gap-2 rounded-lg bg-[#5C8BD9] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#4a7ac8] disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-[#d8763d] px-6 py-2.5 font-mono text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#c4652e] disabled:opacity-50 cursor-pointer"
         >
-          {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-          {saving ? 'Saving...' : 'Save Changes'}
+          {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+          {saving ? 'Saving...' : 'Save Changes ↗'}
         </button>
 
         <button
@@ -685,7 +685,7 @@ export default function AdminCustomizationPage() {
             setFooterTagline(DEFAULTS.footerTagline)
             setFooterLinks(DEFAULT_FOOTER_LINKS)
           }}
-          className="text-sm text-gray-500 hover:text-gray-700"
+          className="font-mono text-xs uppercase tracking-wider text-[#f1efe8]/50 hover:text-[#f1efe8] cursor-pointer"
         >
           Reset to defaults
         </button>

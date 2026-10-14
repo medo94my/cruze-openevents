@@ -20,8 +20,9 @@ export default async function DashboardAdminLegalPage() {
   return (
     <div className="space-y-6">
       <WorkspacePageHeader
+        badge="// COMPLIANCE & LEGAL"
         title="Legal & Contact"
-        description="Customize the Terms of Service, About Us, Privacy Policy, and Contact pages."
+        description="Customize the Terms of Service, About Us, Privacy Policy, and Qatar contact particulars."
       />
 
       <LegalContactForm initialData={legalContent} />
