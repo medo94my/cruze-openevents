@@ -91,42 +91,49 @@ export function Header({ platformName = 'OpenEvents', platformLogo, brandColor }
 
   if (isPublicPage) {
     return (
-      <header className="sticky top-0 z-50 border-b border-[#e9d8d2] bg-[#fbf8f3]/95 text-[#321d28] backdrop-blur-xl print:hidden">
-        <nav className="mx-auto flex h-[74px] max-w-[1350px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-12">
-          <Link href="/" className="flex items-center gap-3" aria-label="Cruze Doha home">
-            <span className="flex h-11 w-11 items-center justify-center rounded-[15px] bg-[#641633] text-[23px] font-black tracking-[-0.08em] text-white">C<span className="text-[#e4b98c]">.</span></span>
+      <header className="sticky top-0 z-50 px-4 py-3 sm:px-6 lg:px-8 print:hidden transition-all duration-300">
+        <nav className="mx-auto flex h-[66px] max-w-[1300px] items-center justify-between gap-4 rounded-full px-5 sm:px-8 spatial-glass-dock text-[#241a20]">
+          <Link href="/" className="group flex items-center gap-3" aria-label="Cruze Doha home">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8A1538] to-[#5C1026] text-[20px] font-black tracking-[-0.06em] text-white shadow-[0_4px_14px_rgba(138,21,56,0.35)] transition-transform duration-300 group-hover:scale-105">
+              C<span className="text-[#e8bc91]">.</span>
+            </span>
             <span className="flex flex-col leading-none">
-              <span className="text-[23px] font-black tracking-[-0.07em] text-[#48142d]">CRUZE<span className="text-[#b57d83]">.</span></span>
-              <span className="mt-1 text-[9px] font-extrabold tracking-[0.31em] text-[#a16c7a]">DOHA EXPERIENCES</span>
+              <span className="text-[20px] font-black tracking-[-0.06em] text-[#2b101c]">CRUZE<span className="text-[#8A1538]">.</span></span>
+              <span className="mt-0.5 text-[8.5px] font-bold tracking-[0.28em] text-[#8a5d6a]">DOHA SCENE</span>
             </span>
           </Link>
-          <div className="hidden items-center gap-8 lg:flex">
-            <Link href="/events" className="text-[14px] font-bold text-[#4b3540] transition hover:text-[#9e365b]">Discover events</Link>
-            <Link href="/events?when=weekend" className="text-[14px] font-bold text-[#4b3540] transition hover:text-[#9e365b]">This weekend</Link>
-            <Link href="/#discover" className="text-[14px] font-bold text-[#4b3540] transition hover:text-[#9e365b]">Explore by interest</Link>
+          <div className="hidden items-center gap-2 lg:flex">
+            <Link href="/events" className="rounded-full px-4 py-2 text-[13px] font-semibold text-[#44333b] transition duration-200 hover:bg-black/5 hover:text-[#8a1538]">Discover</Link>
+            <Link href="/events?when=weekend" className="rounded-full px-4 py-2 text-[13px] font-semibold text-[#44333b] transition duration-200 hover:bg-black/5 hover:text-[#8a1538]">This Weekend</Link>
+            <Link href="/#discover" className="rounded-full px-4 py-2 text-[13px] font-semibold text-[#44333b] transition duration-200 hover:bg-black/5 hover:text-[#8a1538]">Curated Escapes</Link>
           </div>
           <div className="hidden items-center gap-3 sm:flex">
-            <span className="me-2 hidden items-center gap-1.5 text-xs font-semibold text-[#977b85] xl:inline-flex"><MapPin size={14}/>Qatar</span>
+            <span className="me-1 hidden items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-3 py-1.5 text-[11px] font-bold tracking-wider text-[#795d66] xl:inline-flex">
+              <span className="h-2 w-2 rounded-full bg-[#10b981] animate-pulse-radar" />
+              DOHA LIVE
+            </span>
             {canManageEvents ? (
-              <Link href="/dashboard" className="rounded-full border border-[#d8bdc5] px-5 py-2.5 text-sm font-bold text-[#641633] transition hover:bg-[#f2e9e3]">Dashboard</Link>
+              <Link href="/dashboard" className="rounded-full border border-[#d8bdc5] bg-white/60 px-4 py-2 text-xs font-bold text-[#641633] transition hover:bg-white">Dashboard</Link>
             ) : status === 'authenticated' ? (
-              <Link href="/dashboard/profile" className="rounded-full border border-[#d8bdc5] px-5 py-2.5 text-sm font-bold text-[#641633]">My account</Link>
+              <Link href="/dashboard/profile" className="rounded-full border border-[#d8bdc5] bg-white/60 px-4 py-2 text-xs font-bold text-[#641633]">My account</Link>
             ) : (
-              <Link href="/login" className="rounded-full border border-[#d8bdc5] px-5 py-2.5 text-sm font-bold text-[#641633] transition hover:bg-[#f2e9e3]">Sign in</Link>
+              <Link href="/login" className="rounded-full border border-black/10 bg-white/50 px-4 py-2 text-xs font-bold text-[#4c353f] transition hover:bg-white">Sign in</Link>
             )}
-            <Link href="/events" className="inline-flex items-center gap-2 rounded-full bg-[#641633] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#812849]">Explore <ArrowUpRight size={16}/></Link>
+            <Link href="/events" className="sheen-effect inline-flex items-center gap-1.5 rounded-full bg-[#8A1538] px-5 py-2.5 text-xs font-bold text-white shadow-[0_4px_16px_rgba(138,21,56,0.25)] transition hover:bg-[#6c0f2a] active:scale-95">
+              Explore <ArrowUpRight size={14}/>
+            </Link>
           </div>
-          <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#e8dcd5] text-[#641633] sm:hidden" aria-label={mobileMenuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((open) => !open)}>
+          <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 text-[#641633] sm:hidden" aria-label={mobileMenuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((open) => !open)}>
             {mobileMenuOpen ? <X size={20}/> : <Menu size={20}/>}
           </button>
         </nav>
         {mobileMenuOpen && (
-          <div className="border-t border-[#e5d8d0] bg-[#fbf8f3] px-5 py-5 sm:hidden">
+          <div className="mx-auto mt-2 max-w-[1300px] rounded-3xl spatial-glass-dock px-6 py-5 sm:hidden">
             <div className="flex flex-col gap-3 text-sm font-bold">
               <Link href="/events" onClick={() => setMobileMenuOpen(false)}>Discover events</Link>
               <Link href="/events?when=weekend" onClick={() => setMobileMenuOpen(false)}>This weekend</Link>
               <Link href="/#discover" onClick={() => setMobileMenuOpen(false)}>Explore by interest</Link>
-              <Link href={canManageEvents ? '/dashboard' : status === 'authenticated' ? '/dashboard/profile' : '/login'} onClick={() => setMobileMenuOpen(false)} className="mt-2 rounded-full bg-[#641633] px-4 py-3 text-center text-white">{canManageEvents ? 'Dashboard' : status === 'authenticated' ? 'My account' : 'Sign in'}</Link>
+              <Link href={canManageEvents ? '/dashboard' : status === 'authenticated' ? '/dashboard/profile' : '/login'} onClick={() => setMobileMenuOpen(false)} className="mt-2 rounded-full bg-[#8A1538] px-4 py-3 text-center text-white">{canManageEvents ? 'Dashboard' : status === 'authenticated' ? 'My account' : 'Sign in'}</Link>
             </div>
           </div>
         )}

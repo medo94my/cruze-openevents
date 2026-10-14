@@ -187,21 +187,21 @@ function EventTile({ event, lang, large = false }: { event: CruzeEvent; lang: La
   return (
     <Link
       href={"/events/" + encodeURIComponent(event.slug)}
-      className={"group relative block overflow-hidden rounded-[25px] bg-[#1e1820] text-white shadow-[0_12px_34px_rgba(62,27,34,0.09)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(62,27,34,0.17)] " + (large ? "min-h-[360px] sm:min-h-[440px]" : "min-h-[210px] sm:min-h-[216px]")}
+      className={"group relative block overflow-hidden rounded-[28px] bg-[#12131a] text-white spatial-glass-card " + (large ? "min-h-[380px] sm:min-h-[460px]" : "min-h-[220px] sm:min-h-[224px]")}
     >
       {event.coverImage && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={event.coverImage} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+        <img src={event.coverImage} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105" />
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#150b17]/95 via-[#210e19]/35 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#090a0f]/95 via-[#170c16]/40 to-black/20" />
       <div className="absolute start-5 top-5 flex flex-wrap gap-2">
-        <span className="rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#491229] backdrop-blur-sm">{category?.[lang]}</span>
-        {event.isDemo && <span className="rounded-full border border-white/40 bg-[#310c20]/60 px-3 py-1.5 text-[10px] font-bold tracking-wider text-white backdrop-blur-sm">{copy[lang].concept}</span>}
+        <span className="rounded-full spatial-glass-dock px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-widest text-[#f5d8db] shadow-sm">{category?.[lang]}</span>
+        {event.isDemo && <span className="rounded-full border border-white/20 bg-black/60 px-3.5 py-1.5 text-[10px] font-bold tracking-wider text-white backdrop-blur-md">{copy[lang].concept}</span>}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+      <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
         <p className="mb-2 text-xs font-semibold tracking-wide text-[#f8dcb4]">{eventDate(event.startDate, lang)} · {event.city}</p>
-        <h3 className={"max-w-xl font-bold tracking-[-0.03em] " + (large ? "text-3xl leading-tight sm:text-[38px]" : "text-[21px] leading-snug")}>{cleanTitle(event.title)}</h3>
-        {large && <div className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#fff4e3]">{copy[lang].view}<ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" /></div>}
+        <h3 className={"max-w-xl font-bold tracking-[-0.03em] transition-colors group-hover:text-[#f8dcb4] " + (large ? "text-3xl leading-tight sm:text-[40px]" : "text-[21px] leading-snug")}>{cleanTitle(event.title)}</h3>
+        {large && <div className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#fff4e3] transition group-hover:translate-x-1">{copy[lang].view}<ArrowUpRight className="h-4 w-4 rtl:-scale-x-100" /></div>}
       </div>
     </Link>
   )
@@ -210,24 +210,24 @@ function EventTile({ event, lang, large = false }: { event: CruzeEvent; lang: La
 function EventCard({ event, lang }: { event: CruzeEvent; lang: Language }) {
   const category = categories.find((c) => c.key === categoryFor(event))
   return (
-    <Link href={"/events/" + encodeURIComponent(event.slug)} className="group block overflow-hidden rounded-[22px] border border-[#e9e0d7] bg-white transition duration-300 hover:-translate-y-1 hover:border-[#d3beb3] hover:shadow-[0_20px_45px_rgba(79,31,46,0.12)]">
-      <div className="relative aspect-[1.45] overflow-hidden bg-[#e6dbce]">
+    <Link href={"/events/" + encodeURIComponent(event.slug)} className="group block overflow-hidden rounded-[26px] spatial-glass-card text-[#271d20]">
+      <div className="relative aspect-[1.45] overflow-hidden bg-[#181920]">
         {event.coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={event.coverImage} alt="" loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+          <img src={event.coverImage} alt="" loading="lazy" className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-105" />
         ) : <div className="h-full w-full bg-gradient-to-tr from-[#721635] to-[#d5a876]" />}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-        <div className="absolute start-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-[#55132d]">{category?.[lang]}</div>
-        {event.isDemo && <div className="absolute bottom-4 start-4 rounded-full border border-white/50 bg-[#51142f]/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white">{copy[lang].concept}</div>}
-        <span className="absolute bottom-4 end-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#651b3c] shadow-sm transition group-hover:rotate-45"><ArrowUpRight size={18}/></span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+        <div className="absolute start-4 top-4 rounded-full spatial-glass-dock px-3 py-1.5 text-[11px] font-semibold text-[#481e2b] shadow-sm">{category?.[lang]}</div>
+        {event.isDemo && <div className="absolute bottom-4 start-4 rounded-full border border-white/20 bg-black/60 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">{copy[lang].concept}</div>}
+        <span className="absolute bottom-4 end-4 flex h-10 w-10 items-center justify-center rounded-full spatial-glass-dock text-[#8a1538] shadow-md transition duration-300 group-hover:rotate-45 group-hover:scale-110"><ArrowUpRight size={17}/></span>
       </div>
-      <div className="px-5 pb-6 pt-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-[#9b4158]">{eventWeekday(event.startDate, lang)}, {eventDate(event.startDate, lang)} · {event.city}</p>
-        <h3 className="min-h-[60px] text-[21px] font-bold leading-[1.35] tracking-tight text-[#291d23]">{cleanTitle(event.title)}</h3>
-        <div className="mt-3 flex items-center gap-1.5 text-[13px] text-[#76656b]"><MapPin size={14} className="shrink-0"/><span className="truncate">{event.venue}</span></div>
-        <div className="mt-5 flex items-center justify-between border-t border-[#f0e7de] pt-4">
-          <span className="text-xs font-medium text-[#98838a]">{event.ticketPrice === 0 ? copy[lang].freeLabel : copy[lang].from}</span>
-          <span className="text-[18px] font-extrabold text-[#641532]">{price(event, lang)}</span>
+      <div className="px-6 pb-6 pt-5">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-[#8a1538]">{eventWeekday(event.startDate, lang)}, {eventDate(event.startDate, lang)} · {event.city}</p>
+        <h3 className="min-h-[58px] text-[20px] font-bold leading-[1.32] tracking-tight text-[#22181d] transition-colors group-hover:text-[#8a1538]">{cleanTitle(event.title)}</h3>
+        <div className="mt-3 flex items-center gap-1.5 text-[12.5px] text-[#76656b]"><MapPin size={14} className="shrink-0 text-[#8a1538]"/><span className="truncate">{event.venue}</span></div>
+        <div className="mt-5 flex items-center justify-between border-t border-black/[0.06] pt-4">
+          <span className="text-xs font-medium text-[#8c7b82]">{event.ticketPrice === 0 ? copy[lang].freeLabel : copy[lang].from}</span>
+          <span className="text-[19px] font-extrabold text-[#8a1538]">{price(event, lang)}</span>
         </div>
       </div>
     </Link>
@@ -252,126 +252,214 @@ export function CruzeHome({ events, compact = false, initialDate = "any", initia
   const clear = () => { setCategory("all"); setDate("any"); setSearch(""); setFreeOnly(false) }
 
   return (
-    <div dir={lang === "ar" ? "rtl" : "ltr"} className="min-h-screen bg-[#fbf8f3] text-[#271d20]">
-      <div className="bg-[#641633] px-4 py-2.5 text-center text-[10px] font-bold uppercase tracking-[0.15em] text-[#fff0dc] sm:text-xs">
+    <div dir={lang === "ar" ? "rtl" : "ltr"} className="relative min-h-screen bg-[#090a0f] text-[#f2eff4] antialiased selection:bg-[#8A1538] selection:text-white overflow-hidden">
+      {/* Background ambient aurora lights */}
+      <div className="pointer-events-none absolute -top-40 right-1/4 h-[550px] w-[550px] rounded-full bg-[#8A1538]/15 blur-[140px] animate-aurora" />
+      <div className="pointer-events-none absolute top-[600px] -left-40 h-[500px] w-[500px] rounded-full bg-[#d4af37]/10 blur-[130px] animate-aurora" />
+      <div className="pointer-events-none absolute bottom-40 right-10 h-[600px] w-[600px] rounded-full bg-[#8A1538]/10 blur-[150px]" />
+
+      {/* Top Notice Banner */}
+      <div className="border-b border-white/[0.08] bg-[#12131a]/80 px-4 py-2.5 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-[#e8bc91] backdrop-blur-md sm:text-xs">
         {t.preview}
       </div>
-      <div className="mx-auto flex max-w-[1300px] items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
-        <div className="flex items-center gap-2 text-xs font-bold tracking-[0.14em] text-[#7d2545]"><MapPin size={15}/>{t.place}</div>
-        <div className="flex items-center gap-2 rounded-full border border-[#e8dcd5] bg-white p-1 text-[12px] font-bold">
-          <button type="button" onClick={() => setLang("en")} aria-pressed={lang === "en"} className={"rounded-full px-3 py-1.5 transition " + (lang === "en" ? "bg-[#641633] text-white" : "text-[#786a6b] hover:bg-[#f8eee9]")}>EN</button>
-          <button type="button" onClick={() => setLang("ar")} aria-pressed={lang === "ar"} className={"rounded-full px-3 py-1.5 transition " + (lang === "ar" ? "bg-[#641633] text-white" : "text-[#786a6b] hover:bg-[#f8eee9]")}>عربي</button>
+
+      {/* Subheader Utility Bar */}
+      <div className="mx-auto flex max-w-[1300px] items-center justify-between px-5 py-3 sm:px-8 lg:px-12">
+        <div className="flex items-center gap-2 font-mono text-xs font-semibold tracking-wider text-[#d4af37]">
+          <span className="h-2 w-2 rounded-full bg-[#10b981] animate-pulse-radar" />
+          <MapPin size={13} className="text-[#8a1538]"/>
+          {t.place}
+        </div>
+        <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] p-1 text-[11px] font-bold backdrop-blur-md">
+          <button type="button" onClick={() => setLang("en")} aria-pressed={lang === "en"} className={"rounded-full px-3 py-1 transition duration-200 " + (lang === "en" ? "bg-[#8A1538] text-white shadow-sm" : "text-[#9da3af] hover:text-white")}>EN</button>
+          <button type="button" onClick={() => setLang("ar")} aria-pressed={lang === "ar"} className={"rounded-full px-3 py-1 transition duration-200 " + (lang === "ar" ? "bg-[#8A1538] text-white shadow-sm" : "text-[#9da3af] hover:text-white")}>عربي</button>
         </div>
       </div>
 
       {!compact && (
         <>
-      <section className="relative mx-3 min-h-[570px] overflow-hidden rounded-[28px] bg-[#2b0e23] text-white sm:mx-6 sm:min-h-[640px] sm:rounded-[34px] lg:mx-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={heroImage} alt="Illustrative Qatar-inspired event atmosphere" className="absolute inset-0 h-full w-full object-cover object-center" fetchPriority="high" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#250c20]/95 via-[#42142e]/75 to-[#180e18]/25 rtl:bg-gradient-to-l" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#280e20]/80 via-transparent to-[#280e20]/10" />
-        <div className="relative mx-auto flex min-h-[570px] max-w-[1260px] flex-col justify-center px-6 pb-24 pt-12 sm:min-h-[640px] sm:px-12 lg:px-16">
-          <div className="mb-8 flex items-center gap-3">
-            <span className="h-px w-9 bg-[#e3bf9b]"/>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#f3d3af] sm:text-xs">{t.eyebrow}</p>
-          </div>
-          <h1 className="max-w-4xl text-[53px] font-extrabold leading-[1.05] tracking-[-0.055em] sm:text-[76px] lg:text-[96px]">
-            {t.headOne}<br/><span className="font-serif italic font-normal tracking-[-0.045em] text-[#f1d2ab]">{t.headTwo}</span>
-          </h1>
-          <p className="mt-7 max-w-[520px] text-[16px] leading-relaxed text-white/85 sm:text-[18px]">{t.heroDescription}</p>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <button type="button" onClick={goToDiscovery} className="inline-flex min-h-12 items-center gap-3 rounded-full bg-[#f5d4aa] px-7 py-3 font-bold text-[#50162f] transition hover:bg-white">{t.explore}<ArrowRight size={18} className={lang === "ar" ? "rotate-180" : ""}/></button>
-            <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide text-white/75"><Sparkles size={15}/>{t.city}</span>
-          </div>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-3 border-t border-white/20 bg-white/10 px-6 py-4 text-[11px] font-bold uppercase tracking-[0.13em] text-white/80 backdrop-blur-md sm:px-12 lg:px-16">
-          <span>{t.local}</span><span>25° 17' N &nbsp; 51° 32' E</span>
-        </div>
-      </section>
-
-      <div className="relative z-10 mx-auto -mt-8 max-w-[960px] px-6 sm:-mt-9">
-        <form onSubmit={(e) => { e.preventDefault(); goToDiscovery() }} className="flex flex-wrap items-center gap-3 rounded-[24px] border border-[#e9ded2] bg-white p-3 shadow-[0_16px_46px_rgba(51,25,31,0.14)] sm:flex-nowrap sm:p-4">
-          <div className="flex min-w-0 flex-1 items-center gap-3 px-3">
-            <Search size={20} className="shrink-0 text-[#7c4c5e]"/>
-            <input aria-label={t.search} value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t.search} className="min-w-0 w-full border-0 bg-transparent py-3 text-[15px] text-[#291f22] outline-none placeholder:text-[#a6999a]"/>
-            {search && <button type="button" aria-label="Clear search" onClick={() => setSearch("")}><X size={17} className="text-[#7c4c5e]"/></button>}
-          </div>
-          <div className="hidden h-10 w-px bg-[#eadfdb] sm:block"/>
-          <div className="hidden items-center gap-2 px-3 text-sm font-semibold text-[#65445a] sm:flex"><MapPin size={16}/>Doha, Qatar</div>
-          <button type="submit" className="w-full rounded-[15px] bg-[#681638] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#812348] sm:w-auto">{t.find}</button>
-        </form>
-      </div>
-
-      <section className="mx-auto max-w-[1300px] px-5 pb-6 pt-24 sm:px-8 lg:px-12">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.17em] text-[#9b4f62]">{t.curated}</p>
-            <h2 className="max-w-[650px] text-[34px] font-extrabold leading-[1.12] tracking-[-0.045em] sm:text-[48px]">{t.featured}</h2>
-            <p className="mt-4 max-w-[560px] text-[15px] leading-7 text-[#76656a]">{t.featuredText}</p>
-          </div>
-          <button onClick={goToDiscovery} className="inline-flex items-center gap-2 rounded-full border border-[#bdaab0] px-5 py-3 text-sm font-bold text-[#641633] transition hover:bg-[#f1e3dc]">{t.discoverMore}<ArrowUpRight size={16}/></button>
-        </div>
-        {events.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-            <EventTile event={events[0]} lang={lang} large/>
-            <div className="grid grid-rows-2 gap-4">
-              {events.slice(1,3).map((event) => <EventTile key={event.id} event={event} lang={lang}/>)}
+          {/* Spatial Keynote Hero */}
+          <section className="relative mx-3 min-h-[580px] overflow-hidden rounded-[32px] border border-white/10 bg-[#12131a] sm:mx-6 sm:min-h-[660px] sm:rounded-[40px] lg:mx-10 shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={heroImage} alt="Illustrative Qatar-inspired event atmosphere" className="absolute inset-0 h-full w-full object-cover object-center opacity-40 transition-transform duration-1000 ease-out hover:scale-105" fetchPriority="high" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#090a0f]/95 via-[#180a14]/85 to-[#090a0f]/40 rtl:bg-gradient-to-l" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#090a0f] via-transparent to-[#090a0f]/30" />
+            
+            <div className="relative mx-auto flex min-h-[580px] max-w-[1260px] flex-col justify-center px-6 pb-24 pt-14 sm:min-h-[660px] sm:px-12 lg:px-16">
+              <div className="mb-7 flex items-center gap-3">
+                <span className="h-2 w-2 rounded-full bg-[#d4af37] animate-pulse-radar"/>
+                <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#d4af37] sm:text-xs">{t.eyebrow}</p>
+              </div>
+              <h1 className="max-w-4xl text-[50px] font-extrabold leading-[1.04] tracking-[-0.04em] sm:text-[76px] lg:text-[94px] text-white">
+                {t.headOne}<br/>
+                <span className="bg-gradient-to-r from-[#f1d2ab] via-[#ffd9a3] to-[#e8bc91] bg-clip-text text-transparent font-normal tracking-[-0.03em] italic">
+                  {t.headTwo}
+                </span>
+              </h1>
+              <p className="mt-6 max-w-[540px] text-[16px] leading-relaxed text-[#c7cbd4] sm:text-[18px]">{t.heroDescription}</p>
+              <div className="mt-9 flex flex-wrap items-center gap-4">
+                <button type="button" onClick={goToDiscovery} className="sheen-effect inline-flex min-h-12 items-center gap-3 rounded-full bg-gradient-to-r from-[#8A1538] to-[#5C1026] px-8 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(138,21,56,0.4)] transition duration-300 hover:scale-105 active:scale-95">
+                  {t.explore}
+                  <ArrowRight size={17} className={lang === "ar" ? "rotate-180" : ""}/>
+                </button>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold tracking-wide text-[#d4af37] backdrop-blur-md">
+                  <Sparkles size={14}/>
+                  {t.city}
+                </span>
+              </div>
             </div>
-          </div>
-        ) : <div className="rounded-3xl border border-dashed border-[#dccccc] p-12 text-center text-[#765b63]">{t.noResults}</div>}
-      </section>
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-3 border-t border-white/10 bg-black/40 px-6 py-4 text-[11px] font-bold uppercase tracking-[0.15em] text-[#9da3af] backdrop-blur-xl sm:px-12 lg:px-16">
+              <span>{t.local}</span>
+              <span className="font-mono text-[10.5px] text-[#d4af37]">25° 17' N · 51° 32' E · ASIA/QATAR</span>
+            </div>
+          </section>
 
+          {/* Floating Spatial Search Capsule */}
+          <div className="relative z-10 mx-auto -mt-8 max-w-[960px] px-6 sm:-mt-9">
+            <form onSubmit={(e) => { e.preventDefault(); goToDiscovery() }} className="flex flex-wrap items-center gap-3 rounded-full border border-white/15 bg-[#171922]/90 p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl sm:flex-nowrap sm:p-3">
+              <div className="flex min-w-0 flex-1 items-center gap-3 px-3">
+                <Search size={18} className="shrink-0 text-[#8a1538]"/>
+                <input aria-label={t.search} value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t.search} className="min-w-0 w-full border-0 bg-transparent py-2.5 text-[14.5px] text-white outline-none placeholder:text-[#6e7587]"/>
+                {search && <button type="button" aria-label="Clear search" onClick={() => setSearch("")}><X size={16} className="text-[#9da3af]"/></button>}
+              </div>
+              <div className="hidden h-8 w-px bg-white/10 sm:block"/>
+              <div className="hidden items-center gap-2 px-3 text-xs font-semibold text-[#c7cbd4] sm:flex"><MapPin size={14} className="text-[#d4af37]"/>Doha, Qatar</div>
+              <button type="submit" className="sheen-effect w-full rounded-full bg-[#8A1538] px-7 py-3 text-xs font-bold text-white shadow-md transition hover:bg-[#6c0f2a] active:scale-95 sm:w-auto">
+                {t.find}
+              </button>
+            </form>
+          </div>
+
+          {/* Curated Grid Section */}
+          <section className="mx-auto max-w-[1300px] px-5 pb-8 pt-24 sm:px-8 lg:px-12">
+            <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[#d4af37]">{t.curated}</p>
+                <h2 className="max-w-[650px] text-[34px] font-extrabold leading-[1.1] tracking-[-0.035em] text-white sm:text-[46px]">{t.featured}</h2>
+                <p className="mt-3 max-w-[560px] text-[15px] leading-relaxed text-[#9da3af]">{t.featuredText}</p>
+              </div>
+              <button onClick={goToDiscovery} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-2.5 text-xs font-bold text-white backdrop-blur-md transition hover:bg-white/10 hover:border-white/30">
+                {t.discoverMore}
+                <ArrowUpRight size={15}/>
+              </button>
+            </div>
+            {events.length > 0 ? (
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.25fr_0.75fr]">
+                <EventTile event={events[0]} lang={lang} large/>
+                <div className="grid grid-rows-2 gap-5">
+                  {events.slice(1,3).map((event) => <EventTile key={event.id} event={event} lang={lang}/>)}
+                </div>
+              </div>
+            ) : <div className="rounded-3xl border border-dashed border-white/10 p-12 text-center text-[#9da3af]">{t.noResults}</div>}
+          </section>
         </>
       )}
-      {compact && <div className="mx-auto max-w-[1300px] px-5 pt-14 sm:px-8 lg:px-12"><p className="mb-3 text-xs font-bold tracking-[0.17em] text-[#a0576b]">{t.place}</p><h1 className="text-[44px] font-extrabold tracking-tight text-[#341d29] sm:text-[62px]">{t.discovery}</h1><p className="mt-3 text-base text-[#7b6470]">{t.featuredText}</p></div>}
-      <section ref={discoveryRef} id="discover" className="scroll-mt-24 mx-auto max-w-[1300px] px-5 pb-20 pt-20 sm:px-8 lg:px-12">
-        <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.17em] text-[#9b4f62]">{t.trending}</p>
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div><h2 className="text-[36px] font-extrabold tracking-[-0.04em] sm:text-[48px]">{t.discovery}</h2><p className="mt-2 text-[15px] text-[#786970]">{t.discoverText}</p></div>
-          <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#83626c]"><Ticket size={16}/>{filtered.length} {t.results}</div>
+
+      {compact && (
+        <div className="mx-auto max-w-[1300px] px-5 pt-14 sm:px-8 lg:px-12">
+          <p className="mb-2 text-xs font-bold tracking-[0.2em] text-[#d4af37]">{t.place}</p>
+          <h1 className="text-[42px] font-extrabold tracking-tight text-white sm:text-[60px]">{t.discovery}</h1>
+          <p className="mt-3 text-base text-[#9da3af]">{t.featuredText}</p>
         </div>
-        <div role="group" aria-label="Event category" className="mb-6 flex flex-wrap gap-2.5">
+      )}
+
+      {/* Discovery Section with Apple Pill Dock */}
+      <section ref={discoveryRef} id="discover" className="scroll-mt-24 mx-auto max-w-[1300px] px-5 pb-24 pt-20 sm:px-8 lg:px-12">
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[#d4af37]">{t.trending}</p>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-[34px] font-extrabold tracking-[-0.035em] text-white sm:text-[46px]">{t.discovery}</h2>
+            <p className="mt-2 text-[14.5px] text-[#9da3af]">{t.discoverText}</p>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 font-mono text-xs font-semibold text-[#e8bc91]">
+            <Ticket size={14} className="text-[#8a1538]"/>
+            {filtered.length} {t.results}
+          </div>
+        </div>
+
+        {/* Categories Floating Pill Dock */}
+        <div role="group" aria-label="Event category" className="mb-6 flex flex-wrap gap-2 rounded-2xl border border-white/10 bg-[#12141c]/60 p-2 backdrop-blur-xl">
           {categories.map(({ key, icon: Icon, en, ar }) => (
-            <button key={key} type="button" onClick={() => setCategory(key)} aria-pressed={category===key} className={"inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2.5 text-[13px] font-semibold transition " + (category===key ? "border-[#641633] bg-[#641633] text-white" : "border-[#e4d9d2] bg-white text-[#6b5860] hover:border-[#b77a90] hover:text-[#641633]")}>
-              <Icon size={16}/>{lang==="ar"?ar:en}
+            <button
+              key={key}
+              type="button"
+              onClick={() => setCategory(key)}
+              aria-pressed={category === key}
+              className={"sheen-effect inline-flex min-h-10 items-center gap-2 rounded-xl px-4 py-2 text-[12.5px] font-semibold transition duration-200 " + (category === key ? "bg-[#8A1538] text-white shadow-[0_4px_16px_rgba(138,21,56,0.35)]" : "text-[#9da3af] hover:bg-white/[0.05] hover:text-white")}
+            >
+              <Icon size={15}/>
+              {lang === "ar" ? ar : en}
             </button>
           ))}
         </div>
-        <div className="mb-7 flex flex-wrap items-center gap-3 border-y border-[#e9dfd6] py-5">
+
+        {/* Date Filter Bar */}
+        <div className="mb-8 flex flex-wrap items-center gap-3 border-y border-white/[0.08] py-4">
           {([{key:"any",label:t.all},{key:"weekend",label:t.thisWeekend},{key:"week",label:t.nextWeek}] as const).map((option) => (
-            <button key={option.key} type="button" onClick={() => setDate(option.key)} aria-pressed={date===option.key} className={"rounded-full px-4 py-2.5 text-sm font-semibold transition " + (date===option.key ? "bg-[#ead3dc] text-[#641633]" : "text-[#76656a] hover:bg-white")}>{option.label}</button>
+            <button
+              key={option.key}
+              type="button"
+              onClick={() => setDate(option.key)}
+              aria-pressed={date === option.key}
+              className={"rounded-full px-4 py-2 text-xs font-semibold transition duration-200 " + (date === option.key ? "bg-white/15 text-white shadow-sm border border-white/20" : "text-[#9da3af] hover:text-white hover:bg-white/[0.04]")}
+            >
+              {option.label}
+            </button>
           ))}
-          <label className="ms-auto flex cursor-pointer items-center gap-2 text-sm font-semibold text-[#6b5560]"><input type="checkbox" checked={freeOnly} onChange={(e)=>setFreeOnly(e.target.checked)} className="h-4 w-4 accent-[#641633]"/>{t.free}</label>
+          <label className="ms-auto flex cursor-pointer items-center gap-2 text-xs font-semibold text-[#c7cbd4]">
+            <input type="checkbox" checked={freeOnly} onChange={(e) => setFreeOnly(e.target.checked)} className="h-4 w-4 accent-[#8a1538] rounded"/>
+            {t.free}
+          </label>
         </div>
+
         {filtered.length ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((event) => <EventCard key={event.id} event={event} lang={lang}/>)}
           </div>
         ) : (
-          <div className="rounded-3xl border border-dashed border-[#d8c6c3] bg-white px-8 py-16 text-center"><Search size={28} className="mx-auto mb-4 text-[#996a76]"/><h3 className="text-xl font-bold">{t.noResults}</h3><p className="mt-2 text-sm text-[#847177]">{t.tryAgain}</p><button onClick={clear} className="mt-5 rounded-full bg-[#641633] px-5 py-2.5 text-sm font-bold text-white">{t.reset}</button></div>
+          <div className="rounded-3xl border border-dashed border-white/10 bg-[#12131a] px-8 py-16 text-center">
+            <Search size={28} className="mx-auto mb-4 text-[#8a1538]"/>
+            <h3 className="text-xl font-bold text-white">{t.noResults}</h3>
+            <p className="mt-2 text-sm text-[#9da3af]">{t.tryAgain}</p>
+            <button onClick={clear} className="mt-5 rounded-full bg-[#8A1538] px-6 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-[#6c0f2a]">{t.reset}</button>
+          </div>
         )}
       </section>
 
-      <section className="bg-[#f1e8dd] py-20">
+      {/* Spotlight Features in Glass Bento */}
+      <section className="border-t border-white/[0.08] bg-[#0c0d12] py-24">
         <div className="mx-auto max-w-[1300px] px-5 sm:px-8 lg:px-12">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.17em] text-[#a05d67]">{t.spotlight}</p>
-          <h2 className="max-w-[770px] text-[36px] font-extrabold leading-tight tracking-[-0.04em] sm:text-[53px]">{t.spotlightTitle}</h2>
-          <p className="mt-5 max-w-[670px] text-[16px] leading-8 text-[#715b62]">{t.spotlightText}</p>
-          <div className="mt-12 grid gap-4 md:grid-cols-3">
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[#d4af37]">{t.spotlight}</p>
+          <h2 className="max-w-[770px] text-[34px] font-extrabold leading-tight tracking-[-0.035em] text-white sm:text-[50px]">{t.spotlightTitle}</h2>
+          <p className="mt-4 max-w-[670px] text-[15px] leading-relaxed text-[#9da3af]">{t.spotlightText}</p>
+          <div className="mt-14 grid gap-5 md:grid-cols-3">
             {[
               {icon:MapPin,title:t.living,body:t.livingText},
               {icon:Compass,title:t.visiting,body:t.visitingText},
               {icon:Heart,title:t.together,body:t.togetherText},
-            ].map(({icon:Icon,title,body})=><div key={title} className="rounded-[24px] border border-white/80 bg-[#faf6f0] px-7 py-8"><div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#671637] text-white"><Icon size={22}/></div><h3 className="text-xl font-bold">{title}</h3><p className="mt-3 text-[14px] leading-7 text-[#765e65]">{body}</p></div>)}
+            ].map(({icon:Icon,title,body}) => (
+              <div key={title} className="spatial-glass-card rounded-[28px] p-8 text-[#f2eff4]">
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#8A1538] to-[#5C1026] text-white shadow-[0_4px_16px_rgba(138,21,56,0.35)]">
+                  <Icon size={20}/>
+                </div>
+                <h3 className="text-xl font-bold text-white">{title}</h3>
+                <p className="mt-3 text-[14px] leading-relaxed text-[#9da3af]">{body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
-      <section className="bg-[#641633] px-5 py-20 text-center text-white">
-        <Waves className="mx-auto mb-6 h-10 w-10 text-[#e8bc91]"/>
-        <h2 className="mx-auto max-w-[760px] text-[34px] font-bold tracking-[-0.04em] sm:text-[50px]">{t.closing}</h2>
-        <p className="mx-auto mt-5 max-w-[580px] text-sm text-[#f5d8db]">{t.safe}</p>
-        <button type="button" onClick={goToDiscovery} className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#f3d1ac] px-7 py-3.5 font-bold text-[#641633] transition hover:bg-white">{t.closingButton}<ArrowUpRight size={18}/></button>
+
+      {/* Futuristic Closing Callout */}
+      <section className="relative overflow-hidden border-t border-white/[0.08] bg-gradient-to-b from-[#12131a] to-[#090a0f] px-5 py-24 text-center text-white">
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[350px] w-[500px] rounded-full bg-[#8A1538]/20 blur-[120px]" />
+        <Waves className="mx-auto mb-6 h-9 w-9 text-[#d4af37]"/>
+        <h2 className="relative mx-auto max-w-[760px] text-[34px] font-extrabold tracking-[-0.035em] sm:text-[48px]">{t.closing}</h2>
+        <p className="relative mx-auto mt-4 max-w-[580px] text-xs text-[#9da3af]">{t.safe}</p>
+        <button type="button" onClick={goToDiscovery} className="sheen-effect relative mt-9 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#8A1538] to-[#5C1026] px-8 py-3.5 text-xs font-bold text-white shadow-[0_8px_30px_rgba(138,21,56,0.35)] transition duration-300 hover:scale-105 active:scale-95">
+          {t.closingButton}
+          <ArrowUpRight size={16}/>
+        </button>
       </section>
     </div>
   )
