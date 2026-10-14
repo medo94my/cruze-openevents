@@ -1,61 +1,44 @@
-"use client"
+"use client";
 
-import { useMemo, useState } from "react"
-import Link from "next/link"
-import { Search, X } from "lucide-react"
+import { useMemo } from "react";
+import Link from "next/link";
+import ParticleText from "@/components/seatwise/ParticleText";
+import EventUniverse, { type UniverseEvent } from "@/components/seatwise/EventUniverse";
+import SiteMenu from "@/components/seatwise/SiteMenu";
 
 export type CruzeEvent = {
-  id: string
-  slug: string
-  title: string
-  description: string | null
-  coverImage: string | null
-  startDate: string
-  endDate: string
-  city: string
-  venue: string
-  isDemo: boolean
-  ticketPrice: number | null
-  currency: string
-}
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  coverImage: string | null;
+  startDate: string;
+  endDate: string;
+  city: string;
+  venue: string;
+  isDemo: boolean;
+  ticketPrice: number | null;
+  currency: string;
+};
 
 interface CruzeHomeProps {
-  events: CruzeEvent[]
-  compact?: boolean
-  initialDate?: string
-  initialSearch?: string
+  events: CruzeEvent[];
+  compact?: boolean;
+  initialDate?: string;
+  initialSearch?: string;
 }
 
-const FALLBACK_IMAGES = [
-  "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1200&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=1200&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200&auto=format&fit=crop",
-]
-
-const CATEGORY_TAGS = [
-  "ALL",
-  "MUSIC",
-  "COMEDY",
-  "THEATRE",
-  "SPORTS",
-  "CULTURE",
-  "LIVE",
-]
-
-function formatEventDate(isoDate: string): string {
-  try {
-    const d = new Date(isoDate)
-    const day = d.toLocaleDateString("en-US", { day: "2-digit" })
-    const month = d.toLocaleDateString("en-US", { month: "short" }).toUpperCase()
-    const time = d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true }).toUpperCase()
-    return `${day} ${month} / ${time}`
-  } catch {
-    return "18 NOV / 08:00 PM"
-  }
-}
+const DEFAULT_EVENT_IMAGES = [
+  "/events/img-1.png",
+  "/events/img-5.png",
+  "/events/img-9.png",
+  "/events/img-2.png",
+  "/events/img-6.png",
+  "/events/img-3.png",
+  "/events/img-7.png",
+  "/events/img-4.png",
+  "/events/img-8.png",
+];
 
 const DEMO_ITEMS: CruzeEvent[] = [
   {
@@ -63,7 +46,7 @@ const DEMO_ITEMS: CruzeEvent[] = [
     slug: "demo-katara-symphony-orchestra",
     title: "The Midnight Room",
     description: "An evocative nocturnal concert of contemporary neo-classical music under the desert stars.",
-    coverImage: FALLBACK_IMAGES[0],
+    coverImage: "/events/img-1.png",
     startDate: "2026-11-18T17:00:00.000Z",
     endDate: "2026-11-18T21:00:00.000Z",
     city: "Doha",
@@ -77,7 +60,7 @@ const DEMO_ITEMS: CruzeEvent[] = [
     slug: "demo-lusail-comedy-night",
     title: "After Hours",
     description: "Intimate stand-up and live comedy showcasing Qatar's finest bilingual performers.",
-    coverImage: FALLBACK_IMAGES[1],
+    coverImage: "/events/img-5.png",
     startDate: "2026-11-22T16:30:00.000Z",
     endDate: "2026-11-22T19:30:00.000Z",
     city: "Lusail",
@@ -91,7 +74,7 @@ const DEMO_ITEMS: CruzeEvent[] = [
     slug: "demo-museum-islamic-art-gala",
     title: "Nocturne No. 7",
     description: "Avant-garde physical theatre and dramatic lighting installation at MIA Park.",
-    coverImage: FALLBACK_IMAGES[2],
+    coverImage: "/events/img-9.png",
     startDate: "2026-11-28T15:30:00.000Z",
     endDate: "2026-11-28T19:30:00.000Z",
     city: "Doha",
@@ -105,7 +88,7 @@ const DEMO_ITEMS: CruzeEvent[] = [
     slug: "demo-desert-acoustic-festival",
     title: "Frequency Live",
     description: "Electronic acoustics, modular synthesizers and cinematic audiovisual immersion.",
-    coverImage: FALLBACK_IMAGES[3],
+    coverImage: "/events/img-2.png",
     startDate: "2026-12-02T16:00:00.000Z",
     endDate: "2026-12-02T21:00:00.000Z",
     city: "Al Wakrah",
@@ -119,7 +102,7 @@ const DEMO_ITEMS: CruzeEvent[] = [
     slug: "demo-doha-film-heritage-night",
     title: "Between Rooms",
     description: "An architectural exploration of Arab cinema, retrospectives and sound design.",
-    coverImage: FALLBACK_IMAGES[4],
+    coverImage: "/events/img-6.png",
     startDate: "2026-12-06T15:00:00.000Z",
     endDate: "2026-12-06T19:00:00.000Z",
     city: "Doha",
@@ -133,7 +116,7 @@ const DEMO_ITEMS: CruzeEvent[] = [
     slug: "demo-qatar-grand-prix-fan-zone",
     title: "Open Field",
     description: "High-octane fan experience, live telemetry simulators, and outdoor concert stage.",
-    coverImage: FALLBACK_IMAGES[5],
+    coverImage: "/events/img-3.png",
     startDate: "2026-12-10T14:00:00.000Z",
     endDate: "2026-12-10T20:00:00.000Z",
     city: "Lusail",
@@ -142,438 +125,503 @@ const DEMO_ITEMS: CruzeEvent[] = [
     ticketPrice: 450,
     currency: "QAR",
   },
-]
+];
 
-export function CruzeHome({ events, initialSearch = "" }: CruzeHomeProps) {
-  const [search, setSearch] = useState(initialSearch)
-  const [selectedCategory, setSelectedCategory] = useState("ALL")
+function formatEventDate(isoDate: string): string {
+  try {
+    const d = new Date(isoDate);
+    const day = d.toLocaleDateString("en-US", { day: "2-digit", timeZone: "Asia/Qatar" });
+    const month = d.toLocaleDateString("en-US", { month: "short", timeZone: "Asia/Qatar" }).toUpperCase();
+    const time = d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Qatar" }).toUpperCase();
+    return `${day} ${month} / ${time}`;
+  } catch {
+    return "18 NOV / 08:00 PM";
+  }
+}
 
+export function CruzeHome({ events }: CruzeHomeProps) {
   const displayEvents = useMemo(() => {
-    if (events.length >= 6) return events
-    return [...events, ...DEMO_ITEMS]
-  }, [events])
+    if (events && events.length >= 6) return events;
+    return [...(events || []), ...DEMO_ITEMS];
+  }, [events]);
 
-  const filteredEvents = useMemo(() => {
-    return displayEvents.filter((ev) => {
-      const matchSearch =
-        search === "" ||
-        ev.title.toLowerCase().includes(search.toLowerCase()) ||
-        ev.venue.toLowerCase().includes(search.toLowerCase()) ||
-        ev.city.toLowerCase().includes(search.toLowerCase())
-      return matchSearch
-    })
-  }, [displayEvents, search])
+  const universeEvents: UniverseEvent[] = useMemo(() => {
+    return displayEvents.map((e, idx) => ({
+      id: e.id,
+      slug: e.slug,
+      title: e.title,
+      coverImage: e.coverImage || DEFAULT_EVENT_IMAGES[idx % DEFAULT_EVENT_IMAGES.length],
+    }));
+  }, [displayEvents]);
 
   return (
-    <div className="seatwise-canvas min-h-screen text-[#f1efe8]">
-      {/* Background Micro-grain & Warm Radial Glow */}
-      <div className="seatwise-grain" />
-      <div className="seatwise-glow" />
+    <main className="min-h-screen bg-[#11110f] text-[#f1efe8]">
+      {/* =====================================================
+          SECTION 01 — HERO
+      ===================================================== */}
+      <section
+        id="top"
+        className="relative min-h-screen overflow-hidden px-5 py-5 md:px-8 md:py-7"
+      >
+        {/* ================= NAVBAR ================= */}
+        <nav className="relative z-50 flex items-start justify-between">
+          {/* LOGO */}
+          <Link href="/" className="group">
+            <div className="text-[24px] font-black leading-none tracking-[-0.07em] md:text-[30px] text-[#f1efe8]">
+              CRUZE
+              <sup className="ml-1 text-[8px] font-medium text-[#d8763d]">®</sup>
+            </div>
+            <div className="mt-1 text-[8px] uppercase tracking-[0.2em] text-white/45">
+              Live event ticketing · Qatar
+            </div>
+          </Link>
 
-      {/* Main Content Container */}
-      <main className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-12">
-        {/* =========================================================================
-            SECTION 1: HERO ("CLAIM.")
-            Exact SeatWise typography: massive clamp uppercase with accent dot
-            ========================================================================= */}
-        <section id="top" className="border-b border-[#f1efe8]/15 pt-12 pb-20 sm:pt-20 sm:pb-32 lg:pt-28 lg:pb-36">
-          {/* Top Eyebrow Telemetry */}
-          <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.24em] text-[#f1efe8]/50">
-            <span className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#d8763d]" />
-              LIVE EVENTS · EXACT SEATING · REAL TIME
+          {/* NAV RIGHT */}
+          <div className="flex items-center gap-6">
+            <span className="hidden text-[9px] uppercase tracking-[0.18em] text-white/45 md:block font-mono">
+              QAT / 2026
             </span>
-            <span>QATAR / ASIA/QATAR / 2026</span>
+            <SiteMenu />
+          </div>
+        </nav>
+
+        {/* =====================================================
+            HERO CONTAINER
+        ===================================================== */}
+        <div
+          className="
+            relative
+            mx-auto
+            mt-10
+            h-[78vh]
+            max-w-[1500px]
+            md:mt-4
+            md:h-[78vh]
+          "
+        >
+          {/* ================= LEFT META ================= */}
+          <div className="absolute left-0 top-[7%] z-30 hidden md:block">
+            <p className="font-mono text-[9px] uppercase leading-[1.5] tracking-[0.18em] text-white/45">
+              LIVE EVENTS
+              <br />
+              EXACT SEATING
+              <br />
+              REAL TIME
+            </p>
           </div>
 
-          {/* Monolithic CLAIM. Display */}
-          <div className="mt-10 sm:mt-16">
-            <h1 className="seatwise-hero-title">
-              CLAIM<span className="text-[#d8763d]">.</span>
-            </h1>
+          {/* ================= RIGHT META ================= */}
+          <div className="absolute right-0 top-[7%] z-30 text-right">
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/40">
+              Discover / Book / Be there
+            </span>
+          </div>
 
-            <p className="mt-8 max-w-2xl text-lg font-medium leading-tight tracking-tight text-[#f1efe8]/75 sm:text-2xl sm:leading-snug">
-              Find the event. Choose the exact seat. Make it yours.
+          {/* =====================================================
+              MASKED HERO VIDEO / IMAGE
+          ===================================================== */}
+          <div
+            className="
+              hero-mask
+              absolute
+              left-1/2
+              top-1/2
+              z-10
+              h-[58%]
+              w-[92%]
+              -translate-x-1/2
+              -translate-y-1/2
+              overflow-hidden
+              md:h-[68%]
+              md:w-[67%]
+            "
+          >
+            <div
+              className="
+                hero-image
+                absolute
+                inset-[-3%]
+                h-[106%]
+                w-[106%]
+              "
+              style={{
+                backgroundImage: "url('/hero-bg.png')",
+              }}
+            />
+
+            {/* CINEMATIC DARK OVERLAY */}
+            <div className="hero-image-vignette" />
+            <div className="absolute inset-0 bg-black/25" />
+          </div>
+
+          {/* =====================================================
+              CLAIM
+          ===================================================== */}
+          <h1
+            className="
+              hero-word
+              pointer-events-none
+              absolute
+              left-[2%]
+              top-[12%]
+              z-20
+              text-[17vw]
+              font-black
+              uppercase
+              leading-[0.75]
+              tracking-[-0.09em]
+              text-[#f1efe8]
+              md:left-[8%]
+              md:top-[12%]
+              md:text-[10vw]
+            "
+          >
+            CLAIM
+          </h1>
+
+          {/* =====================================================
+              YOUR
+          ===================================================== */}
+          <div
+            className="
+              hero-word
+              pointer-events-none
+              absolute
+              right-[3%]
+              top-[40%]
+              z-30
+              text-[15vw]
+              font-black
+              uppercase
+              leading-[0.75]
+              tracking-[-0.09em]
+              text-[#f1efe8]
+              md:right-[5%]
+              md:top-[40%]
+              md:text-[9vw]
+            "
+          >
+            YOUR
+          </div>
+
+          {/* =====================================================
+              PARTICLE PLACE.
+          ===================================================== */}
+          <div
+            className="
+              hero-word
+              absolute
+              bottom-[16%]
+              left-[16%]
+              z-30
+              h-[145px]
+              w-[76%]
+              md:bottom-[-4%]
+              md:left-[20%]
+              md:h-[220px]
+              md:w-[64%]
+            "
+          >
+            <ParticleText
+              text="PLACE."
+              particleSize={1.8}
+              density={4}
+              color="#f1efe8"
+              highlightColor="#d8763d"
+              scatter={115}
+              gatherDuration={850}
+              stagger={160}
+              pointerRepel={60}
+              repelRadius={130}
+              idleDrift={0.25}
+              trigger="hover"
+              fontSize="clamp(5rem, 10vw, 10rem)"
+              fontWeight={900}
+              fontFamily="Arial, Helvetica, sans-serif"
+              glow={false}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          </div>
+
+          {/* =====================================================
+              BOTTOM LEFT METADATA
+          ===================================================== */}
+          <div className="absolute bottom-0 left-0 z-40 hidden max-w-[220px] md:block font-mono">
+            <p className="text-[11px] leading-[1.45] text-white/55">
+              Find the event.
+              <br />
+              Choose the exact seat.
+              <br />
+              Make it yours.
             </p>
+          </div>
 
-            {/* Action Bar */}
-            <div className="mt-12 flex flex-wrap items-center gap-6 sm:mt-14">
-              <a href="#event-universe" className="seatwise-btn">
-                <span>01 / Explore Find Events</span>
-                <span className="seatwise-btn-arrow">↗</span>
-              </a>
+          {/* =====================================================
+              CTA (01 / EXPLORE FIND EVENTS)
+          ===================================================== */}
+          <a
+            href="#event-universe"
+            className="
+              group
+              absolute
+              bottom-[2%]
+              right-0
+              z-40
+              flex
+              h-[72px]
+              w-[190px]
+              items-center
+              justify-between
+              bg-[#f1efe8]
+              px-5
+              text-black
+              transition-all
+              duration-300
+              hover:bg-[#d8763d]
+              md:bottom-0
+              md:h-[82px]
+              md:w-[230px]
+              md:px-6
+            "
+          >
+            <div>
+              <span className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/45">
+                01 / Explore
+              </span>
+              <span className="mt-1 block text-[14px] font-bold uppercase tracking-[-0.02em]">
+                Find Events
+              </span>
+            </div>
 
-              <a
-                href="#happening"
-                className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#f1efe8]/60 transition-colors hover:text-[#f1efe8]"
-              >
-                Happening Next ({filteredEvents.length}) ↓
-              </a>
+            <span className="text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+              ↗
+            </span>
+          </a>
+
+          {/* ================= SCROLL INDICATOR ================= */}
+          <div className="absolute bottom-0 left-1/2 z-30 hidden -translate-x-1/2 md:block">
+            <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-white/35">
+              Scroll to discover ↓
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================
+          SECTION 02 — EVENT UNIVERSE
+      ===================================================== */}
+      <section id="event-universe">
+        <EventUniverse events={universeEvents} />
+      </section>
+
+      {/* =====================================================
+          SECTION 03 — UPCOMING EVENTS (HAPPENING NEXT.)
+          Light substrate (#ebe8df) with 12-column asymmetric layout
+      ===================================================== */}
+      <section
+        id="events"
+        className="relative overflow-hidden bg-[#ebe8df] px-5 py-20 text-[#11110f] md:px-8 md:py-28"
+      >
+        <div className="mx-auto max-w-[1600px]">
+          {/* ================= HEADER ================= */}
+          <div className="flex items-start justify-between border-t border-black/40 pt-3 font-mono">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+              03 / Upcoming Events
+            </div>
+
+            <div className="text-right text-[9px] uppercase leading-[1.5] tracking-[0.18em] text-black/50">
+              Qatar
+              <br />
+              All Venues · Doha & Lusail
             </div>
           </div>
 
-          {/* Bottom Telemetry Coordinates Bar */}
-          <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-[#f1efe8]/10 pt-6 font-mono text-[9.5px] uppercase tracking-[0.2em] text-[#f1efe8]/40 sm:mt-24">
-            <span>CRUZE LIVE TICKETING SYSTEM</span>
-            <span>25° 17′ N · 51° 32′ E · DOHA</span>
-          </div>
-        </section>
+          {/* =====================================================
+              BIG HEADING
+          ===================================================== */}
+          <div className="relative mt-16 md:mt-24">
+            <h2 className="text-[19vw] font-black uppercase leading-[0.72] tracking-[-0.09em] md:text-[11vw]">
+              Happening
+            </h2>
 
-        {/* =========================================================================
-            SECTION 2: "EVENT UNIVERSE."
-            SeatWise signature 3D perspective gallery with category axis
-            ========================================================================= */}
-        <section id="event-universe" className="border-b border-[#f1efe8]/15 py-24 sm:py-32">
-          {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-            <div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#f1efe8]/50">
-                02 / EXPERIENCES · QATAR
-              </span>
-              <h2 className="seatwise-section-title mt-4">
-                EVENT<br />UNIVERSE<span className="text-[#d8763d]">.</span>
+            <div className="mt-4 flex items-end justify-between md:mt-7">
+              <p className="hidden max-w-[260px] font-mono text-[11px] leading-[1.5] text-black/55 md:block">
+                Concerts, comedy, cultural galas and live sports.
+                Pick the event. Then pick exactly where you sit.
+              </p>
+
+              <h2 className="ml-auto text-[19vw] font-black uppercase leading-[0.72] tracking-[-0.09em] md:text-[11vw]">
+                Next<span className="text-[#d8763d]">.</span>
               </h2>
             </div>
-            <Link
-              href="/events"
-              className="seatwise-btn !py-2.5 !px-5 self-start sm:self-auto text-[10.5px]"
-            >
-              <span>View All Events</span>
-              <span className="seatwise-btn-arrow">↗</span>
-            </Link>
           </div>
 
-          {/* Category Axis Line */}
-          <div className="my-10 flex items-center gap-4 sm:my-14">
-            <span className="h-px flex-1 bg-[#f1efe8]/15" />
-            <p className="font-mono text-[8.5px] sm:text-[10px] uppercase tracking-[0.22em] text-[#d8763d]">
-              MUSIC · COMEDY · THEATRE · SPORTS · CULTURE · LIVE
-            </p>
-            <span className="h-px flex-1 bg-[#f1efe8]/15" />
-          </div>
+          {/* =====================================================
+              ALTERNATING 12-COLUMN ASYMMETRIC ZIG-ZAG FEED
+          ===================================================== */}
+          <div className="mt-20 flex flex-col">
+            {displayEvents.slice(0, 6).map((event, index) => {
+              const itemNumber = String(index + 1).padStart(2, "0");
+              const isEven = index % 2 === 1;
+              const formattedDate = formatEventDate(event.startDate);
+              const eventImage = event.coverImage || DEFAULT_EVENT_IMAGES[index % DEFAULT_EVENT_IMAGES.length];
+              const eventHref = `/events/${event.slug}`;
+              const displayPrice = event.ticketPrice ? `${event.ticketPrice} ${event.currency || "QAR"}` : "Free";
 
-          {/* 3D Perspective Card World (SeatWise Signature) */}
-          <div className="seatwise-universe-world pb-6">
-            <div className="flex gap-6 sm:gap-8 min-w-max px-2">
-              {displayEvents.slice(0, 8).map((event, index) => {
-                const img = event.coverImage || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
-                const indexNum = String(index + 1).padStart(2, "0")
+              if (!isEven) {
+                // Layout A: Number (1 col) | Image (5 col) | Details (6 col)
                 return (
                   <Link
                     key={event.id}
-                    href={`/events/${event.slug}`}
-                    className="group seatwise-card-3d w-[220px] sm:w-[280px] lg:w-[320px] bg-[#171714] block"
+                    href={eventHref}
+                    className="group grid border-t border-black/40 py-8 md:grid-cols-12 md:gap-8 transition-colors"
                   >
-                    {/* Background Image with Scale Zoom */}
-                    <div
-                      className="seatwise-card-img absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out"
-                      style={{ backgroundImage: `url('${img}')` }}
-                    />
+                    <div className="mb-4 md:col-span-1 md:mb-0 font-mono">
+                      <span className="text-[11px] font-semibold">{itemNumber}</span>
+                    </div>
 
-                    {/* Gradient Shade Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20 group-hover:from-black/95 transition-opacity duration-500" />
+                    <div className="overflow-hidden md:col-span-5">
+                      <div
+                        className="
+                          aspect-[16/10]
+                          bg-cover
+                          bg-center
+                          transition-transform
+                          duration-700
+                          ease-out
+                          group-hover:scale-[1.025]
+                        "
+                        style={{
+                          backgroundImage: `url('${eventImage}')`,
+                        }}
+                      />
+                    </div>
 
-                    {/* Top Index Number */}
-                    <span className="absolute top-4 left-5 z-10 font-mono text-[11px] font-bold tracking-[0.16em] text-[#f1efe8]/80 group-hover:text-[#f1efe8]">
-                      {indexNum}
-                    </span>
-
-                    {/* Bottom Info Drawer (Slides up smoothly on hover) */}
-                    <div className="seatwise-card-drawer absolute bottom-0 left-0 right-0 z-20 p-5 border-t border-[#f1efe8]/15 bg-[#11110f]/90 backdrop-blur-md opacity-90 sm:opacity-0 transition-all duration-300">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#f1efe8] truncate">
-                          {event.title}
+                    <div className="mt-5 flex flex-col justify-between md:col-span-6 md:mt-0">
+                      <div className="flex items-start justify-between font-mono">
+                        <span className="text-[9px] uppercase tracking-[0.18em] text-black/50">
+                          {event.city} · {event.venue}
                         </span>
-                        <span className="text-[#d8763d] text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+
+                        <span className="text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
                           ↗
                         </span>
                       </div>
-                      <div className="mt-2 flex items-center justify-between text-[9px] font-mono text-[#f1efe8]/50 uppercase tracking-widest">
-                        <span>{event.city}</span>
-                        <span className="text-[#d8763d]">
-                          {event.ticketPrice ? `${event.ticketPrice} ${event.currency}` : "FREE"}
-                        </span>
+
+                      <div className="mt-14 md:mt-0">
+                        <h3 className="max-w-[650px] text-[10vw] font-black uppercase leading-[0.78] tracking-[-0.07em] md:text-[4.5vw]">
+                          {event.title}
+                        </h3>
+
+                        <div className="mt-6 flex items-end justify-between border-t border-black/20 pt-3 font-mono">
+                          <div className="text-[10px] uppercase leading-[1.5] tracking-[0.12em]">
+                            {formattedDate}
+                            <br />
+                            {event.venue}
+                          </div>
+
+                          <div className="text-right">
+                            <span className="text-[8px] uppercase tracking-[0.15em] text-black/45">
+                              From
+                            </span>
+                            <div className="text-xl font-bold tracking-[-0.04em]">
+                              {displayPrice}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Link>
-                )
-              })}
-            </div>
-          </div>
-        </section>
+                );
+              }
 
-        {/* =========================================================================
-            SECTION 3: "HAPPENING NEXT."
-            Asymmetric Alternating 12-Column Zig-Zag Rows (Exact SeatWise Pattern)
-            ========================================================================= */}
-        <section id="happening" className="border-b border-[#f1efe8]/15 py-24 sm:py-32">
-          {/* Section Titles */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 pb-12 border-b border-[#f1efe8]/20">
-            <div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#f1efe8]/50">
-                03 / CURATED LINEUP
-              </span>
-              <h2 className="seatwise-section-title mt-4">
-                Happening<br />Next<span className="text-[#d8763d]">.</span>
-              </h2>
-            </div>
-            <p className="max-w-md font-mono text-xs uppercase tracking-[0.14em] text-[#f1efe8]/60 leading-relaxed">
-              Music, comedy, theatre and live experiences in Qatar. Pick the event. Then pick exactly where you sit.
-            </p>
-          </div>
-
-          {/* Interactive Search & Quick Filters */}
-          <div className="my-10 flex flex-wrap items-center justify-between gap-6 border-b border-[#f1efe8]/15 pb-8">
-            <div className="flex flex-1 min-w-[280px] max-w-[500px] items-center gap-3 border border-[#f1efe8]/20 bg-transparent px-4 py-3">
-              <Search size={16} className="text-[#d8763d]" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="SEARCH EXPERIENCES, VENUES, ARTISTS..."
-                className="w-full bg-transparent font-mono text-xs text-[#f1efe8] uppercase tracking-wider outline-none placeholder:text-[#f1efe8]/30"
-              />
-              {search && (
-                <button type="button" onClick={() => setSearch("")} aria-label="Clear">
-                  <X size={14} className="text-[#f1efe8]/50 hover:text-white" />
-                </button>
-              )}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              {CATEGORY_TAGS.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-all ${
-                    selectedCategory === cat
-                      ? "border border-[#d8763d] bg-[#d8763d] text-[#11110f] font-bold"
-                      : "border border-[#f1efe8]/15 text-[#f1efe8]/60 hover:text-[#f1efe8] hover:border-[#f1efe8]/40"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Zig-Zag Alternating Event Rows */}
-          <div className="divide-y divide-[#f1efe8]/20">
-            {filteredEvents.map((event, idx) => {
-              const indexNum = String(idx + 1).padStart(2, "0")
-              const img = event.coverImage || FALLBACK_IMAGES[idx % FALLBACK_IMAGES.length]
-              const dateStr = formatEventDate(event.startDate)
-              const isEven = idx % 2 === 0
-
+              // Layout B: Number (1 col) | Details (5 col) | Image (6 col)
               return (
                 <Link
                   key={event.id}
-                  href={`/events/${event.slug}`}
-                  className="group grid grid-cols-1 md:grid-cols-12 md:gap-8 py-10 sm:py-14 transition-colors hover:bg-[#f1efe8]/[0.02]"
+                  href={eventHref}
+                  className="group grid border-t border-black/40 py-8 md:grid-cols-12 md:gap-8 transition-colors"
                 >
-                  {/* Left Column: Number Index */}
-                  <div className="mb-4 md:col-span-1 md:mb-0">
-                    <span className="font-mono text-sm font-semibold tracking-wider text-[#d8763d]">
-                      {indexNum}
-                    </span>
+                  <div className="mb-4 md:col-span-1 md:mb-0 font-mono">
+                    <span className="text-[11px] font-semibold">{itemNumber}</span>
                   </div>
 
-                  {isEven ? (
-                    <>
-                      {/* Image (col-span-5) */}
-                      <div className="overflow-hidden md:col-span-5 aspect-[16/10] bg-[#171714]">
-                        <div
-                          className="h-full w-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                          style={{ backgroundImage: `url('${img}')` }}
-                        />
-                      </div>
+                  <div className="order-2 mt-5 flex flex-col justify-between md:order-none md:col-span-5 md:mt-0">
+                    <div className="font-mono">
+                      <span className="text-[9px] uppercase tracking-[0.18em] text-black/50">
+                        {event.city} · {event.venue}
+                      </span>
+                    </div>
 
-                      {/* Content (col-span-6) */}
-                      <div className="mt-6 flex flex-col justify-between md:col-span-6 md:mt-0">
-                        {/* Top: Category & Arrow */}
-                        <div className="flex items-start justify-between">
-                          <span className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-[#f1efe8]/50">
-                            {event.city} · LIVE
-                          </span>
-                          <span className="text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 text-[#f1efe8]">
-                            ↗
-                          </span>
+                    <div className="mt-14 md:mt-0">
+                      <h3 className="text-[10vw] font-black uppercase leading-[0.78] tracking-[-0.07em] md:text-[4.5vw]">
+                        {event.title}
+                      </h3>
+
+                      <div className="mt-6 flex items-end justify-between border-t border-black/20 pt-3 font-mono">
+                        <div className="text-[10px] uppercase leading-[1.5] tracking-[0.12em]">
+                          {formattedDate}
+                          <br />
+                          {event.venue}
                         </div>
 
-                        {/* Middle: Giant Title */}
-                        <div className="my-6 sm:my-8">
-                          <h3 className="seatwise-card-title text-[#f1efe8] group-hover:text-[#d8763d] transition-colors">
-                            {event.title}
-                          </h3>
-                        </div>
-
-                        {/* Bottom: Date & Price Bar */}
-                        <div className="flex items-end justify-between border-t border-[#f1efe8]/20 pt-4 font-mono">
-                          <div className="text-[10px] uppercase leading-relaxed tracking-[0.14em] text-[#f1efe8]/80">
-                            <div>{dateStr}</div>
-                            <div className="text-[#f1efe8]/50">{event.venue}</div>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-[8.5px] uppercase tracking-[0.18em] text-[#f1efe8]/45">
-                              From
-                            </span>
-                            <div className="text-lg sm:text-xl font-bold tracking-tight text-[#f1efe8]">
-                              {event.ticketPrice ? `${event.ticketPrice} ${event.currency}` : "FREE"}
-                            </div>
+                        <div className="text-right">
+                          <span className="text-[8px] uppercase tracking-[0.15em] text-black/45">
+                            From
+                          </span>
+                          <div className="text-xl font-bold tracking-[-0.04em]">
+                            {displayPrice}
                           </div>
                         </div>
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      {/* Content (col-span-5) for alternating row */}
-                      <div className="order-2 mt-6 flex flex-col justify-between md:order-none md:col-span-5 md:mt-0">
-                        {/* Top: Category & Arrow */}
-                        <div className="flex items-start justify-between">
-                          <span className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-[#f1efe8]/50">
-                            {event.city} · LIVE
-                          </span>
-                          <span className="text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 text-[#f1efe8]">
-                            ↗
-                          </span>
-                        </div>
+                    </div>
+                  </div>
 
-                        {/* Middle: Giant Title */}
-                        <div className="my-6 sm:my-8">
-                          <h3 className="seatwise-card-title text-[#f1efe8] group-hover:text-[#d8763d] transition-colors">
-                            {event.title}
-                          </h3>
-                        </div>
-
-                        {/* Bottom: Date & Price Bar */}
-                        <div className="flex items-end justify-between border-t border-[#f1efe8]/20 pt-4 font-mono">
-                          <div className="text-[10px] uppercase leading-relaxed tracking-[0.14em] text-[#f1efe8]/80">
-                            <div>{dateStr}</div>
-                            <div className="text-[#f1efe8]/50">{event.venue}</div>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-[8.5px] uppercase tracking-[0.18em] text-[#f1efe8]/45">
-                              From
-                            </span>
-                            <div className="text-lg sm:text-xl font-bold tracking-tight text-[#f1efe8]">
-                              {event.ticketPrice ? `${event.ticketPrice} ${event.currency}` : "FREE"}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Image (col-span-6) for alternating row */}
-                      <div className="order-1 overflow-hidden md:order-none md:col-span-6 aspect-[16/10] bg-[#171714]">
-                        <div
-                          className="h-full w-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                          style={{ backgroundImage: `url('${img}')` }}
-                        />
-                      </div>
-                    </>
-                  )}
+                  <div className="order-1 overflow-hidden md:order-none md:col-span-6">
+                    <div
+                      className="
+                        aspect-[16/10]
+                        bg-cover
+                        bg-center
+                        transition-transform
+                        duration-700
+                        ease-out
+                        group-hover:scale-[1.025]
+                      "
+                      style={{
+                        backgroundImage: `url('${eventImage}')`,
+                      }}
+                    />
+                  </div>
                 </Link>
-              )
+              );
             })}
           </div>
 
-          {/* Section Footer */}
-          <div className="mt-8 flex items-center justify-between border-t border-[#f1efe8]/20 pt-6 font-mono text-[10px] uppercase tracking-wider text-[#f1efe8]/50">
-            <span>CRUZE / EVENTS / 2026</span>
-            <Link href="/events" className="group flex items-center gap-2 text-[#f1efe8] hover:text-[#d8763d] transition-colors">
-              <span>View All Experiences</span>
-              <span className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
-            </Link>
-          </div>
-        </section>
-
-        {/* =========================================================================
-            SECTION 4: "INSIDE CRUZE."
-            Swiss Industrial 4-Column Architectural Operational Grid
-            ========================================================================= */}
-        <section className="border-b border-[#f1efe8]/15 py-24 sm:py-32">
-          <div className="max-w-2xl">
-            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#d8763d]">
-              04 / ARCHITECTURE & STANDARDS
+          {/* =====================================================
+              VIEW ALL FOOTER
+          ===================================================== */}
+          <div className="flex items-center justify-between border-t border-black/40 pt-6 mt-12 font-mono">
+            <span className="text-[9px] uppercase tracking-[0.18em] text-black/45">
+              Cruze / Events / Qatar 2026
             </span>
-            <h2 className="seatwise-section-title mt-4">
-              INSIDE<br />CRUZE<span className="text-[#d8763d]">.</span>
-            </h2>
-            <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-[#f1efe8]/65 leading-relaxed">
-              Curated access to Qatar&apos;s defining cultural, musical, and sporting gatherings. Built for complete certainty.
-            </p>
-          </div>
 
-          <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 border-t border-[#f1efe8]/20 pt-12">
-            <div className="border-t border-[#d8763d] pt-4">
-              <span className="font-mono text-[11px] font-bold text-[#d8763d]">01</span>
-              <h4 className="mt-3 text-base font-bold uppercase tracking-tight text-[#f1efe8]">
-                Curated Access
-              </h4>
-              <p className="mt-3 font-mono text-xs uppercase tracking-wider text-[#f1efe8]/60 leading-relaxed">
-                Cruze staff directly verifies and manages event partnerships across Qatar. No unauthorized third-party listings.
-              </p>
-            </div>
-
-            <div className="border-t border-[#d8763d] pt-4">
-              <span className="font-mono text-[11px] font-bold text-[#d8763d]">02</span>
-              <h4 className="mt-3 text-base font-bold uppercase tracking-tight text-[#f1efe8]">
-                Exact Seating
-              </h4>
-              <p className="mt-3 font-mono text-xs uppercase tracking-wider text-[#f1efe8]/60 leading-relaxed">
-                Choose the exact tier, section, and seat with live inventory synchronization.
-              </p>
-            </div>
-
-            <div className="border-t border-[#d8763d] pt-4">
-              <span className="font-mono text-[11px] font-bold text-[#d8763d]">03</span>
-              <h4 className="mt-3 text-base font-bold uppercase tracking-tight text-[#f1efe8]">
-                Universal Checkout
-              </h4>
-              <p className="mt-3 font-mono text-xs uppercase tracking-wider text-[#f1efe8]/60 leading-relaxed">
-                Powered by a modular payment gateway adapter with instant Apple Pay, credit cards, and regional Qatari rails.
-              </p>
-            </div>
-
-            <div className="border-t border-[#d8763d] pt-4">
-              <span className="font-mono text-[11px] font-bold text-[#d8763d]">04</span>
-              <h4 className="mt-3 text-base font-bold uppercase tracking-tight text-[#f1efe8]">
-                Asia/Qatar Sync
-              </h4>
-              <p className="mt-3 font-mono text-xs uppercase tracking-wider text-[#f1efe8]/60 leading-relaxed">
-                Native QAR pricing, Friday-Saturday weekend alignment, and real-time QR ticket validation.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* =========================================================================
-            SECTION 5: BOTTOM CALL TO ACTION
-            ========================================================================= */}
-        <section className="py-24 sm:py-32 flex flex-col md:flex-row md:items-end md:justify-between gap-10">
-          <div>
-            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#f1efe8]/50">
-              05 / READY TO EXPERIENCE
-            </span>
-            <h2 className="seatwise-section-title mt-4">
-              CLAIM YOUR<br />PLACE<span className="text-[#d8763d]">.</span>
-            </h2>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <Link href="/events" className="seatwise-btn">
-              <span>Explore All Experiences</span>
-              <span className="seatwise-btn-arrow">↗</span>
-            </Link>
-            <a
-              href="#top"
-              className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[#f1efe8]/50 hover:text-[#f1efe8] transition-colors"
+            <Link
+              href="/events"
+              className="group flex items-center gap-4 text-[11px] font-bold uppercase tracking-[0.05em] hover:text-[#d8763d] transition-colors"
             >
-              Back to Top ↑
-            </a>
+              View all events
+              <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                ↗
+              </span>
+            </Link>
           </div>
-        </section>
-      </main>
-    </div>
-  )
+        </div>
+      </section>
+    </main>
+  );
 }
+export default CruzeHome;

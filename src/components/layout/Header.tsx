@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
+
+import SiteMenu from '@/components/seatwise/SiteMenu'
 
 type HeaderProps = {
   platformName?: string
@@ -84,6 +86,11 @@ export function Header({ platformName = 'Cruze', platformLogo, brandColor }: Hea
       window.removeEventListener('openevents:organizer-logo-updated', onOrganizerLogoUpdated)
     }
   }, [])
+
+  // SeatWise design: On the homepage, CruzeHome renders its own exact SeatWise top nav bar and hero geometry.
+  if (pathname === '/') {
+    return null
+  }
 
   if (isPublicPage) {
     return (
@@ -203,18 +210,13 @@ export function Header({ platformName = 'Cruze', platformLogo, brandColor }: Hea
               <span>Explore</span>
               <span>↗</span>
             </Link>
+            <SiteMenu />
           </div>
 
-          {/* Mobile Menu Trigger */}
-          <button
-            type="button"
-            className="inline-flex h-11 w-11 items-center justify-center border border-[#f1efe8]/20 text-[#f1efe8] hover:bg-[#f1efe8]/10 lg:hidden"
-            aria-label={mobileMenuOpen ? 'Close navigation' : 'Open navigation'}
-            aria-expanded={mobileMenuOpen}
-            onClick={() => setMobileMenuOpen((open) => !open)}
-          >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          {/* Mobile Menu Trigger using SeatWise SiteMenu */}
+          <div className="lg:hidden flex items-center">
+            <SiteMenu />
+          </div>
         </nav>
 
         {/* Mobile Full-width Drawer (SeatWise Numbered Style) */}
