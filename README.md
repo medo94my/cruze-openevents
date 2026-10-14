@@ -1,3 +1,41 @@
+# Cruze Events
+
+**Qatar-first event discovery and ticketing — evaluation deployment.** Explore the [live demo](https://cruze-openevents-demo.vercel.app/) or [GitHub source](https://github.com/medo94my/cruze-openevents).
+
+Cruze is a customized fork of [Eyevinn OpenEvents](https://github.com/Eyevinn/openevents). Its public website focuses on discovering experiences for Qataris, expatriates and visitors. Cruze staff manage the listings; this is **not** an open multi-organizer marketplace.
+
+> **Demo safety:** Listings labeled `demo-` are fictional and cannot accept real ticket purchases. Real payment, email delivery, QR check-in and full booking reliability must be validated before launch.
+
+## For AI coding agents and contributors
+
+| Start here | Purpose |
+| --- | --- |
+| [AGENTS.md](AGENTS.md) | Canonical instructions for coding agents |
+| [CLAUDE.md](CLAUDE.md) | Claude Code-specific agreement |
+| [Copilot instructions](.github/copilot-instructions.md) | Editor assistant hints |
+| [Architecture](docs/ARCHITECTURE.md) | Code map, infrastructure, data flows and open risks |
+| [Design system](docs/DESIGN.md) | Qatar brand, customer experience, English/Arabic and RTL |
+| [Workflows](docs/WORKFLOWS.md) | Tests, migrations, PRs, deployments and safety |
+
+**Stack:** Next.js 16, React/TypeScript, Tailwind CSS, Prisma, PostgreSQL on Neon, NextAuth, Vercel Blob, Vercel hosting. Redis and real Qatar checkout integration require further verification.
+
+**Local start** (bring your own disposable dev DB):
+```bash
+npm ci
+cp .env.example .env.local
+# Configure safe local-only values; never use production or inherited OSC credentials.
+npx prisma generate
+npm run dev
+```
+
+**Checks:** `npm run lint`, `npx tsc --noEmit`, `npm test`, `npm run build`.
+
+## Upstream OpenEvents reference
+
+The following content is preserved from the original upstream project's README for feature and API background. **It may reference OSC, Swedish tax assumptions, an upstream demo and infrastructure/credentials that do not belong to Cruze.** Follow the Cruze files above for current conventions and deployment requirements.
+
+---
+
 # OpenEvents
 
 An open-source event management and ticketing platform built for [Streaming Tech Sweden 2026](https://www.streamingtech.se/). Built with Next.js, TypeScript, and deployed on [Eyevinn Open Source Cloud (OSC)](https://www.osaas.io/).
