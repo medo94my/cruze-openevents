@@ -115,13 +115,6 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
         </Link>
       </div>
 
-      {/* Fictional Showcase Banner */}
-      {isDemo && (
-        <div role="status" className="mb-8 border border-[#d8763d]/30 bg-[#d8763d]/10 px-5 py-4 text-xs font-mono text-[#f1efe8]">
-          <strong className="text-[#d8763d] mr-2">FICTIONAL SHOWCASE:</strong> This listing demonstrates Cruze&apos;s design in Qatar. It is not a real scheduled event and tickets are not for purchase.
-        </div>
-      )}
-
       {checkoutUnavailableMessage && (
         <div role="status" className="mb-8 border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-xs font-mono text-amber-200">
           {checkoutUnavailableMessage}
@@ -217,10 +210,6 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
             <p className="event-detail__closed font-mono">
               EVENT HAS ENDED — BOOKING CLOSED
             </p>
-          ) : isDemo ? (
-            <div className="event-detail__closed font-mono">
-              SHOWCASE LISTING — DEMO ONLY
-            </div>
           ) : (
             <Link
               href={`/events/${event.slug}/checkout`}

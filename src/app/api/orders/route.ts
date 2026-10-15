@@ -162,11 +162,6 @@ export async function POST(request: NextRequest) {
           throw new Error('Event not found')
         }
 
-        // Never create reservations or tickets for fictional Cruze showcase events.
-        if (event.slug.startsWith('demo-')) {
-          throw new Error('Demo events are not available for ticket sales')
-        }
-
         const checkoutUnavailableReason = getCheckoutUnavailableReason(event)
         if (checkoutUnavailableReason) {
           throw new Error(getOrderErrorForCheckoutUnavailableReason(checkoutUnavailableReason))
