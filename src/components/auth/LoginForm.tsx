@@ -342,11 +342,11 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="flex h-12 w-full items-center justify-center bg-[#f1efe8] text-black text-xs font-bold uppercase tracking-wider transition-colors hover:bg-[#d8763d] disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex h-12 w-full items-center justify-center bg-[#f1efe8] !text-[#11110f] text-xs font-black uppercase tracking-wider transition-colors hover:bg-[#d8763d] hover:!text-[#11110f] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (
             <svg
-              className="h-5 w-5 animate-spin text-black"
+              className="h-5 w-5 animate-spin !text-[#11110f]"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"

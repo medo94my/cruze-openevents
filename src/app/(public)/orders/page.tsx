@@ -141,7 +141,7 @@ export default async function MyTicketsPage() {
 
                 <Link
                   href={orderLink}
-                  className="inline-flex items-center justify-between border border-white/30 px-5 py-3 text-xs uppercase hover:bg-white hover:text-black transition-colors"
+                  className="inline-flex items-center justify-between border border-white/30 px-5 py-3 text-xs uppercase hover:bg-white hover:!text-[#11110f] transition-colors"
                 >
                   <span>VIEW ADMISSION PASS & QR</span>
                   <span>↗</span>

@@ -353,12 +353,15 @@ export function CruzeHome({ events }: CruzeHomeProps) {
               w-[190px]
               items-center
               justify-between
+              border border-black/10
               bg-[#f1efe8]
               px-5
-              text-black
+              !text-[#11110f]
+              shadow-lg
               transition-all
               duration-300
               hover:bg-[#d8763d]
+              hover:!text-[#11110f]
               md:bottom-0
               md:h-[82px]
               md:w-[230px]
@@ -366,15 +369,15 @@ export function CruzeHome({ events }: CruzeHomeProps) {
             "
           >
             <div>
-              <span className="block font-mono text-[9px] uppercase tracking-[0.18em] text-black/45">
+              <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.18em] !text-[#11110f]/75 group-hover:!text-[#11110f]">
                 01 / Explore
               </span>
-              <span className="mt-1 block text-[14px] font-bold uppercase tracking-[-0.02em]">
+              <span className="mt-1 block text-[14px] font-black uppercase tracking-[-0.02em] !text-[#11110f]">
                 Find Events
               </span>
             </div>
 
-            <span className="text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+            <span className="text-xl font-bold !text-[#11110f] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
               ↗
             </span>
           </a>
@@ -443,127 +446,29 @@ export function CruzeHome({ events }: CruzeHomeProps) {
           <div className="mt-20 flex flex-col">
             {displayEvents.slice(0, 6).map((event, index) => {
               const itemNumber = String(index + 1).padStart(2, "0");
-              const isEven = index % 2 === 1;
               const formattedDate = formatEventDate(event.startDate);
               const eventImage = event.coverImage || DEFAULT_EVENT_IMAGES[index % DEFAULT_EVENT_IMAGES.length];
               const eventHref = `/events/${event.slug}`;
               const displayPrice = event.ticketPrice ? `${event.ticketPrice} ${event.currency || "QAR"}` : "Free";
 
-              if (!isEven) {
-                // Layout A: Number (1 col) | Image (5 col) | Details (6 col)
-                return (
-                  <Link
-                    key={event.id}
-                    href={eventHref}
-                    className="group grid border-t border-black/40 py-8 md:grid-cols-12 md:gap-8 transition-colors"
-                  >
-                    <div className="mb-4 md:col-span-1 md:mb-0 font-mono">
-                      <span className="text-[11px] font-semibold">{itemNumber}</span>
-                    </div>
-
-                    <div className="overflow-hidden md:col-span-5">
-                      <div
-                        className="
-                          aspect-[16/10]
-                          bg-cover
-                          bg-center
-                          transition-transform
-                          duration-700
-                          ease-out
-                          group-hover:scale-[1.025]
-                        "
-                        style={{
-                          backgroundImage: `url('${eventImage}')`,
-                        }}
-                      />
-                    </div>
-
-                    <div className="mt-5 flex flex-col justify-between md:col-span-6 md:mt-0">
-                      <div className="flex items-start justify-between font-mono">
-                        <span className="text-[9px] uppercase tracking-[0.18em] text-black/50">
-                          {event.city} · {event.venue}
-                        </span>
-
-                        <span className="text-xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                          ↗
-                        </span>
-                      </div>
-
-                      <div className="mt-14 md:mt-0">
-                        <h3 className="max-w-[650px] text-[10vw] font-black uppercase leading-[0.78] tracking-[-0.07em] md:text-[4.5vw]">
-                          {event.title}
-                        </h3>
-
-                        <div className="mt-6 flex items-end justify-between border-t border-black/20 pt-3 font-mono">
-                          <div className="text-[10px] uppercase leading-[1.5] tracking-[0.12em]">
-                            {formattedDate}
-                            <br />
-                            {event.venue}
-                          </div>
-
-                          <div className="text-right">
-                            <span className="text-[8px] uppercase tracking-[0.15em] text-black/45">
-                              From
-                            </span>
-                            <div className="text-xl font-bold tracking-[-0.04em]">
-                              {displayPrice}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              }
-
-              // Layout B: Number (1 col) | Details (5 col) | Image (6 col)
               return (
                 <Link
                   key={event.id}
                   href={eventHref}
-                  className="group grid border-t border-black/40 py-8 md:grid-cols-12 md:gap-8 transition-colors"
+                  className="group grid border-t border-[#11110f]/30 py-8 md:grid-cols-12 md:gap-8 transition-colors hover:bg-black/[0.02]"
                 >
                   <div className="mb-4 md:col-span-1 md:mb-0 font-mono">
-                    <span className="text-[11px] font-semibold">{itemNumber}</span>
+                    <span className="text-[12px] font-bold text-[#11110f]">{itemNumber}</span>
                   </div>
 
-                  <div className="order-2 mt-5 flex flex-col justify-between md:order-none md:col-span-5 md:mt-0">
-                    <div className="font-mono">
-                      <span className="text-[9px] uppercase tracking-[0.18em] text-black/50">
-                        {event.city} · {event.venue}
-                      </span>
-                    </div>
-
-                    <div className="mt-14 md:mt-0">
-                      <h3 className="text-[10vw] font-black uppercase leading-[0.78] tracking-[-0.07em] md:text-[4.5vw]">
-                        {event.title}
-                      </h3>
-
-                      <div className="mt-6 flex items-end justify-between border-t border-black/20 pt-3 font-mono">
-                        <div className="text-[10px] uppercase leading-[1.5] tracking-[0.12em]">
-                          {formattedDate}
-                          <br />
-                          {event.venue}
-                        </div>
-
-                        <div className="text-right">
-                          <span className="text-[8px] uppercase tracking-[0.15em] text-black/45">
-                            From
-                          </span>
-                          <div className="text-xl font-bold tracking-[-0.04em]">
-                            {displayPrice}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="order-1 overflow-hidden md:order-none md:col-span-6">
+                  <div className="overflow-hidden md:col-span-5">
                     <div
                       className="
                         aspect-[16/10]
+                        w-full
                         bg-cover
                         bg-center
+                        border border-black/10
                         transition-transform
                         duration-700
                         ease-out
@@ -573,6 +478,41 @@ export function CruzeHome({ events }: CruzeHomeProps) {
                         backgroundImage: `url('${eventImage}')`,
                       }}
                     />
+                  </div>
+
+                  <div className="mt-5 flex flex-col justify-between md:col-span-6 md:mt-0">
+                    <div className="flex items-start justify-between font-mono">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#11110f]/70">
+                        {event.city} · {event.venue}
+                      </span>
+
+                      <span className="text-xl font-bold text-[#11110f] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-[#d8763d]">
+                        ↗
+                      </span>
+                    </div>
+
+                    <div className="mt-8 md:mt-0">
+                      <h3 className="max-w-[650px] text-[8vw] font-black uppercase leading-[0.82] tracking-[-0.06em] text-[#11110f] transition-colors group-hover:text-[#d8763d] md:text-[3.8vw]">
+                        {event.title}
+                      </h3>
+
+                      <div className="mt-6 flex items-end justify-between border-t border-[#11110f]/20 pt-3 font-mono">
+                        <div className="text-[10px] font-medium uppercase leading-[1.5] tracking-[0.12em] text-[#11110f]/80">
+                          {formattedDate}
+                          <br />
+                          {event.venue}
+                        </div>
+
+                        <div className="text-right">
+                          <span className="text-[9px] font-semibold uppercase tracking-[0.15em] text-[#11110f]/60">
+                            From
+                          </span>
+                          <div className="text-2xl font-black tracking-[-0.04em] text-[#11110f]">
+                            {displayPrice}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </Link>
               );
