@@ -8,6 +8,8 @@ import { CHECKOUT_UNAVAILABLE_NOTICE } from '@/lib/orders/checkoutAvailability'
 import { isValidTimeZone } from '@/lib/timezone'
 import { formatEventPrice, formatEventDateTime } from '@/lib/utils'
 
+import { ensureDemoEventExists, ensureDemoTickets } from '@/lib/tickets/demoTickets'
+
 export const dynamic = 'force-dynamic'
 
 type PageProps = {
@@ -30,7 +32,7 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
   const query = await searchParams
   const user = await getCurrentUser()
 
-  const event = await prisma.event.findUnique({
+  let event = await prisma.event.findUnique({
     where: { slug },
     include: {
       organizer: {
@@ -56,8 +58,45 @@ export default async function EventDetailsPage({ params, searchParams }: PagePro
     },
   })
 
+  if (!event && isDemo) {
+    await ensureDemoEventExists(slug)
+    event = await prisma.event.findUnique({
+      where: { slug },
+      include: {
+        organizer: {
+          select: {
+            userId: true,
+            orgName: true,
+            description: true,
+            website: true,
+            socialLinks: true,
+          },
+        },
+        ticketTypes: {
+          where: { isVisible: true },
+          orderBy: { sortOrder: 'asc' },
+        },
+        speakers: {
+          orderBy: { sortOrder: 'asc' },
+        },
+        media: {
+          where: { type: 'IMAGE' },
+          orderBy: { sortOrder: 'asc' },
+        },
+      },
+    })
+  }
+
   if (!event) {
     notFound()
+  }
+
+  if (isDemo && (event.ticketTypes.length === 0 || event.ticketTypes.some((t) => t.salesEndDate && t.salesEndDate <= new Date()))) {
+    await ensureDemoTickets(event.id, slug)
+    event.ticketTypes = await prisma.ticketType.findMany({
+      where: { eventId: event.id, isVisible: true },
+      orderBy: { sortOrder: 'asc' },
+    })
   }
 
   const isOwnerOrAdmin = user

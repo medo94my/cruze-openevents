@@ -26,6 +26,7 @@ import { createOrderSchema } from '@/lib/validations'
 import { formatDateTime, generateOrderNumber, isTicketAvailable } from '@/lib/utils'
 import { getVatRateForCountryNameOrCode } from '@/lib/pricing/vatRates'
 import { getIncludedVatFromVatInclusiveTotal } from '@/lib/pricing/vat'
+import { ensureDemoTickets } from '@/lib/tickets/demoTickets'
 
 type DiscountCodeWithLinks = Prisma.DiscountCodeGetPayload<{
   include: { ticketTypes: true }
@@ -126,6 +127,14 @@ export async function POST(request: NextRequest) {
         { error: 'Buyer email is required to place an order' },
         { status: 400 }
       )
+    }
+
+    const targetEvent = await prisma.event.findUnique({
+      where: { id: input.eventId },
+      select: { id: true, slug: true },
+    })
+    if (targetEvent && targetEvent.slug.startsWith('demo-')) {
+      await ensureDemoTickets(targetEvent.id, targetEvent.slug)
     }
 
     const createdOrder = await prisma.$transaction(
