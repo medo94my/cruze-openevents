@@ -6,6 +6,8 @@ import { formatEventDateTime } from '@/lib/utils'
 import { isValidTimeZone } from '@/lib/timezone'
 import { getCheckoutUnavailableNotice, getCheckoutUnavailableReason } from '@/lib/orders/checkoutAvailability'
 
+import { ensureDemoEventExists, ensureDemoTickets } from '@/lib/tickets/demoTickets'
+
 export const dynamic = 'force-dynamic'
 
 interface CheckoutPageProps {
@@ -14,8 +16,9 @@ interface CheckoutPageProps {
 
 export default async function CheckoutPage({ params }: CheckoutPageProps) {
   const { slug } = await params
+  const isDemo = slug.startsWith('demo-')
 
-  const event = await prisma.event.findUnique({
+  let event = await prisma.event.findUnique({
     where: { slug },
     select: {
       id: true,
@@ -57,8 +60,80 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
     },
   })
 
+  if (!event && isDemo) {
+    await ensureDemoEventExists(slug)
+    event = await prisma.event.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        startDate: true,
+        endDate: true,
+        timezone: true,
+        locationType: true,
+        venue: true,
+        city: true,
+        country: true,
+        onlineUrl: true,
+        coverImage: true,
+        collectAllergies: true,
+        status: true,
+        ticketTypes: {
+          where: { isVisible: true },
+          select: {
+            salesStartDate: true,
+            salesEndDate: true,
+            maxCapacity: true,
+            soldCount: true,
+            reservedCount: true,
+            isVisible: true,
+          },
+        },
+        groupDiscounts: {
+          where: { isActive: true },
+          select: {
+            id: true,
+            ticketTypeId: true,
+            minQuantity: true,
+            discountType: true,
+            discountValue: true,
+          },
+          orderBy: { minQuantity: 'asc' },
+        },
+      },
+    })
+  }
+
   if (!event) {
     notFound()
+  }
+
+  if (isDemo) {
+    await ensureDemoTickets(event.id, slug)
+    const refreshed = await prisma.event.findUnique({
+      where: { id: event.id },
+      select: {
+        startDate: true,
+        status: true,
+        ticketTypes: {
+          where: { isVisible: true },
+          select: {
+            salesStartDate: true,
+            salesEndDate: true,
+            maxCapacity: true,
+            soldCount: true,
+            reservedCount: true,
+            isVisible: true,
+          },
+        },
+      },
+    })
+    if (refreshed) {
+      event.startDate = refreshed.startDate
+      event.status = refreshed.status
+      event.ticketTypes = refreshed.ticketTypes
+    }
   }
 
   const checkoutUnavailableReason = getCheckoutUnavailableReason(event)

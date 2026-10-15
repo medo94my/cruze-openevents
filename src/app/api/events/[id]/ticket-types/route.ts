@@ -9,6 +9,8 @@ import {
   normalizeDiscountCode,
 } from '@/lib/tickets'
 
+import { ensureDemoTickets } from '@/lib/tickets/demoTickets'
+
 interface RouteContext {
   params: Promise<{ id: string }>
 }
@@ -17,10 +19,13 @@ export async function GET(request: NextRequest, context: RouteContext) {
   const { id: eventId } = await context.params
   const discountCodeParam = request.nextUrl.searchParams.get('discountCode')
 
-  const event = await prisma.event.findUnique({
-    where: { id: eventId },
+  const event = await prisma.event.findFirst({
+    where: {
+      OR: [{ id: eventId }, { slug: eventId }],
+    },
     select: {
       id: true,
+      slug: true,
       ticketTypes: {
         orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       },
@@ -29,6 +34,17 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
   if (!event) {
     return NextResponse.json({ error: 'Event not found' }, { status: 404 })
+  }
+
+  if (
+    (event.slug?.startsWith('demo-') || eventId.startsWith('demo-')) &&
+    (event.ticketTypes.length === 0 || event.ticketTypes.some((t) => t.salesEndDate && t.salesEndDate <= new Date()))
+  ) {
+    await ensureDemoTickets(event.id, event.slug)
+    event.ticketTypes = await prisma.ticketType.findMany({
+      where: { eventId: event.id },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+    })
   }
 
   let revealedTicketTypeIds = new Set<string>()
