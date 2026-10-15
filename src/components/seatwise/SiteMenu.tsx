@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 
@@ -14,7 +15,12 @@ type MenuItem = {
 export function SiteMenu() {
   const [open, setOpen] = useState(false)
   const [activeItem, setActiveItem] = useState<number | null>(null)
+  const [mounted, setMounted] = useState(false)
   const { data: session } = useSession()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const isOrganizer = session?.user?.roles?.includes('ORGANIZER')
   const isSuperAdmin = session?.user?.roles?.includes('SUPER_ADMIN')
@@ -98,6 +104,80 @@ export function SiteMenu() {
     setActiveItem(null)
   }
 
+  const menuContent = (
+    <div
+      className={`seatwise-menu ${open ? 'seatwise-menu--open' : ''}`}
+      aria-hidden={!open}
+    >
+      {/* Architectural grid overlay */}
+      <div className="seatwise-menu__grid" />
+
+      {/* Top bar */}
+      <div className="seatwise-menu__top">
+        <div>
+          <div className="seatwise-menu__brand">
+            CRUZE
+            <sup>®</sup>
+          </div>
+          <div className="seatwise-menu__brand-sub">
+            LIVE EVENT EXPERIENCES · QATAR
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="seatwise-menu__edition">
+            QAT / 2026
+          </div>
+          <button
+            type="button"
+            onClick={closeMenu}
+            aria-label="Close navigation menu"
+            className="flex items-center gap-2 border border-white/20 bg-white/10 px-3.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-[#f1efe8] hover:border-[#d8763d] hover:bg-[#d8763d] hover:text-[#11110f] transition-all cursor-pointer"
+          >
+            <span>Close</span>
+            <span className="text-base leading-none">✕</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main navigation */}
+      <nav className="seatwise-menu__nav">
+        {baseItems.map((item, index) => (
+          <Link
+            key={item.title}
+            href={item.href}
+            className="seatwise-menu__item"
+            style={{
+              transitionDelay: open ? `${140 + index * 70}ms` : '0ms',
+            }}
+            onMouseEnter={() => setActiveItem(index)}
+            onMouseLeave={() => setActiveItem(null)}
+            onClick={closeMenu}
+          >
+            <span className="seatwise-menu__number">{item.number}</span>
+
+            <span className="seatwise-menu__title">{item.title}</span>
+
+            <span className="seatwise-menu__meta">{item.meta}</span>
+
+            <span
+              className={`seatwise-menu__dot ${
+                activeItem === index ? 'seatwise-menu__dot--active' : ''
+              }`}
+            />
+          </Link>
+        ))}
+      </nav>
+
+      {/* Bottom metadata */}
+      <div className="seatwise-menu__bottom">
+        <span>DISCOVER / BOOK / BE THERE</span>
+        <span>LIVE EXPERIENCES / DOHA · QATAR</span>
+        <span>© 2026 CRUZE EVENTS</span>
+      </div>
+    </div>
+  )
+
   return (
     <>
       {/* =====================================================
@@ -121,68 +201,9 @@ export function SiteMenu() {
       </button>
 
       {/* =====================================================
-          FULLSCREEN MENU
+          FULLSCREEN MENU PORTAL (Escapes header backdrop-filter)
       ===================================================== */}
-      <div
-        className={`seatwise-menu ${open ? 'seatwise-menu--open' : ''}`}
-        aria-hidden={!open}
-      >
-        {/* Architectural grid overlay */}
-        <div className="seatwise-menu__grid" />
-
-        {/* Top bar */}
-        <div className="seatwise-menu__top">
-          <div>
-            <div className="seatwise-menu__brand">
-              CRUZE
-              <sup>®</sup>
-            </div>
-            <div className="seatwise-menu__brand-sub">
-              LIVE EVENT EXPERIENCES · QATAR
-            </div>
-          </div>
-
-          <div className="seatwise-menu__edition">
-            QAT / 2026
-          </div>
-        </div>
-
-        {/* Main navigation */}
-        <nav className="seatwise-menu__nav">
-          {baseItems.map((item, index) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="seatwise-menu__item"
-              style={{
-                transitionDelay: open ? `${140 + index * 70}ms` : '0ms',
-              }}
-              onMouseEnter={() => setActiveItem(index)}
-              onMouseLeave={() => setActiveItem(null)}
-              onClick={closeMenu}
-            >
-              <span className="seatwise-menu__number">{item.number}</span>
-
-              <span className="seatwise-menu__title">{item.title}</span>
-
-              <span className="seatwise-menu__meta">{item.meta}</span>
-
-              <span
-                className={`seatwise-menu__dot ${
-                  activeItem === index ? 'seatwise-menu__dot--active' : ''
-                }`}
-              />
-            </Link>
-          ))}
-        </nav>
-
-        {/* Bottom metadata */}
-        <div className="seatwise-menu__bottom">
-          <span>DISCOVER / BOOK / BE THERE</span>
-          <span>LIVE EXPERIENCES / DOHA · QATAR</span>
-          <span>© 2026 CRUZE EVENTS</span>
-        </div>
-      </div>
+      {mounted ? createPortal(menuContent, document.body) : null}
     </>
   )
 }

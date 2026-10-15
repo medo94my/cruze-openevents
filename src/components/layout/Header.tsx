@@ -83,14 +83,14 @@ export function Header({ platformName = 'Cruze' }: HeaderProps) {
           {pathname.startsWith('/events/') ? (
             <Link
               href="/events"
-              className="hidden sm:inline-flex items-center gap-1.5 border border-white/15 bg-white/[0.02] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#f1efe8] hover:border-[#d8763d] hover:text-[#d8763d] transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1.5 border border-white/25 bg-white/[0.04] px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#f1efe8] hover:border-[#d8763d] hover:text-[#d8763d] transition-colors whitespace-nowrap"
             >
               <span>← Back to Events</span>
             </Link>
           ) : pathname !== '/events' ? (
             <Link
               href="/events"
-              className="hidden sm:inline-flex items-center gap-1.5 border border-white/15 bg-white/[0.02] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#f1efe8] hover:border-[#d8763d] hover:text-[#d8763d] transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1.5 border border-white/25 bg-white/[0.04] px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#f1efe8] hover:border-[#d8763d] hover:text-[#d8763d] transition-colors whitespace-nowrap"
             >
               <span>Discover</span>
               <span className="text-[#d8763d]">↗</span>
@@ -101,7 +101,7 @@ export function Header({ platformName = 'Cruze' }: HeaderProps) {
           {canManageEvents ? (
             <Link
               href="/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 border border-[#d8763d]/50 bg-[#d8763d]/15 px-3.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#d8763d] hover:bg-[#d8763d] hover:text-[#11110f] transition-all whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1.5 border border-[#d8763d]/60 bg-[#d8763d]/20 px-3.5 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#d8763d] hover:bg-[#d8763d] hover:text-[#11110f] transition-all whitespace-nowrap"
             >
               <span>Curator</span>
               <span>↗</span>
@@ -109,7 +109,7 @@ export function Header({ platformName = 'Cruze' }: HeaderProps) {
           ) : status === 'authenticated' ? (
             <Link
               href="/orders"
-              className="hidden sm:inline-flex items-center gap-1.5 border border-white/15 bg-white/[0.02] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#f1efe8] hover:border-[#d8763d] hover:text-[#d8763d] transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1.5 border border-white/25 bg-white/[0.04] px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#f1efe8] hover:border-[#d8763d] hover:text-[#d8763d] transition-colors whitespace-nowrap"
             >
               <span>My Tickets</span>
               <span className="text-[#d8763d]">↗</span>
@@ -117,7 +117,7 @@ export function Header({ platformName = 'Cruze' }: HeaderProps) {
           ) : (
             <Link
               href="/login"
-              className="hidden sm:inline-flex items-center gap-1.5 border border-white/15 bg-white/[0.02] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#f1efe8] hover:border-[#d8763d] hover:text-[#d8763d] transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1.5 border border-white/25 bg-white/[0.04] px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#f1efe8] hover:border-[#d8763d] hover:text-[#d8763d] transition-colors whitespace-nowrap"
             >
               <span>Sign In</span>
               <span className="text-[#d8763d]">↗</span>
