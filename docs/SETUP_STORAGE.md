@@ -1,192 +1,47 @@
-# Setting Up MinIO Storage Bucket
+# Cruze Events — Media Storage
 
-OpenEvents uses MinIO (S3-compatible object storage) hosted on OSC for storing event images, videos, speaker photos, and other media files.
+## Current Vercel Blob path
 
-## OSC MinIO Instance Details
+Event/speaker client uploads use src/app/api/upload/blob/route.ts and a private BLOB_READ_WRITE_TOKEN. Use a separate development store for local tests; production tokens stay in Vercel's environment configuration.
 
-- **Instance Name:** `your-instance-name`
-- **Endpoint URL:** `https://your-minio-endpoint.example.com`
-- **Access Key:** `your-access-key`
-- **Secret Key:** `your-secret-key`
+The endpoint uses Vercel's handleUpload flow. Before issuing a token it:
 
-## Creating the Storage Bucket
+- Authenticates the user and requires ORGANIZER or SUPER_ADMIN.
+- Accepts events or speakers folders with an entity ID.
+- Validates the pathname prefix and rejects traversal.
+- Checks ownership of an existing event, with a SUPER_ADMIN exception; new entities use the new identifier.
+- Allows JPEG, PNG, WebP and GIF up to 50 MiB.
+- Adds a random suffix and limits token validity to 15 minutes.
 
-The bucket `openevents-media` must be created manually. Choose one of the methods below:
+The completion callback does not require a browser session; the client persists the uploaded URL separately. Upload success alone is not proof that the event saved the image.
 
-### Method 1: MinIO Web Console (Recommended)
+## Local checks
 
-1. Open the MinIO Console in your browser:
-   ```
-   https://your-minio-endpoint.example.com
-   ```
+1. Use an isolated staff test account and development Blob store.
+2. Upload an allowed image and save the event.
+3. Verify the saved image displays on the event/editor.
+4. Check rejection for wrong role, another event, bad path, unsupported MIME type and oversized files.
+5. Inspect CSP and image remotePatterns in next.config.ts if browser uploads/display fail.
 
-2. Log in with your credentials:
-   - **Username:** `your-access-key`
-   - **Password:** `your-secret-key`
+Do not publish signed URLs, upload tokens or raw provider errors containing credentials. Vercel Blob is not automatically used by every inherited media handler.
 
-3. Click **"Create Bucket"** in the sidebar
+## Legacy S3/MinIO
 
-4. Enter bucket name: `openevents-media`
+src/lib/storage/index.ts and presigned upload/profile/platform routes still use the AWS S3 SDK. Only configure them when deliberately testing those paths on storage you own. Upstream OSC instances do not belong to Cruze.
 
-5. Click **"Create Bucket"**
+| Variable | Purpose |
+| --- | --- |
+| S3_ENDPOINT | Owned S3-compatible endpoint |
+| S3_PUBLIC_URL | Optional browser-facing base URL |
+| S3_ACCESS_KEY_ID | Private access key |
+| S3_SECRET_ACCESS_KEY | Private secret; inherited MINIO_PASSWORD fallback also exists |
+| S3_BUCKET_NAME | Explicit bucket; code fallback is openevents |
+| S3_REGION | Region; code fallback is us-east-1 |
 
-6. (Optional) Set bucket policy to allow public read access for images:
-   - Go to **Buckets** → **openevents-media** → **Access Policy**
-   - Set to **Public** if you want direct image URLs, or keep **Private** for signed URLs only
+Folders can include events, speakers, organizers, users and platform. Rewriting a presigned URL to a different public endpoint may affect signature validity; verify against the selected provider.
 
-### Method 2: AWS CLI
+Do not copy old infrastructure commands, disable TLS verification, grant blanket public access or use wildcard CORS by default. Configure the required origins and permissions for the intended development store. Creating paid/live storage or changing access controls requires approval.
 
-If you have AWS CLI installed:
+## Limits
 
-```bash
-# Configure AWS CLI for MinIO
-export AWS_ACCESS_KEY_ID="your-access-key"
-export AWS_SECRET_ACCESS_KEY="your-secret-key"
-export AWS_REGION="us-east-1"
-
-# Create the bucket
-aws s3api create-bucket \
-  --bucket openevents-media \
-  --endpoint-url https://your-minio-endpoint.example.com
-```
-
-### Method 3: MinIO Client (mc)
-
-If you have MinIO Client installed:
-
-```bash
-# Configure MinIO alias
-mc alias set openevents https://your-minio-endpoint.example.com your-access-key "your-secret-key"
-
-# Create the bucket
-mc mb openevents/openevents-media
-
-# Verify bucket was created
-mc ls openevents
-```
-
-## Bucket Structure
-
-The application organizes files in the following structure:
-
-```
-openevents-media/
-├── events/
-│   └── {event-id}/
-│       ├── cover-{timestamp}.jpg
-│       └── media-{timestamp}.{ext}
-├── speakers/
-│   └── {event-id}/
-│       └── {speaker-id}-{timestamp}.jpg
-├── organizers/
-│   └── {organizer-id}/
-│       └── logo-{timestamp}.{ext}
-└── users/
-    └── {user-id}/
-        └── avatar-{timestamp}.{ext}
-```
-
-## Testing the Connection
-
-After creating the bucket, you can test the connection:
-
-```bash
-# Using AWS CLI
-aws s3 ls s3://openevents-media \
-  --endpoint-url https://your-minio-endpoint.example.com
-
-# Using MinIO Client
-mc ls openevents/openevents-media
-```
-
-## Configuring CORS
-
-Browser-based uploads require CORS to be configured on the MinIO server.
-
-### OSC-hosted MinIO
-
-MinIO instances on OSC have CORS enabled at the server level with `cors_allow_origin=*`. No additional configuration is needed.
-
-### Self-hosted MinIO
-
-If you're running your own MinIO, configure CORS using the admin API:
-
-```bash
-mc admin config set myminio api cors_allow_origin="*"
-mc admin service restart myminio
-```
-
-Or set bucket-level CORS:
-
-```bash
-# Create cors.xml
-cat > cors.xml << 'EOF'
-<CORSConfiguration>
-  <CORSRule>
-    <AllowedOrigin>*</AllowedOrigin>
-    <AllowedMethod>GET</AllowedMethod>
-    <AllowedMethod>PUT</AllowedMethod>
-    <AllowedMethod>POST</AllowedMethod>
-    <AllowedMethod>DELETE</AllowedMethod>
-    <AllowedMethod>HEAD</AllowedMethod>
-    <AllowedHeader>*</AllowedHeader>
-    <ExposeHeader>ETag</ExposeHeader>
-  </CORSRule>
-</CORSConfiguration>
-EOF
-
-mc cors set myminio/openevents-media cors.xml
-```
-
-## Troubleshooting
-
-### "Self-signed certificate" errors
-
-The OSC MinIO instance uses HTTPS. If you encounter certificate errors:
-
-1. **AWS CLI:** Try adding `--no-verify-ssl` (not recommended for production)
-2. **Node.js:** The S3 client in the app is configured to work with OSC certificates
-3. **Browser:** Ensure you're using `https://` in the endpoint URL
-
-### "Access Denied" errors
-
-1. Verify your access key and secret key are correct
-2. Check that the bucket policy allows your operations
-3. Ensure the bucket name matches exactly: `openevents-media`
-
-### Connection timeout
-
-1. Verify the endpoint URL is correct
-2. Check your network can reach OSC services
-3. Ensure no firewall is blocking HTTPS (port 443)
-
-## Environment Variables
-
-### Local Development
-
-Set these in your `.env` file:
-
-```env
-S3_ENDPOINT=https://your-minio-endpoint.example.com
-S3_ACCESS_KEY_ID=your-access-key
-S3_SECRET_ACCESS_KEY=your-secret-key
-S3_BUCKET_NAME=openevents-media
-S3_REGION=us-east-1
-```
-
-Note: `S3_PUBLIC_URL` is optional. Only set it if the browser-accessible URL differs from `S3_ENDPOINT` (e.g., when using an internal endpoint for server-side operations).
-
-### OSC Catalog Service Deployment
-
-When deploying Open Events as an OSC catalog service, storage is configured through the service instance settings:
-
-1. **Create a MinIO instance** on your OSC tenant
-2. **Create the bucket** (e.g., `openevents-media`) via the MinIO Console
-3. **Configure the Open Events instance** with your MinIO credentials:
-   - `s3Endpoint`: Your MinIO instance URL
-   - `s3AccessKeyId`: MinIO access key
-   - `s3SecretAccessKey`: MinIO secret key
-   - `s3BucketName`: Your bucket name
-   - `s3Region`: `us-east-1`
-
-Environment variables are injected directly by OSC when creating the instance. No additional configuration service is required.
+Blob token generation is present in code; this does not establish current live token configuration or end-to-end media persistence. See [Architecture](ARCHITECTURE.md) and [Workflows](WORKFLOWS.md).

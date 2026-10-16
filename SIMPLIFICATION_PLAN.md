@@ -1,3 +1,9 @@
+> **Historical plan — not an execution checklist.** Retained for provenance. Reviewed 2026-10-16 against main `c2667ba5998603f28c0fa1674b726193d8fdad62`. Checked boxes, test counts, backups, deployment steps and resource references below describe past work and have not been revalidated. They do not authorize migrations, privilege promotion, production changes, delegation or access to upstream infrastructure.
+>
+> Current guidance: [AGENTS.md](AGENTS.md), [Architecture](docs/ARCHITECTURE.md), [Design](docs/DESIGN.md), [Workflows](docs/WORKFLOWS.md). GitHub Actions credits are exhausted; use local checks and the existing Vercel integration.
+>
+> The current schema has no Category, OrganizerRequest or ATTENDEE role; ownership helpers and OrganizerProfile still exist. Discovery now uses EventsBrowser/client filters and the dark Cruze UI, so the old pagination/no-filters and showcase descriptions below are not current specifications. The category-removal migration is checked in; whether it has run on any live DB must be verified separately. Do not promote customers to staff or rerun old migrations from this document.
+
 # OpenEvents Single-Tenant Simplification Plan
 
 ## Executive Summary
