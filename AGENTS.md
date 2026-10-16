@@ -40,6 +40,11 @@ The architecture guide records source observations separately from intended safe
 
 Search for the existing implementation before adding files or abstractions.
 
+## Problem solving and evidence
+
+- **Choose the simplest solution that fully meets the requirement** when fixing an issue or adding a feature or functionality. Inspect existing implementations first, reuse established patterns, and minimize changes, dependencies and abstractions. Preserve correctness, security and maintainability; explain when added complexity is necessary.
+- **Never rely on agent memory alone. Always research and verify before making a factual claim.** Inspect current repository code, configuration and tests for project behavior; consult current official documentation for external APIs, libraries and platform behavior; use authorized read-only observations for live service status. Cite the relevant files, documentation or check results. Prior conversation, remembered behavior and old docs are starting points, not proof. If evidence is unavailable or conflicting, state what remains unverified rather than guessing.
+
 ## Coding conventions
 
 1. Prefer incremental, typed TypeScript changes in existing patterns. Keep client components focused; use server components for DB-backed views. Validate untrusted inputs with Zod.
