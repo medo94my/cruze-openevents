@@ -1,56 +1,60 @@
-# Developer Onboarding Guide
+# Cruze Events — Local Setup
 
 ## Prerequisites
-- Node.js 18+
-- Git
 
-## Setup
+Use Node.js 24.x to match the inspected Vercel runtime, npm, Git and a disposable PostgreSQL database owned by you. Redis, SMTP, Blob and Stripe are optional for isolated feature work; use mocks or dedicated development resources.
+
+## Install
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/JuiceAndTheJoe/openevents.git
-cd openevents
-
-# 2. Install dependencies
-npm install
-
-# 3. Set up environment variables
-cp .env.example .env
-
-# 4. Generate Prisma client
-npm run db:generate
+git clone https://github.com/medo94my/cruze-openevents.git
+cd cruze-openevents
+npm ci
+cp .env.example .env.local
 ```
 
-## Local Development (Optional)
+Populate placeholders locally. Never paste production secrets into chats, docs or commits.
 
-If you want to run the app locally for testing:
+| Variable | Use |
+| --- | --- |
+| DATABASE_URL | Separate disposable PostgreSQL database |
+| NEXTAUTH_SECRET | Locally generated signing secret |
+| NEXTAUTH_URL | http://localhost:3000 for local auth |
+| NEXT_PUBLIC_APP_URL | http://localhost:3000 for local links |
+| APP_NAME | Cruze Events |
+| EMAIL_MODE | development for synthetic local mail only |
+| BLOB_READ_WRITE_TOKEN | Optional separate development Blob store |
+| REDIS_URL | Optional dedicated development Redis |
+| PAYMENT_GATEWAY_PROVIDER | stub only for deliberately isolated simulations |
+
+Next.js loads .env.local. Prisma CLI does not automatically use Next.js's environment loader: supply DATABASE_URL through your local shell/environment tooling, or a private ignored .env used only for the disposable DB. Do not print it. A generated Prisma client does not create database tables.
+
 ```bash
+# With DATABASE_URL already scoped to your disposable DB:
+npx prisma generate
+npx prisma migrate deploy
 npm run dev
 ```
-The app will be available at http://localhost:3000
 
-This is **optional** - you can also test directly on the deployed app.
+The development app runs at http://localhost:3000. Do not seed from the inherited seed by default. If migrations fail, diagnose the migration history on the disposable DB; do not reset a shared database as a workaround.
 
-## Deploying Changes
+## Isolate side effects
 
-To deploy your changes to the live app:
+Demo detail and checkout pages can provision database rows and reopen ticket stock. Use a disposable DB even for browsing demos. Stub payments report success, so simulated booking tests must be visibly sandboxed and isolated from live inventory, real email and real payment rails.
 
-1. **Commit and push** your changes to the repo
-2. **Restart the OSC Web Runner** (openeventsapp) to pull the latest code
+Development emails log content and links. Use synthetic addresses/data and keep verification/reset links private. Login requires verified email; complete the local verification flow rather than bypassing it.
 
-The deployed app is live at https://events.apps.osaas.io
+See [Email](SETUP_EMAIL.md) and [Storage](SETUP_STORAGE.md). Missing service variables can disable feature paths; do not request production secrets to make local checks pass.
 
-## Important Notes
+## Validation and delivery
 
-- **No migrations needed** - The database is already set up on OSC
-- **Credentials are pre-configured** - `.env.example` contains the real OSC credentials
-- **Shared infrastructure** - We all connect to the same PostgreSQL, MinIO, and Valkey instances on OSC
-- **OSC handles builds** - No need to run `npm run build` locally
+```bash
+npm run lint
+npx tsc --noEmit
+npm test
+npm run build
+```
 
-## Useful Commands
+Do not use npm start as a neutral test: it runs prisma migrate deploy first. Build may require additional environment configuration and network access for fonts. Report failures accurately.
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start local dev server (optional) |
-| `npm run db:generate` | Regenerate Prisma client (after schema changes) |
-| `npm run db:studio` | Open Prisma Studio (database GUI) |
+GitHub Actions is unavailable due to exhausted credits. Run checks locally and use the existing Vercel integration under [Workflows](WORKFLOWS.md). Never restart an upstream OSC service or assume all developers share its database.

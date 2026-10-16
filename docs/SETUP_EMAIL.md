@@ -1,196 +1,38 @@
-# Setting Up Email for OpenEvents
+# Cruze Events — Email Setup
 
-OpenEvents sends transactional emails for:
-- Password reset (for organizers)
-- Order confirmations
-- Event cancellation notifications
+Implementation: src/lib/email/index.ts. Mail supports verification, password setup/reset, order/attendee tickets, reminders, invoices, cancellation and account-deletion flows. Login requires verified email.
 
-> **Note:** Email verification is not currently implemented. Organizers can register and log in without verifying their email. See "Known Limitations" in the README.
+## Local development
 
-## Email Modes
+Set EMAIL_MODE=development with synthetic local data. The transport logs mail text and links instead of delivering it. These logs can contain personal data and authentication tokens: keep them local and private, and do not paste them into tickets or PRs.
 
-### Development Mode (Default)
+If EMAIL_MODE is absent, code selects smtp when SMTP_HOST exists, otherwise development. NODE_ENV=production alone does not force SMTP delivery.
 
-In development mode, emails are **logged to the console** instead of being sent. This is useful for:
-- Local development without SMTP configuration
-- Testing email templates and content
-- Debugging email-related flows
+## SMTP configuration
 
-**Configuration:**
-```env
-EMAIL_MODE=development
-```
+Configure a dedicated development provider for tests. A live provider or external test message requires the appropriate owner authorization.
 
-**Example console output:**
-```
-============================================================
-📧 EMAIL (Development Mode - Not Actually Sent)
-============================================================
-To:      user@example.com
-From:    OpenEvents <noreply@openevents.local>
-Subject: Your OpenEvents Order Confirmation
-------------------------------------------------------------
-🔗 Links in email:
-   http://localhost:3000/orders/abc123...
-============================================================
-```
+| Variable | Meaning |
+| --- | --- |
+| EMAIL_MODE | smtp for actual delivery; development for logs |
+| SMTP_HOST | Provider hostname |
+| SMTP_PORT | Defaults to 587 |
+| SMTP_SECURE | true for implicit TLS, commonly port 465 |
+| SMTP_USER / SMTP_PASSWORD | Private provider credentials |
+| FROM_EMAIL / EMAIL_FROM | Sender; FROM_EMAIL takes precedence |
+| SITE_NAME / APP_NAME | Display name; SITE_NAME takes precedence |
+| PUBLIC_URL / NEXT_PUBLIC_APP_URL | Link base URL; PUBLIC_URL takes precedence |
 
-### Production Mode (SMTP)
+Verify the sender domain with the provider, including SPF/DKIM and applicable DMARC configuration. Configure each Vercel environment deliberately; a protected preview should not send customer mail unintentionally.
 
-For production, you must configure an external SMTP provider.
+## Verification
 
-**Configuration:**
-```env
-EMAIL_MODE=smtp
-SMTP_HOST=smtp.sendgrid.net
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=apikey
-SMTP_PASSWORD=your-api-key
-EMAIL_FROM=noreply@yourdomain.com
-```
+isEmailConfigured() returns true in development and checks SMTP fields otherwise. It does not prove network access, authentication, delivery or correct links. getEmailMode() reports selected mode.
 
-## Recommended SMTP Providers
+Test verification/reset using synthetic accounts and a local mailbox or isolated provider. Check token expiry, generated URLs, plain-text/HTML content and attachments. Do not remove email verification to work around delivery problems.
 
-### SendGrid
+For authorized SMTP tests, inspect provider delivery status and sanitized application errors. Confirm host, TLS/port pairing, verified sender and network reachability. Never log credentials or publish complete mail bodies.
 
-1. Create account at https://sendgrid.com
-2. Create an API key with "Mail Send" permissions
-3. Configure:
-   ```env
-   SMTP_HOST=smtp.sendgrid.net
-   SMTP_PORT=587
-   SMTP_USER=apikey
-   SMTP_PASSWORD=SG.your-api-key-here
-   ```
+## Current limits
 
-### Postmark
-
-1. Create account at https://postmarkapp.com
-2. Get your Server API Token
-3. Configure:
-   ```env
-   SMTP_HOST=smtp.postmarkapp.com
-   SMTP_PORT=587
-   SMTP_USER=your-server-api-token
-   SMTP_PASSWORD=your-server-api-token
-   ```
-
-### Mailgun
-
-1. Create account at https://mailgun.com
-2. Get your SMTP credentials from the dashboard
-3. Configure:
-   ```env
-   SMTP_HOST=smtp.mailgun.org
-   SMTP_PORT=587
-   SMTP_USER=postmaster@your-domain.mailgun.org
-   SMTP_PASSWORD=your-mailgun-password
-   ```
-
-### Amazon SES
-
-1. Set up Amazon SES in your AWS account
-2. Verify your sending domain
-3. Create SMTP credentials in the SES console
-4. Configure:
-   ```env
-   SMTP_HOST=email-smtp.us-east-1.amazonaws.com
-   SMTP_PORT=587
-   SMTP_USER=your-ses-smtp-user
-   SMTP_PASSWORD=your-ses-smtp-password
-   ```
-
-## Why No Built-in Email on OSC?
-
-Eyevinn Open Source Cloud (OSC) does not provide a built-in transactional email service. This is because:
-
-1. **Email deliverability** requires proper domain verification, SPF/DKIM records, and reputation management
-2. **Spam prevention** requires dedicated infrastructure and monitoring
-3. **Specialized providers** (SendGrid, Postmark, etc.) handle this better and more reliably
-
-## Testing Email Configuration
-
-### Check if email is configured:
-
-```typescript
-import { isEmailConfigured, getEmailMode } from '@/lib/email'
-
-console.log('Email mode:', getEmailMode())
-console.log('Is configured:', isEmailConfigured())
-```
-
-### Send a test email:
-
-```typescript
-import { sendEmail } from '@/lib/email'
-
-await sendEmail({
-  to: 'test@example.com',
-  subject: 'Test Email',
-  html: '<p>This is a test email from OpenEvents</p>',
-  text: 'This is a test email from OpenEvents',
-})
-```
-
-## Email Templates
-
-OpenEvents includes pre-built email templates for:
-
-| Function | Purpose |
-|----------|---------|
-| `sendPasswordResetEmail(email, token)` | Password reset link |
-| `sendOrderConfirmationEmail(email, orderDetails)` | Order confirmation |
-| `sendEventCancellationEmail(email, details)` | Event cancellation notice |
-
-All templates are HTML emails with plain-text fallbacks.
-
-## Customizing Email Templates
-
-Email templates are located in `src/lib/email/index.ts`. To customize:
-
-1. Find the template function (e.g., `sendVerificationEmail`)
-2. Modify the HTML content
-3. Update the plain-text fallback
-
-Example customization:
-```typescript
-export async function sendPasswordResetEmail(email: string, token: string) {
-  const resetUrl = `${APP_URL}/reset-password?token=${token}`
-
-  await sendEmail({
-    to: email,
-    subject: `Reset your ${APP_NAME} password`,
-    html: `
-      <!-- Your custom HTML template -->
-      <div style="...">
-        <h1>Password Reset</h1>
-        <a href="${resetUrl}">Reset Password</a>
-      </div>
-    `,
-    text: `Reset your password: ${resetUrl}`,
-  })
-}
-```
-
-## Troubleshooting
-
-### Emails not sending in production
-
-1. Check `EMAIL_MODE` is set to `smtp`
-2. Verify SMTP credentials are correct
-3. Check SMTP provider dashboard for errors
-4. Look for error logs in the application
-
-### Emails going to spam
-
-1. Set up SPF record for your domain
-2. Configure DKIM signing with your provider
-3. Use a verified "from" email address
-4. Avoid spam trigger words in subject/content
-
-### Connection timeout
-
-1. Check firewall allows outbound port 587
-2. Verify SMTP host is correct
-3. Try port 465 with `SMTP_SECURE=true`
+Production SMTP delivery has not been established by the documentation review. Shared fulfillment sends mail after committing the order and catches delivery errors; a PAID order is not proof that tickets reached the recipient. Existing development logging needs care before any real-user testing. See [Architecture](ARCHITECTURE.md).

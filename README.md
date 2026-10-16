@@ -1,330 +1,84 @@
 # Cruze Events
 
-**Qatar-first event discovery and ticketing — evaluation deployment.** Explore the [live demo](https://cruze-openevents-demo.vercel.app/) or [GitHub source](https://github.com/medo94my/cruze-openevents).
+Cruze is a Qatar event discovery and ticketing application, forked from Eyevinn OpenEvents. Cruze staff curate events; customers browse, book and check in. It is not an organizer marketplace.
 
-Cruze is a customized fork of [Eyevinn OpenEvents](https://github.com/Eyevinn/openevents). Its public website focuses on discovering experiences for Qataris, expatriates and visitors. Cruze staff manage the listings; this is **not** an open multi-organizer marketplace.
+## Current stack
 
-> **Demo safety:** Listings labeled `demo-` are fictional and cannot accept real ticket purchases. Real payment, email delivery, QR check-in and full booking reliability must be validated before launch.
+- Next.js 16.1.6 App Router, React 19.2.3, TypeScript and Tailwind CSS 4.
+- NextAuth v4 credentials login, bcrypt passwords, email verification and database-backed role checks.
+- Neon PostgreSQL through Prisma 6; Vercel hosting and Vercel Blob event/speaker images.
+- Optional ioredis rate limiting/cache helpers, Nodemailer SMTP, Stripe and simulated payment adapters.
+- Vitest tests in `src/__tests__/`.
 
-## For AI coding agents and contributors
+Qatar conventions: QAR, Asia/Qatar and Friday/Saturday weekends. Arabic/RTL is a requirement, not a completed application-wide feature.
 
-| Start here | Purpose |
+## Documentation
+
+| Guide | Purpose |
 | --- | --- |
-| [AGENTS.md](AGENTS.md) | Canonical instructions for coding agents |
-| [CLAUDE.md](CLAUDE.md) | Claude Code-specific agreement |
-| [Copilot instructions](.github/copilot-instructions.md) | Editor assistant hints |
-| [Architecture](docs/ARCHITECTURE.md) | Code map, infrastructure, data flows and open risks |
-| [Design system](docs/DESIGN.md) | Qatar brand, customer experience, English/Arabic and RTL |
-| [Workflows](docs/WORKFLOWS.md) | Tests, migrations, PRs, deployments and safety |
+| [AGENTS.md](AGENTS.md) | Repository rules and production boundaries |
+| [Setup](docs/SETUP.md) | Isolated local development |
+| [Architecture](docs/ARCHITECTURE.md) | Current code paths, data model and known gaps |
+| [Design](docs/DESIGN.md) | Current visual direction and accessibility requirements |
+| [Workflows](docs/WORKFLOWS.md) | Validation and Vercel delivery without GitHub Actions |
+| [Email](docs/SETUP_EMAIL.md) | Development logging and SMTP |
+| [Storage](docs/SETUP_STORAGE.md) | Blob uploads and legacy S3 routes |
+| [Contributing](CONTRIBUTING.md) | Branches, reviews and database changes |
 
-**Stack:** Next.js 16, React/TypeScript, Tailwind CSS, Prisma, PostgreSQL on Neon, NextAuth, Vercel Blob, Vercel hosting. Redis and real Qatar checkout integration require further verification.
+`SIMPLIFICATION_PLAN.md` and `docs/OpenEvents Organizer Guide.pdf` are historical upstream material, not current setup or release instructions. See the current guides before following them.
 
-**Local start** (bring your own disposable dev DB):
+## Local development
+
+Use Node.js 24.x to match the inspected Vercel project and a separate disposable PostgreSQL database.
+
 ```bash
+git clone https://github.com/medo94my/cruze-openevents.git
+cd cruze-openevents
 npm ci
 cp .env.example .env.local
-# Configure safe local-only values; never use production or inherited OSC credentials.
+# Configure only your own disposable development services.
 npx prisma generate
 npm run dev
 ```
 
-**Checks:** `npm run lint`, `npx tsc --noEmit`, `npm test`, `npm run build`.
+Set `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` locally. Prisma CLI environment loading differs from Next.js: ensure the development database variable is supplied to Prisma commands explicitly through your local shell/environment tooling. See [Setup](docs/SETUP.md).
 
-## Upstream OpenEvents reference
-
-The following content is preserved from the original upstream project's README for feature and API background. **It may reference OSC, Swedish tax assumptions, an upstream demo and infrastructure/credentials that do not belong to Cruze.** Follow the Cruze files above for current conventions and deployment requirements.
-
----
-
-# OpenEvents
-
-An open-source event management and ticketing platform built for [Streaming Tech Sweden 2026](https://www.streamingtech.se/). Built with Next.js, TypeScript, and deployed on [Eyevinn Open Source Cloud (OSC)](https://www.osaas.io/).
-
-**Live site:** [events.apps.osaas.io](https://events.apps.osaas.io)
-
-## Features
-
-### Event Management
-- Create, edit, and publish events with rich details
-- Cover images and media uploads
-- Event visibility controls (public/private)
-- Event status workflow (draft, published, cancelled, completed)
-
-### Ticketing & Sales
-- Multiple ticket types with individual pricing and capacity
-- Discount codes (percentage, fixed amount, free tickets)
-- Group discounts for bulk purchases
-- Invoice payment option for B2B customers
-- Ticket reservation system during checkout
-- Real-time availability tracking
-
-### Speakers & Agenda
-- Speaker profiles with photos, bios, and social links
-- Drag-and-drop speaker ordering
-- Agenda/schedule builder with time slots
-- Speaker assignment to agenda items
-
-### Payments
-- Stripe integration for online payments
-- Invoice billing for corporate customers
-- Automated refund processing
-- VAT handling (25% included)
-
-### Attendee Management
-- PDF tickets with QR codes
-- QR code scanner for event check-in
-- Attendee export to CSV/Excel
-- Per-ticket attendee information
-
-### Organizer Dashboard
-- Sales statistics and revenue tracking
-- 30-day sales trend charts
-- Order management with filtering and search
-- Bulk order actions and CSV export
-- Ticket type and discount code management
-
-### Admin Panel
-- Platform-wide statistics
-- User management with role assignment
-- Create accounts with one-time passwords
-- Event overview across all organizers
-
-### Authentication
-- Organizer login with email/password
-- Role-based access control (Organizer, Super Admin)
-- Guest checkout for attendees (no account required)
-- Account deletion with grace period
-
-## Tech Stack
-
-- **Frontend**: Next.js 14+ with App Router, React, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Prisma ORM
-- **Database**: PostgreSQL (on OSC)
-- **Cache**: Valkey/Redis (on OSC)
-- **Storage**: MinIO/S3 (on OSC)
-- **Authentication**: NextAuth.js
-- **Payments**: Stripe
-- **Deployment**: Eyevinn Open Source Cloud
-
-## Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- npm 9+
-- Access to OSC services (or local PostgreSQL, Redis, MinIO)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/JuiceAndTheJoe/openevents.git
-   cd openevents
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. Generate Prisma client and run migrations:
-   ```bash
-   npm run db:generate
-   npm run db:migrate
-   ```
-
-5. Seed the database (optional):
-   ```bash
-   npm run db:seed
-   ```
-
-6. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-7. Open [http://localhost:3000](http://localhost:3000)
-
-### Demo Accounts (after seeding)
-
-| Role | Email | Password |
-|------|-------|----------|
-| Super Admin | admin@openevents.local | Admin123! |
-| Organizer | organizer@openevents.local | Organizer123! |
-
-## Project Structure
-
-```
-openevents/
-├── prisma/                    # Database schema and migrations
-├── src/
-│   ├── app/                   # Next.js App Router
-│   │   ├── (auth)/            # Organizer authentication
-│   │   │   ├── login/
-│   │   │   ├── register/
-│   │   │   ├── forgot-password/
-│   │   │   └── reset-password/
-│   │   ├── (public)/          # Public pages
-│   │   │   ├── events/        # Event listing and details
-│   │   │   │   └── [slug]/
-│   │   │   │       └── checkout/
-│   │   │   └── orders/        # Order confirmation
-│   │   ├── (dashboard)/       # Organizer & admin dashboard
-│   │   │   └── dashboard/
-│   │   │       ├── events/    # Event management
-│   │   │       │   ├── new/
-│   │   │       │   └── [id]/
-│   │   │       │       ├── edit/
-│   │   │       │       ├── orders/
-│   │   │       │       ├── tickets/
-│   │   │       │       ├── discounts/
-│   │   │       │       └── scan/
-│   │   │       ├── admin/     # Super admin panel
-│   │   │       │   └── users/
-│   │   │       ├── profile/
-│   │   │       ├── settings/
-│   │   │       └── scan/      # Quick ticket scanner
-│   │   └── api/               # API routes
-│   │       ├── auth/
-│   │       ├── events/
-│   │       │   └── [id]/
-│   │       │       ├── speakers/
-│   │       │       ├── agenda/
-│   │       │       ├── ticket-types/
-│   │       │       └── discount-codes/
-│   │       ├── orders/
-│   │       │   └── [id]/
-│   │       │       ├── pay/
-│   │       │       ├── capture/
-│   │       │       ├── refund/
-│   │       │       └── mark-paid/
-│   │       ├── dashboard/
-│   │       ├── admin/
-│   │       ├── webhooks/
-│   │       └── upload/
-│   ├── components/            # React components
-│   │   ├── ui/                # Base UI components
-│   │   ├── auth/              # Authentication
-│   │   ├── events/            # Event display & editing
-│   │   ├── tickets/           # Checkout & tickets
-│   │   ├── dashboard/         # Dashboard widgets
-│   │   ├── admin/             # Admin components
-│   │   └── layout/            # Layout components
-│   ├── lib/                   # Shared libraries
-│   │   ├── auth/              # Authentication utilities
-│   │   ├── db/                # Prisma client
-│   │   ├── email/             # Email service
-│   │   ├── storage/           # S3/MinIO utilities
-│   │   ├── payments/          # Stripe integration
-│   │   ├── analytics/         # Dashboard analytics
-│   │   └── validations/       # Zod schemas
-│   └── types/                 # TypeScript types
-├── docs/                      # Documentation
-└── public/                    # Static assets
-```
-
-## Development
-
-### Database Commands
-
-```bash
-npm run db:generate    # Generate Prisma client
-npm run db:migrate     # Run migrations (dev)
-npm run db:push        # Push schema changes
-npm run db:seed        # Seed database
-npm run db:studio      # Open Prisma Studio
-npm run db:reset       # Reset database
-```
-
-### Running Tests
-
-```bash
-npm test               # Run all tests
-npm run test:watch     # Run tests in watch mode
-```
-
-### Linting
+## Checks
 
 ```bash
 npm run lint
+npx tsc --noEmit
+npm test
+npm run build
 ```
 
-## Documentation
+Run appropriate checks locally; GitHub Actions credits are exhausted and Actions must not be a dependency for validation or deployment. Report actual results and skipped checks. No current passing-test count is asserted by these docs.
 
-- [Architecture](./ARCHITECTURE.md) - System design and infrastructure
-- [Contributing](./CONTRIBUTING.md) - How to contribute
-- [Setup Guide](./docs/SETUP.md) - Detailed setup instructions
-- [Email Setup](./docs/SETUP_EMAIL.md) - Email configuration
-- [Storage Setup](./docs/SETUP_STORAGE.md) - MinIO/S3 configuration
+## Vercel deployment
 
-## Deployment
+The connected project is `cruze-openevents-demo` in `medo94mys-projects`, with domain https://cruze-openevents-demo.vercel.app. Inspection on 2026-10-16 found a READY production deployment for main commit `c2667ba5998603f28c0fa1674b726193d8fdad62`. READY confirms deployment status, not working payments or bookings. Vercel deployment protection may require authentication.
 
-This project is deployed on [Eyevinn Open Source Cloud (OSC)](https://www.osaas.io/) at [events.apps.osaas.io](https://events.apps.osaas.io).
+Use the existing Vercel Git integration or an explicitly authorized Vercel CLI deployment; neither requires a GitHub Actions runner. Keep substantive changes in a branch/PR. Production merges, deployments and migrations require explicit approval. See [Workflows](docs/WORKFLOWS.md).
 
-### Option 1: Contribute to the Existing Deployment
+The build script generates Prisma Client and builds Next.js; it does not deploy migrations. `npm start` runs `prisma migrate deploy` before starting Next.js, so it is not a harmless smoke-test command against a production database. Do not assume Vercel executes this start script.
 
-To contribute features or fixes to the live site at events.apps.osaas.io:
+## Known implementation gaps
 
-1. Fork or clone [github.com/JuiceAndTheJoe/openevents](https://github.com/JuiceAndTheJoe/openevents)
-2. Set up your local development environment (see [Quick Start](#quick-start))
-3. Make your changes following the guidelines in [CONTRIBUTING.md](./CONTRIBUTING.md)
-4. Submit a pull request to `main`
+These are source observations, not a claim that a live transaction was tested:
 
-**Note:** Merged changes will only appear on the live site after someone with access to the OpenEvents OSC account restarts the application.
+- Demo events have `demo-` slugs. Public detail/checkout and order code can create or refresh demo events/ticket stock; demo checkout is currently reachable. Fictional events must not be represented as genuine or charged for.
+- If Stripe is unavailable, the registry falls back to a stub without a production-only exclusion. The stub reports payment success; this is not proof of payment. Payment method records still use the legacy `PAYPAL` enum for Stripe/stub flows.
+- Order creation uses a serializable transaction and ticket-row locks, but creates pending orders with `expiresAt = null`. Do not assume automatic reservation expiry.
+- Invoice-code order creation currently marks orders PAID and issues tickets, while the pay route also supports PENDING_INVOICE. These paths need reconciliation.
+- Stripe webhooks verify signatures, but do not visibly reconcile session amount/currency/payment identity against the order before fulfillment.
+- QR check-in reads status then updates it; atomic replay prevention and event-specific staff authorization need verification. Global security headers currently disable camera access.
+- Redis integration and SMTP delivery require separate verification. Rate limits fail open when Redis is unavailable.
+- Cleanup/reminder endpoints accept requests if their configured token is absent. No checked-in Vercel cron schedule exists.
+- Inherited schema defaults still include SEK, UTC and 25% VAT. Do not use them as Qatar business rules.
+- The customer interface currently uses dark charcoal, cream and orange; older maroon design descriptions are historical.
 
-### Option 2: Deploy Your Own Instance
-
-To deploy a separate OpenEvents instance on your own OSC account:
-
-1. Fork the repository to your GitHub account
-2. Ensure your AI coding assistant (Claude Code, Cursor, etc.) is connected to GitHub and [OSC via MCP](https://www.npmjs.com/package/@osaas/mcp)
-3. Ask your assistant: *"Set up OpenEvents on my OSC from my fork"*
-
-The assistant will provision the required OSC services (PostgreSQL, Valkey, MinIO, Web Runner) and configure the environment.
-
-To deploy changes pushed to your fork's `main` branch, restart your Web Runner instance through OSC.
-
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for details on OSC service configuration.
-
-## Known Limitations & Recommendations
-
-This version of OpenEvents was built specifically for Streaming Tech Sweden 2026 and has some limitations that should be addressed for broader use.
-
-### Email Delivery
-
-The email integration is fully functional, but **emails sent through OSC's default mail service will not be delivered**. Email providers like Gmail and Outlook block messages from `@users.osaas.io` addresses.
-
-**Impact:** Users will not receive order confirmations, tickets, or receipts via email until a reputable email provider is configured.
-
-**Recommendation:** Configure a third-party email service (SendGrid, Postmark, AWS SES, etc.) via the environment variables in `.env`. See [Email Setup](./docs/SETUP_EMAIL.md) for configuration details.
-
-### Invoice Payments
-
-Invoice payment functionality is currently tied to Eyevinn. When users select invoice as their payment method, they are prompted to send payment details to `info@eyevinn.se`, regardless of which organizer created the event.
-
-**Recommendation:** For other organizations, update the invoice instructions in the checkout flow to point to the appropriate billing contact.
-
-### Guest Checkout Only
-
-Ticket buyers do not create accounts on the platform. This was a deliberate decision to minimize friction during the purchase process.
-
-**Impact:** Combined with the email delivery limitation above, buyers currently have limited ways to retrieve their ticket information after purchase. They cannot sign in to view past orders.
-
-**Recommendation:** For production use, either:
-- Configure working email delivery (priority)
-- Implement an order lookup feature using email + order number
-- Add optional account creation during checkout
-
-## Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+See [Architecture](docs/ARCHITECTURE.md) for source references. This documentation update does not remediate application behavior.
 
 ## License
 
-MIT License - see [LICENSE](./LICENSE) for details.
+MIT; see [LICENSE](LICENSE). Upstream attribution is retained; upstream services and credentials are not Cruze resources.

@@ -1,29 +1,19 @@
-# Cruze Events — Development and Agent Workflows
+# Cruze Events — Development and Delivery
 
-These steps apply to coding agents and human contributors. Start with [AGENTS.md](../AGENTS.md). Environment changes always require explicit owner approval.
+Read [AGENTS.md](../AGENTS.md). Work in a branch and open a PR for substantive changes.
 
-## Normal engineering loop
+## Engineering loop
 
-1. Inspect the relevant page, API handler, Prisma model and tests.
-2. Write a short task plan and call out payment, authentication, data or infrastructure impacts.
-3. Make one focused change on a feature branch. Avoid incidental refactors.
-4. Add or adjust tests for success and failure scenarios.
-5. Run supported local checks, report results honestly, and open a reviewable PR.
-6. After explicit approval, merge/deploy and verify the actual Vercel deployment and logs.
+1. Inspect the affected UI, API, authorization, Prisma models and tests.
+2. State the focused change and any payment/data/infrastructure boundaries.
+3. Implement within existing patterns; add meaningful failure tests for sensitive flows.
+4. Run appropriate local checks and review the diff.
+5. Open a PR with results, skipped checks, remaining risks and confirmed links.
+6. Obtain explicit approval for production merge, deployment, migration or live data changes.
 
-## Local setup (with a disposable development database)
+## Validation without GitHub Actions
 
-```bash
-npm ci
-cp .env.example .env.local
-# Supply your OWN safe dev-only environment settings locally.
-npx prisma generate
-npm run dev
-```
-
-The .env example contains placeholders. Do not paste production connection strings into AI chats, commits, issue bodies or CI logs. Never use database credentials from the old upstream CLAUDE.md or Git history.
-
-## Validation commands
+The owner reports GitHub Actions credits are exhausted. Do not depend on Actions for tests, previews or releases. The reviewed tree contains no workflow files.
 
 ```bash
 npm run lint
@@ -32,42 +22,62 @@ npm test
 npm run build
 ```
 
-- Some integration tests may need local test services. Mock APIs/payment and storage where practical.
-- `npm run build` uses `prisma generate && next build`; database-backed dynamic pages may still require environment setup to test properly.
-- When changing Prisma, use `npx prisma migrate dev` **only in an isolated disposable local database**; review generated SQL and commit the migration.
-- Avoid `npm run db:reset`, `npm run db:push` or `npm run db:seed` except on clearly isolated, expendable development data. The upstream seed is not Cruze-specific.
+Use isolated development services or mocks. Report each result honestly; missing variables are not a reason to request production secrets. For documentation-only changes, check links, paths and source accuracy; application checks can be recorded as not run.
 
-## Before editing sensitive flows
+Follow [Setup](SETUP.md). Prisma CLI does not automatically load .env.local like Next.js; supply only a disposable DB environment to Prisma commands.
 
-| Concern | Required checks |
+## Vercel project and delivery
+
+Inspection on 2026-10-16 identified:
+
+| Setting | Observed value |
 | --- | --- |
-| Auth and account registration | Negative permission tests, rate limits, email verification, session handling |
-| Events | Ownership checks, publish constraints, timezone correctness, public/draft visibility |
-| Media uploads | Auth, file type/size limits, path ownership, Blob token expiry, CSP and display routes |
-| Tickets | Atomic capacity enforcement, reservation expiry, concurrency stress tests |
-| Payments | Provider sandbox, signed webhook validation, idempotency, amount/currency integrity |
-| QR check-in | Server-side verification, one-time checks, replay prevention, scoped staff roles |
-| Refunds | Consistent DB/payment states, stock reconciliation and auditability |
-| Demo data | Clearly fictional labels, no real charges, no misleading bookings |
+| Team | medo94mys-projects |
+| Project | cruze-openevents-demo |
+| Framework/runtime | Next.js / Node.js 24.x |
+| Production domain | https://cruze-openevents-demo.vercel.app |
+| Reviewed production commit | c2667ba5998603f28c0fa1674b726193d8fdad62 |
+| Deployment state | READY |
+| Protection | Vercel SSO protection enabled for all_except_custom_domains |
 
-## Deployment checklist
+This is a dated observation, not a guarantee of current configuration or booking reliability.
 
-1. Run tests and inspect the PR diff (especially database migrations, API/permission changes and environmental assumptions).
-2. Confirm required Vercel environment variables exist **without displaying their values**.
-3. Deploy to a preview. Check homepage, /events, a real/draft event as appropriate, sign-in permissions and image paths.
-4. For schema changes: plan compatible app/schema rollout, backup/restore and rollback; apply reviewed migrations only with owner approval.
-5. Deploy to the appropriate Vercel environment only after approval.
-6. Inspect Vercel deployment status and recent runtime errors; run non-destructive smoke tests. Do not claim booking works solely because pages returned HTTP 200.
-7. Record which flows were manually checked and which were *not* checked.
+Use the existing Vercel Git integration for branch previews and approved main releases, subject to project settings. Git integration builds do not consume GitHub Actions runner credits. Creating a branch/PR can trigger an existing preview automatically; verify its actual result.
 
-## Demo/real booking boundary
+If the Git integration cannot deploy, an authorized operator can use Vercel CLI for the verified team/project/environment. Do not create a second project, bypass release checks or add an Actions-based pipeline by default.
 
-Current `demo-` events are fictional examples, with ticket purchasing intentionally disabled. Never silently re-enable public checkout for those events. A requested demo booking mode must use safe isolated test orders and explicit simulated payment labels, no real financial provider, no sending misleading QR tickets to customers and no accidental charges.
+Before releasing: verify the exact branch/commit, environment, team/project, required variable names (without values), migration plan and local checks. Inspect the resulting deployment and sanitized runtime errors. A READY build or HTTP 200 does not prove a successful booking.
 
-## Secret and historical-leak response
+## Database lifecycle
 
-The inherited upstream CLAUDE.md once included plaintext connection details. The current copy has been sanitized, but existing Git history may still contain those values. Do not republish them. Credential owners should revoke/rotate exposed credentials, assess access logs and coordinate confidential notification with upstream maintainers. Removing a file or a Git commit alone does not rotate credentials. Git history rewriting requires a separate, carefully coordinated decision.
+The build script is prisma generate followed by next build. It does not apply migrations. npm start applies prisma migrate deploy before next start; do not use it as a read-only check against a connected production database, and do not assume Vercel executes it.
 
-## Agent handover / PR description
+Schema changes require a checked-in migration, isolated migration test, compatible rollout/backfill/rollback plan and explicit production approval. Do not run db push, migrate reset, the inherited seed or destructive SQL on Neon production.
 
-Always include: goal, changed files, test results (pass/fail/skipped), screenshots where UI is involved, environment/data changes, assumptions, security considerations, unresolved blockers, and the exact preview/deployment link if confirmed.
+## Sensitive-flow checks
+
+| Flow | Verification |
+| --- | --- |
+| Auth | Verified email, current DB roles, deletion state, negative access tests and rate-limit coverage |
+| Events | Staff/ownership checks, drafts/private visibility, publish rules, timezone |
+| Uploads | Role/path/entity scope, MIME/size, token expiry, save/display |
+| Orders | Server prices, discounts/tax, locked stock, retries, pending reservations |
+| Payments | Explicit sandbox, signature, identity/amount/currency reconciliation, idempotency |
+| Check-in | Staff event scope, atomic ACTIVE-to-USED update, replay rejection and camera policy |
+| Refunds | Provider/DB state consistency, inventory and audit trail |
+| Email | Correct mode, isolated recipients, token privacy, delivery failure handling |
+| Cleanup | Authentication, deliberate scheduling and owner-approved mutations |
+
+No vercel.json cron schedule exists in the reviewed tree. Cleanup/reminder routes are POST operations and currently allow access when their token variable is absent. Do not invoke them as health checks or assume they run automatically.
+
+## Demo behavior and safe testing
+
+Current source auto-provisions demo records and ticket tiers, exposes checkout and can select a successful stub payment fallback. This differs from the intended boundary: fictional demos must not charge customers or issue misleading tickets.
+
+Even a GET to a demo detail/checkout page can write to the connected DB. Use an isolated DB and synthetic data for demo smoke tests. This documentation update neither authorizes live demo purchases nor claims the enforcement gaps are fixed.
+
+## Secrets and handover
+
+Never print or reuse historical upstream credentials. Do not access upstream OSC resources. Keep customer data and token-bearing email links out of shared logs. Credential rotation, infrastructure/access changes and external messages require appropriate authorization.
+
+A PR should describe final behavior, files, validation results, environment/data impacts, screenshots when relevant, known limitations and actual deployment links. No fixed historical test count establishes today's correctness.

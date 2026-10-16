@@ -1,55 +1,43 @@
-# Cruze Events — Design System
+# Cruze Events — Design and UI Requirements
 
-**Audience:** Qataris, expat residents, visiting families and international communities in Qatar. **Promise:** discover local experiences, feel welcome, and make memories. Avoid generic B2B event-management copy.
+## Current implementation
 
-## Brand
+The main customer UI uses a dark editorial style: charcoal #11110f, cream #f1efe8 and orange #d8763d, large uppercase headings, monospace metadata, fine borders and photographic event cards. The root layout loads Outfit and defaults platform_theme to dark. Platform settings retain a separate maroon brand-color default (#8A1538); some customer components hardcode their colors.
 
-| Token | Example |
-| --- | --- |
-| Qatar-inspired maroon | `#641633` |
-| Text / ink | `#271D20` |
-| Warm cream background | `#FBF8F3` |
-| Sand-colored surface | `#F1E8DD` |
-| Pale gold highlight | `#F3D1AC` |
+Primary sources: src/components/landing/CruzeHome.tsx, src/components/events/EventsBrowser.tsx, src/app/(public)/events/[slug]/page.tsx, src/components/layout/, src/app/globals.css and src/components/seatwise/. The older maroon/cream palette is not a description of the current main UI. Preserve the current visual direction unless a redesign is requested.
 
-Style: expressive editorial headlines, generous white space, elegant rounded cards, high-quality licensed photos and welcoming copy. Use maroon for primary action and navigation. Avoid heavy gradients that obscure text, false urgency, fake reviews and unverified venue partnerships.
+## Product and content
 
-## Customer journey and information hierarchy
+Cruze serves Qataris, residents and visitors discovering Qatar experiences. Staff curate events. Avoid consumer-facing organizer marketplace copy.
 
-1. **Homepage:** instantly say what Cruze is and where it operates. Feature a human, memorable image; clear search and discover action.
-2. **Highlighted experiences:** larger photographic feature supported by small editorial tiles.
-3. **Discover:** filter by music, food/culture, arts, family, wellness, outdoor experiences and meetups; search terms; Friday/Saturday weekend; free events.
-4. **Event card:** photo, date in Qatar time, location, title, QAR starting price and clearly distinguishable demo status.
-5. **Event detail:** all relevant schedule, venue, organizer, price and terms. Purchase only when genuinely available and verified.
-6. **Header/footer:** discover, weekend, account/dashboard (when appropriate), support/legal links; never pitch third-party event publishing to consumers.
+Event cards should communicate image, Qatar date/time, location, title, actual QAR pricing and availability. Demo events are fictional and must be clearly distinguished. Current static fallback cards and demo checkout do not consistently enforce that boundary; see [Architecture](ARCHITECTURE.md). Never invent confirmations, reviews, venue partnerships, seating guarantees or ticket scarcity.
 
-Existing main customer UI: `src/components/landing/CruzeHome.tsx`; layout: `src/components/layout/`; route pages: `src/app/(public)/`. Reuse current styles rather than rebuilding from scratch.
+Current discovery supports category, location and text filtering in EventsBrowser; database categories are heuristically derived from descriptions. Do not describe a complete category taxonomy, date/weekend/free filter set or assigned-seat inventory as implemented.
 
-## Arabic, English and RTL
+## Qatar and localization requirements
 
-- Translate all navigational controls, validation errors and labels, without machine-overwriting event titles.
-- Set `lang` and `dir` appropriately at the interface/document boundary. Audit RTL alignment, input direction and arrows.
-- Use CSS logical directions (`start/end`, `ms/me`, etc.) where possible.
-- Keep URLs, contact emails and some embedded numbers LTR when necessary.
-- Ensure Arabic fonts work at the same line height, in text truncation and in large headlines.
-- The existing homepage bilingual toggle does **not** imply that the rest of checkout/auth/admin is fully localized. Track gaps explicitly.
+- New prices default to QAR; display dates/times in Asia/Qatar.
+- Friday/Saturday is the local weekend.
+- Support English and Arabic with usable RTL, including labels, navigation, errors and form controls.
+- Set lang/dir at the document or interface boundary, use logical CSS directions, and retain LTR treatment for URLs/emails where appropriate.
+- Test Arabic fonts, heading wrapping, truncation, numbers and directional controls.
+- Preserve filters when changing language.
 
-## Qatar conventions
+The root currently sets lang=en and the inspected main customer components are English. Application-wide Arabic/RTL and all Qatar-specific filters remain requirements, not completed features.
 
-- QAR currency and real pricing; no artificial price scarcity.
-- Dates and times in `Asia/Qatar`. The local weekend is **Friday/Saturday**.
-- Feature realistic Doha-area experiences while respecting social, cultural and accessibility needs.
-- Do not represent fictional demo listings as real events; clearly label them and keep checkout disabled.
+## Accessibility and motion
 
-## Accessibility and responsiveness
+Aim for WCAG 2.2 AA: contrast, visible focus, keyboard-operable menus/forms, labels, semantic landmarks, meaningful image alternatives, screen-reader feedback and usable touch targets. Respect prefers-reduced-motion for particle/gallery effects. Reserve image space to limit layout shifts.
 
-Aim for WCAG 2.2 AA: accessible contrast, focus visible, semantic landmarks and form labels, meaningful alt text for informative images, 44px-ish touch targets, keyboard-operable menus/filters, reduced-motion support and screen reader feedback. Test at 375px and 1440px, on both LTR and RTL. Avoid layout shifts through aspect ratios; lazy-load lower image grids. Preserve the user’s filters when changing the display language.
+Check mobile at 375px and desktop at 1440px, keyboard-only use and both language directions when localization changes. The global camera=() permission policy currently conflicts with camera scanning; scanner changes require reviewing that header.
 
-## Acceptance before merging frontend changes
+## Acceptance for UI changes
 
-- Header, homepage, /events catalogue and event details look cohesive.
-- Search and date/category/free filters actually work, including empty states.
-- Cards remain readable on mobile and overlays maintain contrast.
-- English and Arabic layouts are usable, including keyboard navigation.
-- All fictional events remain explicitly marked and non-purchasable.
-- Any newly introduced asset is licensed or owned and has a documented source.
+- Homepage, discovery, event detail, checkout and navigation remain coherent.
+- Search/filter behavior and empty states match visible controls.
+- Mobile cards, overlays and long event titles remain readable.
+- Images are owned/licensed and their source is documented.
+- Demo labels/sandbox constraints are explicit; no real charges or misleading tickets.
+- Claims about language support, seating, availability or payments are backed by implementation and verification.
+
+This document records requirements and observed code, not a completed accessibility audit.
